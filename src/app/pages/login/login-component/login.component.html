@@ -1,20 +1,106 @@
 <div class="login">
-    <form class="custom-form" method="post">
+   <!--  <form class="custom-form" (ngSubmit)="onSubmit()" [formGroup]="profileForm">
       <h1>Login</h1>
       <input
         type="email"
-        [(ngModel)]="email"
+        id="email" formControlName="email"
         name="email"
         placeholder="Email"
         required="required"
       />
       <input
         type="password"
-        [(ngModel)]="password"
+        id="constrasena" formControlName="constrasena"
         name="password"
         placeholder="Password"
         required="required"
       />
-      <button type="submit" (click)="login()">Log in</button>
-    </form>
+      <button type="submit">Log in</button>
+    </form> -->
+    <p-toast [style]="{marginTop: '80px'}"></p-toast>
+
+<form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"></div>
+                <div class="ui-grid-col-8">
+                    <div class="ui-grid-row">
+                        <span class="ui-float-label inputInicioSesion">
+                            <input id="float-input" type="text" size="30" pInputText formControlName="email"> 
+                            <label for="float-input" class="fontSize16">E-mai*</label>
+                        </span>
+                        <!-- <div class="ui-grid-col-4">
+                            <p-message severity="error" text="Introduce e-mail" *ngIf="!userform.controls['email'].valid&&userform.controls['email'].dirty"></p-message>
+                        </div> -->
+                    </div>
+                    <div class="ui-grid-row">
+                        <span class="ui-float-label inputInicioSesion marginB10">
+                            <input id="password-input" type="password" size="30" pInputText formControlName="password"> 
+                            <label for="password-input" class="fontSize16">Contraseña*</label>
+                        </span>
+                        <!-- <div class="ui-grid-col-4">
+                            <p-message severity="error" text="Introduce contraseña" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty"></p-message>
+                        </div> -->
+                    </div>
+
+
+                    <!-- <div class="ui-grid-row">
+                        <div class="ui-grid-col-2">
+                            Last Name *:
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <input pInputText type="text" formControlName="lastname" placeholder="Required"/>
+                        </div>
+                        <div class="ui-grid-col-4">
+                            <p-message severity="error" text="Lastname is required" *ngIf="!userform.controls['lastname'].valid&&userform.controls['lastname'].dirty"></p-message>
+                        </div>
+                    </div>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2">
+                            Password *:
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <input pInputText type="password" formControlName="password" placeholder="Required - Min(6)"/>
+                        </div>
+                        <div class="ui-grid-col-4">
+                        <p-message severity="error" [text]="userform.controls['password'].errors['required'] ? 'Password is required' : userform.controls['password'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                                *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty"></p-message>
+                        </div>
+                    </div>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2">
+                            Description:
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <textarea pInputTextarea type="text" formControlName="description"></textarea>
+                        </div>
+                        <div class="ui-grid-col-4"></div>
+                    </div>
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-2">
+                            Gender *:
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
+                        </div>
+                        <div class="ui-grid-col-4">
+                            <p-message severity="error" text="Gender is required" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty"></p-message>
+                        </div>
+                    </div> -->
+                    <div class="ui-grid-row marginB10">
+                        <div class="ui-grid-col-2"></div>
+                        <div class="ui-grid-col-8">
+                            <button pButton type="submit" label="Iniciar Sesión" [disabled]="!userform.valid" class="buttonBig"></button>
+                        </div>
+                        <div class="ui-grid-col-2"></div>
+                        
+                    </div>
+                    <div class="ui-grid-col-12">
+                        <p-checkbox formControlName="rememberLogin" binary="true" label="Recordarme">Recordarme</p-checkbox>
+                    </div>
+                </div>
+            <div class="ui-grid-col-2"></div>
+        </div>
+    </div>
+</form>
   </div>

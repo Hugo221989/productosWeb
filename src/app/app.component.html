@@ -1,3 +1,72 @@
-<div>
+<div class="contenedorPrincipal">
+  <div class="headerFixed">
+    <div class="p-grid w100 headerMask">
+      <div class="p-col">
+       <p class="textoPequeno ml-2"> <fa-icon [icon]="faInfoCircle" class="iconCustom"></fa-icon> COVID-19: Las entregas en España siguen llevándose a cabo normalmente.</p>
+      </div>
+      <div class="p-col text-center">
+        <p class="textoPequeno"><fa-icon [icon]="faTruck" class="iconCustom"></fa-icon> Envío gratuito en pedidos superiores a €24.99</p>
+      </div>
+      <div class="p-col"></div>
+    </div>
+    <div class="p-grid w100 headerPrincipal">
+        <div class="p-col">1</div>
+        <div class="p-col mt-12">
+          <p-autoComplete [(ngModel)]="autocompleteText" placeholder="Buscar" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
+        </div>
+        <div class="p-col">
+          <div class="p-grid w100 divRegistro">
+            <div class="p-col top-help-container">
+              <a href="#" class="linksRegistro"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">Ayuda</p></a>
+            </div>
+            <div class="p-col top-help-container">
+              <a (click)="show()" class="pointer"><p class="textoNormal">Iniciar Sesión</p></a>
+            </div>
+            <div class="p-col top-help-container">
+              <a href="#"><p class="textoNormal">Crear cuenta</p></a>
+            </div>
+            <div class="p-col top-help-container">
+              <a href="#" class="linksRegistro"><fa-icon [icon]="faShoppingCart" class="iconCustom mt-12"></fa-icon><p> </p></a>
+            </div>
+          </div>
+        </div>
+    </div>
+    <p-megaMenu [model]="items"></p-megaMenu>
+    <!-- <p-toolbar>
+      <div class="ui-toolbar-group-left">
+          <button pButton type="button" label="New" icon="pi pi-plus"></button>
+          <button pButton type="button" label="Upload" icon="pi pi-upload" class="ui-button-success"></button>
+              
+          <i class="ui-toolbar-separator pi pi-bars" style="vertical-align: middle"></i>
+          
+          <p-splitButton label="Save" icon="pi pi-check" [model]="items" styleClass="ui-button-warning"></p-splitButton>
+      </div>
+      
+      <div class="ui-toolbar-group-right">
+          <button pButton type="button" icon="pi pi-search"></button>
+          <button pButton type="button" icon="pi pi-calendar" class="ui-button-success"></button>
+          <button pButton type="button" icon="pi pi-times" class="ui-button-danger"></button>
+      </div>
+  </p-toolbar> -->
+</div>
+  <!-- <div class="nav-wrapper">
+    <div class="col s3">
+      <a href="#!" class="brand-logo">Logo</a>
+    </div>
+    <div class="col s6">
+      <div>
+        <p-autoComplete [(ngModel)]="autocompleteText" placeholder="Buscar" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete>
+      </div>
+    </div>
+    <div class="col s3">
+      <ul class="right hide-on-med-and-down">
+        <li><a href="sass.html"><div class="ayudaLi"><i class="material-icons prefix">headset_mic</i>Ayuda</div></a></li>
+        <li><a (click)="show()" pButton icon="pi pi-info-circle">Iniciar sesión</a></li>
+        <li><a href="badges.html">Registrase</a></li>
+      </ul>
+    </div>
+  </div> -->
+
   <router-outlet></router-outlet>
+
 </div>

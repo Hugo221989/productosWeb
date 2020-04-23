@@ -1,0 +1,39 @@
+.contenedorGaleria{
+    max-width: 573px;
+    padding-left: 5%;
+}
+.contenedorDetalleProducto{
+    margin-top: 80px;
+}
+.divEstrellasReviews{
+    margin-top: 2px;
+    margin-left: 10px;
+    color: #656060;
+}
+
+body .ui-button.ui-state-default.ui-button-success, body .ui-buttonset.ui-button-success > .ui-button.ui-state-default{
+    margin-right: 5px;
+    padding: 8px;
+    width: 100%;
+}
+
+body .ui-button.ui-state-default.ui-button-danger, body .ui-buttonset.ui-button-danger > .ui-button.ui-state-default{
+    margin-right: 5px;
+    padding: 8px;
+    width: 55%;
+}
+
+/*TAB INFERIOR*/
+body .ui-tabview .ui-tabview-panels{
+    border: 0 !important;
+    margin-top: 25px;
+}
+/*TAB INFERIOR*/
+/*ICONO*/
+.ui-button-icon-left{
+    font-size: 2.5em !important;
+}
+body .ui-rating a .ui-rating-icon{
+    font-size: 28px;
+}
+/*ICONO*/

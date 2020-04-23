@@ -1,0 +1,102 @@
+<div class="ui-g">
+    <div class="ui-g-12 ui-md-2">
+        <p-panel header="Nombre" [toggleable]="true" [style]="{'margin-bottom':'20px'}" class="panelFiltroLateral">
+            <div class="ui-g" style="width:250px;margin-bottom:10px">
+                <div class="ui-g-12"><p-checkbox name="group1" value="New York" label="New York" [(ngModel)]="selectedCities" inputId="ny"></p-checkbox></div>
+                <div class="ui-g-12"><p-checkbox name="group1" value="San Francisco" label="San Francisco" [(ngModel)]="selectedCities" inputId="sf"></p-checkbox></div>
+                <div class="ui-g-12"><p-checkbox name="group1" value="Los Angeles" label="Los Angeles" [(ngModel)]="selectedCities" inputId="la"></p-checkbox></div>
+            </div>
+        </p-panel>
+        <p-panel header="Marca" [toggleable]="true" [style]="{'margin-bottom':'20px'}" class="panelFiltroLateral">
+            <div class="ui-g" style="width:250px;margin-bottom:10px">
+                <div class="ui-g-12"><p-checkbox name="group1" value="HP" label="HP" [(ngModel)]="selectedCities" inputId="ny"></p-checkbox></div>
+                <div class="ui-g-12"><p-checkbox name="group1" value="Acer" label="Acer" [(ngModel)]="selectedCities" inputId="sf"></p-checkbox></div>
+                <div class="ui-g-12"><p-checkbox name="group1" value="Asus" label="Asus" [(ngModel)]="selectedCities" inputId="la"></p-checkbox></div>
+            </div>
+        </p-panel>
+    </div>
+    <div class="ui-g-12 ui-md-10 ui-g-nopad">
+        <p-dataView #dv [value]="products" [paginator]="true" [rows]="20" paginatorPosition="both" filterBy="nombre"
+            [sortField]="sortField" [sortOrder]="sortOrder">
+            <p-header>
+                <div class="ui-helper-clearfix">
+                    <div class="ui-g">
+                        <div class="ui-g-12 ui-md-4">
+                            <p-dropdown [options]="sortOptions" [(ngModel)]="sortKey" placeholder="Ordenar por" (onChange)="onSortChange($event)" [style]="{'min-width':'140px'}"></p-dropdown>
+                        </div>
+                        <div class="ui-g-6 ui-md-4 filter-container">
+                            <div style="position:relative">
+                                <input type="search" pInputText placeholder="Buscar por nombre" (input)="dv.filter($event.target.value)">
+                            </div>
+                        </div>
+                        <div class="ui-g-6 ui-md-4" style="text-align:right">
+                            <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+                        </div>
+                    </div>
+                </div>
+            </p-header>
+
+
+
+
+            <ng-template let-product pTemplate="listItem">
+                <div class="ui-g-6 panelGeneralProducto" style="cursor: pointer; border: 1px solid #ece9e9; width: 49%; margin: 5px;" (click)="selectProduct($event, product)">
+                    <div class="car-details">
+                        <div>
+                        <!--   <img src="assets/images/demo/car/{{car.brand}}.png"> -->
+                        <div class="ui-g-4" style="min-width: 225px;">
+                            <img src="assets/images/demo.jpg">
+                        </div>
+                        <div class="ui-g-8">
+                            <div class="ui-g">
+                                <div class="ui-g-12">Nombre: <b>{{product.nombre}}</b></div>
+                                <div class="ui-g-12">Descripción: <b>{{product.descripcion}}</b></div>
+                                <div class="ui-g-12">Precio: <b>{{product.precio}}</b></div>
+                                <div class="ui-g-12"><p-rating [ngModel]="product.estrellas" readonly="true" stars="5" [cancel]="false"></p-rating></div>
+                            </div>
+                        </div>
+                        </div>
+                        <!-- <button pButton type="button" icon="pi pi-search" (click)="selectProduct($event, product)"></button> -->
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template let-product pTemplate="gridItem">
+                <div style="padding:.5em; cursor: pointer;" class="ui-g-12 ui-md-3" (click)="selectProduct($event, product)">
+                    <p-panel [header]="product.nombre" [style]="{'text-align':'center'}" id="panelGrid">
+                        <img src="assets/images/demo.jpg" width="60">
+                        <div class="car-detail">
+                        <div class="ui-g-12"> {{product.nombre}} </div>
+                        <div class="ui-g-12"><p-rating [ngModel]="product.estrellas" readonly="true" stars="5" [cancel]="false"></p-rating></div>
+                        </div>
+                        <hr class="ui-widget-content" style="border-top:0">
+                        
+                    <!--  <button pButton type="button" icon="pi pi-search" (click)="selectProduct($event, product)" style="margin-top:0"></button> -->
+                    </p-panel>
+                </div>
+            </ng-template>
+        </p-dataView>
+    </div>
+</div>
+
+
+
+
+
+<p-dialog header="Car Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" [style]="{width: '225px'}"  (onAfterHide)="onDialogHide()">
+    <div class="ui-g" *ngIf="selectProduct">
+        <div class="ui-g-12" style="text-align:center">
+            <img src="assets/images/demo.jpg">
+        </div>
+        <div class="ui-g-4">Vin: </div>
+        <div class="ui-g-8">{{selectedProduct.nombre}}</div>
+
+        <div class="ui-g-4">Brand: </div>
+        <div class="ui-g-8">{{selectedProduct.descripcion}}</div>
+
+        <div class="ui-g-4">Year: </div>
+        <div class="ui-g-8">{{selectedProduct.precio}}</div>
+
+        <div class="ui-g-4">Color: </div>
+        <div class="ui-g-8">{{selectedProduct.estrellas}}</div>
+    </div>
+</p-dialog>

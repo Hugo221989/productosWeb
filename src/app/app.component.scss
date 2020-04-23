@@ -12,3 +12,19 @@
 .ayudaLi{
     display: flex !important;
 }
+/*BREADCRUMB*/
+body .ui-breadcrumb ul li .ui-menuitem-link{
+    color: #9c9c9c !important;
+}
+body .ui-breadcrumb ul li .ui-menuitem-link:hover{
+    color: #9c9c9c !important;
+    text-decoration: underline !important;
+}
+body .ui-breadcrumb ul li.ui-breadcrumb-chevron{
+    font-size: 1em !important;
+}
+body .ui-breadcrumb{
+    background-color: white !important;
+}
+/*BREADCRUMB*/
+

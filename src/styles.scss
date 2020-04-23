@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../src/assets/scss/footer';
+@import '../src/app/pages/products-page/product-detail/product-detail.component';
 
 * {
     box-sizing: border-box;
@@ -7,6 +8,10 @@
   html,
   body {
     background: #ecf0f3;
+  }
+  .contenedorBody{
+    margin-top: 160px;
+    background-color: white;
   }
   h1 {
     margin: 0;
@@ -94,6 +99,9 @@
   .h100{
     height: 100%;
   }
+  .minHeight720{
+    min-height: 720px;
+  }
   .mt-12{
     margin-top: 12px;
   }
@@ -111,7 +119,7 @@
     padding-top: 2% !important;
   }
   .textoNormal{
-    color: white;
+    color: inherit;
     font-family: sans-serif;
     font-size: 14px;
   }
@@ -122,6 +130,14 @@
   }
   .pointer{
     cursor: pointer;
+  }
+
+  .panelGeneralProducto:hover{
+    box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
+  }
+
+  #panelGrid .ui-panel:hover{
+    box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
   }
 
   /*TOOLBAR*/
@@ -141,13 +157,24 @@
 }
 .linksRegistro{
   display: contents;
+  color: white;
+}
+.linksRegistro:hover{
+  display: contents;
+  color: #a2a2a2;
+}
+.linksRegistroSimple{
+  color: white;
+}
+.linksRegistroSimple:hover{
+  color: #a2a2a2;
 }
 .iconCustom{
-  color: white;
+  color: inherit;
 }
 
 .iconCustomBig{
-  color: white;
+  color: inherit;
   margin-right: 10px;
   transform: scale(1.3);
 }
@@ -165,3 +192,28 @@
 .ui-megamenu-horizontal .ui-megamenu-root-list>.ui-menuitem{
   margin-left: 5%;
 }
+
+/*Rating*/
+body .ui-rating a{
+  color: #c5a400 !important;
+}
+
+/*DATAVIEW*/
+body .ui-paginator{
+  background-color: white !important;
+}
+/*DATAVIEW*/
+
+/*MENU LATERAL*/
+.panelFiltroLateral .ui-panel .ui-panel-content{
+  border: 0px !important;
+}
+.panelFiltroLateral .ui-panel .ui-panel-titlebar{
+  background-color: white !important;
+  color: black !important;
+  border: 0px !important;
+}
+.panelFiltroLateral .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon{
+  color: black !important;
+}
+/*MENU LATERAL*/

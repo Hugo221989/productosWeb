@@ -1,0 +1,74 @@
+<div class="ui-g contenedorDetalleProducto">
+    <div class="ui-g-12 ui-md-12 minHeight720">
+        <div class="ui-g-12 ui-md-6 h100">
+            <div class="ui-g-12">
+                <div class="contenedorGaleria">
+                    <p-galleria [images]="images" panelWidth="573" panelHeight="430" [showCaption]="false" [frameWidth]="120" [frameHeight]="80" [autoPlay]="false"></p-galleria>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6 h100">
+            <div>
+                <h1>{{product.nombre}}</h1>
+                <h3>{{product.descripcion}}</h3>
+                <h2 style="color: #d20404;">{{product.precio}}</h2> 
+                <div style="display: inline-flex;">
+                    <div>
+                        <p-rating [ngModel]="product.estrellas" readonly="true" stars="5" [cancel]="false"></p-rating>
+                    </div>
+                    <div>    
+                        <p class="divEstrellasReviews">50 reviews</p>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <div style="display: inline-flex; width: 60%;margin-top: 10%;">
+                    <button pButton type="button" label="Favoritos" class="ui-button-raised ui-button-danger botonFavoritos" icon="pi pi-heart"></button>
+                    <button pButton type="button" label="Añadir a la cesta" class="ui-button-raised ui-button-success botonCesta" icon="pi pi-shopping-cart"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g-12 ui-md-12 minHeight720">
+        <p-tabView>
+            <p-tabPanel header="Descripción" leftIcon="pi pi-calendar">
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                The story begins as Don Vito Corleone, the head of a New York Mafia family, overseeshis daughter's wedding. His beloved son ichael has just come home from the war, but does not intend to become part of his father's business. T hrough Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+            </p-tabPanel>
+            <p-tabPanel header="Información Técnica" leftIcon="pi pi-inbox">
+                <p>Procesador AMD Ryzen 5 3500U \n</p>
+                <p>Velocidad del procesador 2,1 GHz</p>
+                <p>Memoria Caché 6 MB</p>
+                <p>Sistema operativo Windows 10 HomeTipo de pantallaHD</p>
+                <p>Tamaño de la pantalla 35.56 cm / 14 "</p>
+                <p>Resolución 1366x768 ppp</p>
+                <p>       Memoria Ram 8 GB DDR4</p>
+                <p>Disco duro Tipo: SSD PCIe NVMe Capacidad: 512 GB</p>
+                <p>Tipo de tarjeta AMD</p>
+                <p>Procesador gráfico Radeon Vega 8</p>
+                <p>Tipo unidad óptica No tiene</p>
+                <p>Sonido Dos altavoces</p>
+                <p>Tarjeta de red LAN Ethernet Gigabit 10/100/1000 Integrada</p>
+                <p>Tipos de Lan inalámbrica WiFi 802.11 b/g/n/ac (2x2)Bluetooth4.2</p>
+                <p>Puertos entrada / salida1 USB 3.1 Tipo C</p>
+                <p>2 USB 3.1 Gen 1</p>
+                <p>1 HDMI</p>
+                <p>1 RJ-45</p>
+                <p>1 Smart Pin CA</p>
+                <p>1 Combo de auriculares y micrófono</p>
+                <p>1 Lector de tarjetas SD multiformato HPMás informaciónPantalla HD SVA antirreflectante con microborde y retroiluminación WLED</p>
+                <p>Cámara HD HP TrueVision con micrófono digital integrado</p>
+                <p>Dropbox: 25 GB de almacenamiento en línea gratuito durante 1 año desde la fecha de registro.Dimensiones22,59 x 1,99 x 32,4 cmPeso1,47 kg</p>
+            </p-tabPanel>
+            <p-tabPanel header="Opiniones" leftIcon="pi pi-user" rightIcon="pi pi-star">
+                After a break of more than  15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate.
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>

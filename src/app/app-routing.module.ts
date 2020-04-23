@@ -5,13 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'products',
     pathMatch: 'full'
   },
   {
-    path: 'login',
+    path: 'products',
     loadChildren: () =>
-      import('./pages/login/login.module').then(m => m.LoginModule)
+      import('./pages/products-page/products.module').then(m => m.ProductsModule)
   },
   {
     path: 'home',

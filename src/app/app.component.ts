@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {DialogService} from 'primeng/dynamicdialog';
-
 import {Message, MenuItem} from 'primeng/api';
 import { LoginComponent } from './pages/login/login-component/login.component';
 import { faPhoneVolume, faShoppingCart, faInfoCircle, faTruck} from '@fortawesome/free-solid-svg-icons';
@@ -20,7 +19,8 @@ export class AppComponent {
   faInfoCircle = faInfoCircle;
   faTruck = faTruck;
   title = 'productosWeb';
-  items: MenuItem[];
+  megaMenuItems: MenuItem[];
+  breadCrumbItems: MenuItem[];
 
   autocompleteText: string;
 
@@ -47,7 +47,8 @@ export class AppComponent {
 
 
     ngOnInit() {
-        this.items = [
+      /*MEGA MENU*/
+        this.megaMenuItems = [
             {
                 label: 'Videos', icon: 'pi pi-fw pi-video',
                 items: [
@@ -159,6 +160,23 @@ export class AppComponent {
                 ]
             }
         ]
+        /*MEGA MENU*/
+
+
+
+
+        /*BREADCRUMB*/
+        this.breadCrumbItems = [
+          {label:'Categories'},
+          {label:'Sports'},
+          {label:'Football'},
+          {label:'Countries'},
+          {label:'Spain'},
+          {label:'F.C. Barcelona'},
+          {label:'Squad'},
+          {label:'Lionel Messi'}
+      ];
+        /*BREADCRUMB*/
       }
 
 }

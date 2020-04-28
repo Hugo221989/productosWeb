@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../src/assets/scss/footer';
 @import '../src/app/pages/products-page/product-detail/product-detail.component';
+@import '../src/app/pages/account/main-panel/panel.component';
+@import '../src/app/pages/account/data/data.component.scss';
 
 * {
     box-sizing: border-box;

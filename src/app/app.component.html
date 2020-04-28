@@ -19,14 +19,32 @@
             <div class="p-col top-help-container">
               <a href="#" class="linksRegistro"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">Ayuda</p></a>
             </div>
-            <div class="p-col top-help-container">
+         <!--    <div class="p-col top-help-container">
               <a (click)="show()" class="pointer linksRegistroSimple"><p class="textoNormal">Iniciar Sesión</p></a>
             </div>
             <div class="p-col top-help-container">
-              <a href="#" class="linksRegistroSimple"><p class="textoNormal">Crear cuenta</p></a>
-            </div>
+              <a href="#" class="linksRegistroSimple"><p class="textoNormal">Crear Cuenta</p></a>
+            </div> -->
             <div class="p-col top-help-container">
-              <a href="#" class="linksRegistro"><fa-icon [icon]="faShoppingCart" class="iconCustom mt-12"></fa-icon><p> </p></a>
+              <a (click)="miCuenta()" class="pointer linksRegistroSimple"><p class="textoNormal">Mi Cuenta</p></a>
+            </div>
+            <div class="p-col top-help-container" >
+              <a class="linksRegistro" style="cursor: pointer;">
+               
+                  <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12" (click)="op1.toggle($event)"></fa-icon><p> </p>
+         
+              </a>
+              <p-overlayPanel #op1 styleClass="overlayShoppingCart">
+                <ng-template pTemplate>
+                   <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">Tu carrito está vacío</p></div>
+
+                   <div *ngIf="!carritoVacio">
+                    <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+                        <app-shooping-cart></app-shooping-cart>
+                     </p-scrollPanel>
+                   </div>
+                </ng-template>
+            </p-overlayPanel>
             </div>
           </div>
         </div>

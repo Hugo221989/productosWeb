@@ -1,0 +1,54 @@
+<div class="ui-g-12" style="text-align: center;">
+    <h3 class="first">Carrito de la compra</h3>
+        <p-table [value]="productos" [responsive]="true">
+            <ng-template pTemplate="header" let-columns>
+                <tr class="trHeadPedidos">
+                    <th class="thHeadPedidos">Producto</th>
+                    <th class="thHeadPedidosRight">Precio</th>
+                    <th class="thHeadPedidosRight">Cantidad</th>
+                    <th class="thHeadPedidosRight">Total</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr class="trPedidos" *ngFor="let product of productos">
+                    <td class="tdPedidos">
+                        <div class="contenedorCestaImagen">
+                            <div><img [alt]="product.nombre" src="assets/laptops/hp-envy-17/1.png" width="64" /></div>
+                            <div class="nombreProductoCesta"><span><b>{{product.nombre}}</b></span></div>
+                        </div>
+                    </td>
+                    <td class="tdPedidosRight">{{product.precio}}</td>
+                    <td class="tdPedidosRight">{{product.cantidad}}</td>
+                    <td class="tdPedidosRight">{{product.precioTotal}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="divInferiorTotal">
+            <div class="ui-grid-row totalPedido"> 
+                <div class="p-col-2 p-md-6 p-lg-8"></div>
+                <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
+                    <div class="tituloSubTotal">Sub-total:</div>
+                    <div class="w100">521</div>
+                </div>
+            </div>
+            <div class="ui-grid-row totalPedido">
+                <div class="p-col-2 p-md-6 p-lg-8"></div>
+                <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
+                    <div class="tituloSubTotal">Envío:</div>
+                    <div class="w100">Gratis</div>
+                </div>
+            </div>
+            <div class="ui-grid-row totalPedido">
+                <div class="p-col-2 p-md-6 p-lg-8"></div>
+                <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
+                    <div class="tituloSubTotal">Total:</div>
+                    <div class="w100"><b>521</b></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="ui-grid-col-8 divButtonPagoCesta">
+                <button pButton type="button" label="Proceder con el pago" class="buttonBigCesta" icon="pi pi-id-card"></button>
+            </div>
+        </div>
+</div>

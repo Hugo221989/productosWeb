@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home-component/home.component';
 
 const routes: Routes = [
   {
     path: '',
+    data: {
+      breadcrumb: 'Inicio'
+    },
     component: HomeComponent
   }
 ];
 
 @NgModule({
-  declarations: [],
+  exports: [RouterModule],
   imports: [
-    CommonModule
+    RouterModule.forChild(routes)
   ]
 })
 export class HomeRoutingModule { }

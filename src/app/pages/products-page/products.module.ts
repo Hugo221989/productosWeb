@@ -14,6 +14,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import {GalleriaModule} from 'primeng/galleria';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
+import {CarouselModule} from 'primeng/carousel';
 
 
 
@@ -34,6 +35,7 @@ import {TabViewModule} from 'primeng/tabview';
     GalleriaModule,
     ButtonModule,
     TabViewModule,
+    CarouselModule,
     FontAwesomeModule
   ]
 })

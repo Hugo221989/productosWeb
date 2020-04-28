@@ -80,8 +80,7 @@ export class ProductsPageComponent implements OnInit {
       /* this.selectedProduct = product;
       this.displayDialog = true;
       event.preventDefault(); */
-      console.log("SELECT")
-      this.router.navigate(['/detail', product.id]);
+      this.router.navigate(['products/detail', product.id]);
   }
 
   onSortChange(event) {

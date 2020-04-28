@@ -1,0 +1,54 @@
+.ui-tabview.ui-tabview-left>.ui-tabview-nav li{
+    background-color: white !important;
+    padding: 5px !important;
+    border: #d6d2d2 !important;
+}
+.ui-tabview .ui-tabview-nav li a{
+    color: black !important;
+}
+
+.ui-tabview.ui-tabview-left .ui-tabview-nav li.ui-state-active{
+    background-color: #e2e1e1 !important;
+    border: 0;
+}
+.ui-tabview .ui-tabview-nav li.ui-state-active a{
+    color: black !important;
+}
+body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem .ui-menuitem-link:focus{
+    box-shadow: 0 0 0 0 #fbfbfb !important;
+}
+
+/*INPUTS DATOS*/
+.customInputsData{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+/*INPUTS DATOS*/
+
+.ui-fileupload-choose >.ui-button-icon-left {
+    font-size: 1em !important;
+}
+.ui-fileupload-buttonbar .pi-upload {
+    font-size: 1em !important;
+}
+.ui-fileupload-buttonbar .pi-times {
+    font-size: 1em !important;
+}
+.ui-fileupload-content{
+    min-height: 300px;
+}
+
+.imagenPerfil{
+    height: 300px;
+    width: 300px;
+}
+.uploadButton{
+    width: 625px !important;
+}
+
+.eliminarCuentaParrafo1{
+    margin-top: 5%;
+}
+.eliminarCuentaParrafo2{
+    margin-top: 5%;
+}

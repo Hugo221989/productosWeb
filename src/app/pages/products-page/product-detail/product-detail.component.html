@@ -29,6 +29,7 @@
             </div>
         </div>
     </div>
+
     <div class="ui-g-12 ui-md-12 minHeight720">
         <p-tabView>
             <p-tabPanel header="Descripción" leftIcon="pi pi-calendar">
@@ -70,5 +71,33 @@
                 After a break of more than  15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family. Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate.
             </p-tabPanel>
         </p-tabView>
+    </div>
+
+    <div class="ui-g-12 ui-md-12">
+        <p-carousel [value]="products" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" 
+        [circular]="true" [autoplayInterval]="6000" [responsiveOptions]="responsiveOptions">
+            <p-header>
+                <h3>Circular, AutoPlay, 3 Items per Page and Scroll by 1</h3>
+            </p-header>
+            <ng-template let-product pTemplate="item">
+                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id)">
+                        <div class="p-grid p-nogutter">
+                            <div class="p-col-12 text-center">
+                                <img src="assets/laptops/hp-envy-17/1.png" style="max-height: 250px;"/>
+                            </div>
+                            <div class="p-col-12 car-data text-center">
+                                <div class="car-title">{{product.nombre}}</div>
+                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}}</h3> </div>
+            
+                                <div class="car-buttons">
+                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-search"></button>
+                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-star"></button>
+                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-cog"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </ng-template>
+        </p-carousel>
     </div>
 </div>

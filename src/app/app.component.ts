@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import {DialogService} from 'primeng/dynamicdialog';
 import {Message, MenuItem} from 'primeng/api';
 import { LoginComponent } from './pages/login/login-component/login.component';
 import { faPhoneVolume, faShoppingCart, faInfoCircle, faTruck} from '@fortawesome/free-solid-svg-icons';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { ShoopingCartComponent } from './pages/account/shopping-cart/shooping-cart.component';
+import { isNullOrUndefined } from 'util';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +16,9 @@ import { faPhoneVolume, faShoppingCart, faInfoCircle, faTruck} from '@fortawesom
 })
 export class AppComponent {
 
-  constructor(public dialogService: DialogService) {}
+  constructor(public dialogService: DialogService,
+              private router:Router,
+              private activatedRoute: ActivatedRoute) {}
 
   faPhoneVolume = faPhoneVolume;
   faShoppingCart = faShoppingCart;
@@ -21,9 +27,12 @@ export class AppComponent {
   title = 'productosWeb';
   megaMenuItems: MenuItem[];
   breadCrumbItems: MenuItem[];
+  carritoVacio: boolean = false;
 
   autocompleteText: string;
-
+  /* @ViewChild('shoppingCart')
+  private shoppingCart: ShoopingCartComponent;
+ */
     results: string[];
     resultados: string[] = [
       "Albania", "Argentina", "España", "Suecia", "Francia", "Estonia"
@@ -43,6 +52,9 @@ export class AppComponent {
           header: 'Iniciar Sesión',
           width: '40%'
       });
+  }
+  miCuenta(){
+    this.router.navigate(['/account/']);
   }
 
 
@@ -166,6 +178,13 @@ export class AppComponent {
 
 
         /*BREADCRUMB*/
+        this.router.events.pipe(
+            filter(
+                event => event instanceof NavigationEnd))
+                .subscribe( ()=> this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root))
+            
+        
+
         this.breadCrumbItems = [
           {label:'Categories'},
           {label:'Sports'},
@@ -177,6 +196,30 @@ export class AppComponent {
           {label:'Lionel Messi'}
       ];
         /*BREADCRUMB*/
+      }
+
+      createBreadCrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[]{
+        const children: ActivatedRoute[] = route.children;
+
+        if (children.length === 0) {
+          return breadcrumbs;
+        }
+    
+        for (const child of children) {
+          const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
+          if (routeURL !== '') {
+            url += `/${routeURL}`;
+          }
+          console.log("------------------------------------")
+          console.log("RUTA: "+url)
+          console.log(" LABEL =>"+child.snapshot.data['breadcrumb'])
+          const label = child.snapshot.data['breadcrumb'];
+          if (!isNullOrUndefined(label)) {
+            breadcrumbs.push({label, url});
+          }
+    
+          return this.createBreadCrumbs(child, url, breadcrumbs);
+        }
       }
 
 }

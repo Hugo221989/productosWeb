@@ -28,3 +28,19 @@ body .ui-breadcrumb{
 }
 /*BREADCRUMB*/
 
+/*OVERLAY SHOPPING CART*/
+:host ::ng-deep .overlayShoppingCart{
+    width: 28%;
+    min-height: 200%;
+    max-height: 500%;
+    top: 71px !important;
+}
+
+.paragrafCarritoVacio{
+    margin: 0;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+

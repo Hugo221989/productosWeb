@@ -87,16 +87,16 @@
                             <p-message severity="error" text="Gender is required" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty"></p-message>
                         </div>
                     </div> -->
-                    <div class="ui-grid-row marginB10">
+                    <div class="ui-grid-col-12 checkRecordarme">
+                        <p-checkbox formControlName="rememberLogin" binary="true" label="Recordarme">Recordarme</p-checkbox>
+                    </div>
+                    <div class="ui-grid-row botonLogin">
                         <div class="ui-grid-col-2"></div>
                         <div class="ui-grid-col-8">
                             <button pButton type="submit" label="Iniciar Sesión" [disabled]="!userform.valid" class="buttonBig"></button>
                         </div>
                         <div class="ui-grid-col-2"></div>
                         
-                    </div>
-                    <div class="ui-grid-col-12">
-                        <p-checkbox formControlName="rememberLogin" binary="true" label="Recordarme">Recordarme</p-checkbox>
                     </div>
                 </div>
             <div class="ui-grid-col-2"></div>

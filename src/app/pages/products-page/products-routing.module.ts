@@ -6,9 +6,15 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 const routes: Routes = [
   {
     path: '',
+    data: {
+      breadcrumb: 'Productos'
+    },
     component: ProductsPageComponent
   },{
     path: 'detail/:id',
+    data: {
+      breadcrumb: 'Detalle'
+    },
     component: ProductDetailComponent
   }
 ];

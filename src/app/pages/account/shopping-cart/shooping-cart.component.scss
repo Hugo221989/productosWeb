@@ -1,0 +1,55 @@
+
+/*TABLA CUSTOM*/
+.trHeadPedidos{
+    text-align: left;
+}
+.thHeadPedidos{
+    border: 0 !important;
+}
+.thHeadPedidosRight{
+    border: 0 !important;
+    text-align: right;
+    width: 15%;
+}
+.trPedidos{
+    height: 120px;
+}
+.tdPedidos{
+    border: 0 !important;
+}
+.tdPedidosRight{
+    border: 0 !important;
+    text-align: right;
+    width: 15%;
+}
+.divInferiorTotal{
+    text-align: right;
+    margin-top: 5%;
+}
+.subdivInferiorTotal{
+    display: inline-flex;
+}
+.tituloSubTotal{
+    width: 100%;
+}
+.totalPedido{
+    //margin-bottom: 2%;
+}
+.nombreProductoCesta{
+    margin-left: 4%;
+}
+.contenedorCestaImagen{
+    display: inline-flex;
+    width: 100%;
+}
+
+.divButtonPagoCesta{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 100%;
+}
+.buttonBigCesta{
+    padding-bottom: 2% !important;
+    padding-top: 2% !important;
+    width: 70%;
+}

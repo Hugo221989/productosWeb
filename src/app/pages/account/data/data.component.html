@@ -1,0 +1,251 @@
+<p-tabView orientation="left">
+    <p-tabPanel header="Información Personal">
+        <form [formGroup]="userform" (ngSubmit)="saveUserInfo(userform.value)">
+            <div class="ui-fluid" style="width: 90%; float: right;">
+                <div class="">
+                    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-g-12">
+                            <h3>Editar información personal</h3>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Nombre *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="name"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Nombre Obligatorio" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Apellido *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="lastname"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Apellido Obligatorio" *ngIf="!userform.controls['lastname'].valid&&userform.controls['lastname'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Nacimiento
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p-inputMask mask="99/99/9999" formControlName="date" placeholder="31/12/2020" slotChar="dd/mm/aaaa"></p-inputMask>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Email *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="email"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                            <p-message severity="error" [text]="userform.controls['email'].errors['required'] ? 'Contraseña Obligatoria' : userform.controls['email'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                                    *ngIf="!userform.controls['email'].valid&&userform.controls['email'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Teléfono *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="phone" placeholder="Required - Min(6)"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                            <p-message severity="error" [text]="userform.controls['phone'].errors['required'] ? 'Contraseña Obligatoria' : userform.controls['phone'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                                    *ngIf="!userform.controls['phone'].valid&&userform.controls['phone'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Género *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Género Obligatorio" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2"></div>
+                            <div class="ui-grid-col-6">
+                                <button pButton type="submit" label="Submit" [disabled]="!userform.valid"></button>
+                            </div>
+                            <div class="ui-grid-col-4"></div>
+                        </div>
+                        <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                            Form Submitted
+                            <br>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Foto de Perfil">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
+            <div class="" style="margin: 10px 0px; width: 90%; float: right;">
+                <div class="ui-g-12">
+                    <h3>Editar información personal</h3>
+                </div>
+                <div style="text-align: center;">
+                    <div class="ui-grid-row">
+                        <div class="ui-grid-col-4">
+                            <p-fileUpload name="demo[]" url="./upload.php" (onUpload)="onUpload($event)" chooseLabel="Seleccionar" uploadLabel="Subir" 
+                                    cancelLabel="Cancelar" multiple="multiple" accept="image/*" maxFileSize="1000000" fileLimit="1" previewWidth ="300"
+                                    styleClass="uploadButton">
+                                    <ng-template pTemplate="content">
+                                        <ul *ngIf="uploadedFiles.length">
+                                            <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                                        </ul>
+                                    </ng-template>
+                            </p-fileUpload>
+                        </div>
+                        <div class="ui-grid-col-8"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Dirección de Entrega">
+        <form [formGroup]="adressform" (ngSubmit)="saveAdressInfo(adressform.value)">
+            <div class="ui-fluid" style="width: 90%; float: right;">
+                <div class="">
+                    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-g-12">
+                            <h3>Editar dirección</h3>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Nombre del Destinatario*:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="destinatari"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Destinatario Obligatorio" *ngIf="!adressform.controls['destinatari'].valid&&adressform.controls['destinatari'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Calle *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="street"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Calle Obligatoria" *ngIf="!adressform.controls['street'].valid&&adressform.controls['street'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Nº Calle *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="number" formControlName="streetNum"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Num Calle Obligatorio" *ngIf="!adressform.controls['streetNum'].valid&&adressform.controls['streetNum'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Datos Adicionales :
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="aditionalData"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Código Postal *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="postCode" placeholder="Required - Min(6)"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                            <p-message severity="error" [text]="adressform.controls['postCode'].errors['required'] ? 'Código Postal Obligatorio' : adressform.controls['postCode'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                                    *ngIf="!adressform.controls['postCode'].valid&&adressform.controls['postCode'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Localidad *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <p-dropdown [options]="countryList" optionLabel="city" formControlName="locality" [(ngModel)]="locality" [filter]="true"></p-dropdown>
+                            </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" text="Localidad Obligatoria" *ngIf="!adressform.controls['locality'].valid&&adressform.controls['locality'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2">
+                                Teléfono *:
+                            </div>
+                            <div class="ui-grid-col-6">
+                                <input pInputText type="text" formControlName="phone" placeholder="Required - Min(6)"/>
+                            </div>
+                            <div class="ui-grid-col-4">
+                            <p-message severity="error" [text]="adressform.controls['phone'].errors['required'] ? 'Contraseña Obligatoria' : adressform.controls['phone'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                                    *ngIf="!adressform.controls['phone'].valid&&adressform.controls['phone'].dirty"></p-message>
+                            </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2"></div>
+                            <div class="ui-grid-col-6">
+                                <button pButton type="submit" label="Submit" [disabled]="!adressform.valid"></button>
+                            </div>
+                            <div class="ui-grid-col-4"></div>
+                        </div>
+                        <div style="text-align:center;margin-top:20px" *ngIf="submitted">
+                            Form Submitted
+                            <br>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+
+
+    <p-tabPanel header="Eliminar Cuenta">
+        <form [formGroup]="deleteAccountform" (ngSubmit)="saveAdressInfo(adressform.value)">
+            <div class="ui-fluid" style="width: 90%; float: right;">
+                <div class="">
+                    <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+                        <div class="ui-g-12">
+                            <h3>Eliminar la Cuenta</h3>
+                            <p class="eliminarCuentaParrafo1">Al eliminar tu cuenta ya no podrás seguir disfrutando de las ventajas de ser cliente de ProductosWeb ni podrás hacer pedidos en la web</p>
+                            <p>¿Seguro que no quieres cambiar de opinión?</p>
+                            <p class="eliminarCuentaParrafo2">Antes de eliminar tu cuenta, podrás ejercer tus derechps a la portabilidad de datos
+                                enviando un mensaje a nuestro Servicio de Atención al Cliente
+                            </p>
+                        </div>
+                        <div class="ui-g-12">
+                            <div>
+                                <textarea pInputTextarea formControlName="razones" [rows]="10" [cols]="100"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-tabPanel>
+
+</p-tabView>

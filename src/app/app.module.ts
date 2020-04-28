@@ -21,14 +21,18 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
 import { ProductsModule } from './pages/products-page/products.module';
 import {ButtonModule} from 'primeng/button';
+import { HttpClientModule } from '@angular/common/http'; 
+import {OverlayPanelModule} from 'primeng/overlaypanel';
+import { AccountModule } from './pages/account/account.module';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+import { HomeModule } from './pages/home/home.module';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent,
-    HomeComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -44,8 +48,13 @@ import {ButtonModule} from 'primeng/button';
     MegaMenuModule,
     BreadcrumbModule,
     ButtonModule,
+    OverlayPanelModule,
     FontAwesomeModule,
     ProductsModule,
+    HomeModule,
+    HttpClientModule,
+    AccountModule,
+    ScrollPanelModule,
     EffectsModule.forRoot([]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
     StoreModule.forRoot({}, {})

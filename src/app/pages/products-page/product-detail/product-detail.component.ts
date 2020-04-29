@@ -85,6 +85,8 @@ products: Product[] = [
   ];
    }
 
+   producto: Product;
+
    ngOnInit() {
         this.images = [];
         this.images.push({source:'assets/laptops/hp-envy-17/1.png', alt:'Description for Image 1', title:'Title 1'});
@@ -92,7 +94,10 @@ products: Product[] = [
         this.images.push({source:'assets/laptops/hp-envy-17/3.png', alt:'Description for Image 3', title:'Title 3'});
         this.images.push({source:'assets/laptops/hp-envy-17/4.png', alt:'Description for Image 4', title:'Title 4'});
         this.images.push({source:'assets/laptops/hp-envy-17/5.png', alt:'Description for Image 5', title:'Title 5'});
-        console.log(this.images.length)
+
+
+
+        this.producto = history.state;
     }
 
     verProducto(id:string){

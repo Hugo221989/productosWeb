@@ -7,6 +7,10 @@ import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { ShoopingCartComponent } from './pages/account/shopping-cart/shooping-cart.component';
 import { isNullOrUndefined } from 'util';
 import { filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Store, select } from '@ngrx/store';
+import { SettingsState } from './settings/settings.model';
+import { selectSettingsHayBreadcrumb, selectSettingsNombreBreadcrumb } from './settings/settings.selectors';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +22,8 @@ export class AppComponent {
 
   constructor(public dialogService: DialogService,
               private router:Router,
-              private activatedRoute: ActivatedRoute) {}
+              private activatedRoute: ActivatedRoute,
+              private store: Store<{settings: SettingsState}>) {}
 
   faPhoneVolume = faPhoneVolume;
   faShoppingCart = faShoppingCart;
@@ -57,116 +62,75 @@ export class AppComponent {
     this.router.navigate(['/account/']);
   }
 
-
+hayBreadcrumnFinal$: Observable<boolean>;
+nombreProductoBreadcrumb$: Observable<string>;
+nombreString = null;
     ngOnInit() {
+
+       /*  this.hayBreadcrumnFinal$ = this.store.pipe(select(selectSettingsHayBreadcrumb)); */
+        this.nombreProductoBreadcrumb$ = this.store.pipe(select(selectSettingsNombreBreadcrumb));
+        if(this.nombreProductoBreadcrumb$ != null){
+            this.nombreProductoBreadcrumb$.subscribe( (nombre) => {
+                this.nombreString = nombre;
+            })
+            
+        }
+
       /*MEGA MENU*/
         this.megaMenuItems = [
             {
-                label: 'Videos', icon: 'pi pi-fw pi-video',
+                label: 'Nutrición', icon: 'pi pi-fw pi-video',
                 items: [
                     [
                         {
-                            label: 'Video 1',
-                            items: [{label: 'Video 1.1'}, {label: 'Video 1.2'}]
+                            label: 'Proteína',
+                            items: [{label: 'Concentrado de Suero'}, {label: 'Aislado de Proteína Whey'},{label: 'Hidrolizado de proteína Whey'}, {label: 'Proteína Vegetal'}]
                         },
                         {
-                            label: 'Video 2',
-                            items: [{label: 'Video 2.1'}, {label: 'Video 2.2'}]
+                            label: 'Hidratos de Carbono',
+                            items: [{label: 'Ganador de Masa'}, {label: 'Vitargo'}]
                         }
                     ],
                     [
                         {
-                            label: 'Video 3',
-                            items: [{label: 'Video 3.1'}, {label: 'Video 3.2'}]
+                            label: 'Quemadores',
+                            items: [{label: 'Termogénicos'}, {label: 'L-Carnitina'},{label: 'Diuréticos'}, {label: 'CLA'}]
                         },
                         {
-                            label: 'Video 4',
-                            items: [{label: 'Video 4.1'}, {label: 'Video 4.2'}]
+                            label: 'Energía',
+                            items: [{label: 'Preentrenamiento y Óxido Nítrico'}, {label: 'Cafeína'}, {label: 'Creatina'}]
                         }
                     ]
                 ]
             },
             {
-                label: 'Users', icon: 'pi pi-fw pi-users',
+                label: 'Alimentación', icon: 'pi pi-fw pi-users',
                 items: [
                     [
                         {
-                            label: 'User 1',
-                            items: [{label: 'User 1.1'}, {label: 'User 1.2'}]
+                            label: 'Barritas y Snacks',
+                            items: [{label: 'Barritas Protéicas'}, {label: 'Galletas'}, {label: 'Snacks Salados'}]
                         },
                         {
-                            label: 'User 2',
-                            items: [{label: 'User 2.1'}, {label: 'User 2.2'}]
+                            label: 'Bebidas',
+                            items: [{label: 'Bebidas Protéicas'}, {label: 'Bebidas Vegetales'}, {label: 'Infusiones'}]
                         },
-                    ],
-                    [
-                        {
-                            label: 'User 3',
-                            items: [{label: 'User 3.1'}, {label: 'User 3.2'}]
-                        },
-                        {
-                            label: 'User 4',
-                            items: [{label: 'User 4.1'}, {label: 'User 4.2'}]
-                        }
-                    ],
-                    [
-                        {
-                            label: 'User 5',
-                            items: [{label: 'User 5.1'}, {label: 'User 5.2'}]
-                        },
-                        {
-                            label: 'User 6',
-                            items: [{label: 'User 6.1'}, {label: 'User 6.2'}]
-                        }
                     ]
                 ]
             },
             {
-                label: 'Events', icon: 'pi pi-fw pi-calendar',
+                label: 'Promociones', icon: 'pi pi-fw pi-calendar',
                 items: [
                     [
                         {
-                            label: 'Event 1',
-                            items: [{label: 'Event 1.1'}, {label: 'Event 1.2'}]
-                        },
-                        {
-                            label: 'Event 2',
-                            items: [{label: 'Event 2.1'}, {label: 'Event 2.2'}]
+                            label: 'Outlet',
+                            items: [{label: 'Outlet Ropa'}, {label: 'Outlet Nutrición'}]
                         }
                     ],
                     [
                         {
-                            label: 'Event 3',
-                            items: [{label: 'Event 3.1'}, {label: 'Event 3.2'}]
-                        },
-                        {
-                            label: 'Event 4',
-                            items: [{label: 'Event 4.1'}, {label: 'Event 4.2'}]
-                        }
-                    ]
-                ]
-            },
-            {
-                label: 'Settings', icon: 'pi pi-fw pi-cog',
-                items: [
-                    [
-                        {
-                            label: 'Setting 1',
-                            items: [{label: 'Setting 1.1'}, {label: 'Setting 1.2'}]
-                        },
-                        {
-                            label: 'Setting 2',
-                            items: [{label: 'Setting 2.1'}, {label: 'Setting 2.2'}]
-                        },
-                        {
-                            label: 'Setting 3',
-                            items: [{label: 'Setting 3.1'}, {label: 'Setting 3.2'}]
-                        }
-                    ],
-                    [
-                        {
-                            label: 'Technology 4',
-                            items: [{label: 'Setting 4.1'}, {label: 'Setting 4.2'}]
+                            label: 'Liquidación',
+                            items: [{label: 'Últimas Unidades'}]
                         }
                     ]
                 ]
@@ -174,33 +138,23 @@ export class AppComponent {
         ]
         /*MEGA MENU*/
 
-
-
-
         /*BREADCRUMB*/
         this.router.events.pipe(
             filter(
                 event => event instanceof NavigationEnd))
-                .subscribe( ()=> this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root))
-            
-        
-
-        this.breadCrumbItems = [
-          {label:'Categories'},
-          {label:'Sports'},
-          {label:'Football'},
-          {label:'Countries'},
-          {label:'Spain'},
-          {label:'F.C. Barcelona'},
-          {label:'Squad'},
-          {label:'Lionel Messi'}
-      ];
+                .subscribe( ()=> {
+                    this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
+                    if(this.nombreString != null){
+                        this.breadCrumbItems.splice(-1);
+                        this.breadCrumbItems.push({label: this.nombreString});
+                    }
+                });
         /*BREADCRUMB*/
       }
 
       createBreadCrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[]{
-        const children: ActivatedRoute[] = route.children;
 
+        const children: ActivatedRoute[] = route.children;
         if (children.length === 0) {
           return breadcrumbs;
         }
@@ -210,16 +164,16 @@ export class AppComponent {
           if (routeURL !== '') {
             url += `/${routeURL}`;
           }
-          console.log("------------------------------------")
+/*           console.log("------------------------------------")
           console.log("RUTA: "+url)
-          console.log(" LABEL =>"+child.snapshot.data['breadcrumb'])
+          console.log(" LABEL =>"+child.snapshot.data['breadcrumb']) */
           const label = child.snapshot.data['breadcrumb'];
           if (!isNullOrUndefined(label)) {
-            breadcrumbs.push({label, url});
+            breadcrumbs.push({label, url});console.log("BREADCRUMB: ",label)
           }
-    
           return this.createBreadCrumbs(child, url, breadcrumbs);
         }
+
       }
 
 }

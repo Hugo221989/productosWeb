@@ -5,12 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from '../environments/environment';
 import { StoreModule } from '@ngrx/store';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginModule } from './pages/login/login.module';
 import { RegisterComponent } from './pages/register/register-component/register.component';
-import { HomeComponent } from './pages/home/home-component/home.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {DynamicDialogModule} from 'primeng/dynamicdialog';
@@ -26,6 +24,8 @@ import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { AccountModule } from './pages/account/account.module';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { HomeModule } from './pages/home/home.module';
+import { settingsReducer } from './reducers/settings.reducer';
+import { SettingsEffect } from './settings/settings.effects';
 
 
 
@@ -55,9 +55,11 @@ import { HomeModule } from './pages/home/home.module';
     HttpClientModule,
     AccountModule,
     ScrollPanelModule,
-    EffectsModule.forRoot([]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production }),
-    StoreModule.forRoot({}, {})
+    EffectsModule.forRoot([SettingsEffect]),
+    StoreModule.forRoot({
+      settingsState: settingsReducer
+    }),
+    StoreDevtoolsModule.instrument({ maxAge: 25})
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api/selectitem';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { SettingsState } from 'src/app/settings/settings.model';
+import { actionSettingsBreadcrumbExist, actionSettingsNombreBreadcrumb } from 'src/app/settings/settings.actions';
 
 @Component({
   selector: 'app-products-page',
@@ -64,10 +67,18 @@ export class ProductsPageComponent implements OnInit {
 
   sortOrder: number;
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,
+              private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit() {
       //this.carService.getCarsLarge().then(cars => this.cars = cars);
+      /* this.store.dispatch(actionSettingsBreadcrumbExist({
+        hayBreadcrumbFinal: false
+      })) */
+      this.store.dispatch(actionSettingsNombreBreadcrumb({
+        nombreBreadcrumbFinal: null
+      }))
+      localStorage.setItem('nombreBreadcrumb', null);
 
       this.sortOptions = [
           {label: 'Valoraciones', value: 'estrellas'},
@@ -80,7 +91,14 @@ export class ProductsPageComponent implements OnInit {
       /* this.selectedProduct = product;
       this.displayDialog = true;
       event.preventDefault(); */
+      this.store.dispatch(actionSettingsBreadcrumbExist({
+        hayBreadcrumbFinal: true
+      }))
+      this.store.dispatch(actionSettingsNombreBreadcrumb({
+        nombreBreadcrumbFinal: product.nombre
+      }))
       this.router.navigate(['products/detail', product.id]);
+    /*   this.router.navigateByUrl('products/detail', { state: product }); */
   }
 
   onSortChange(event) {

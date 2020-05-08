@@ -15,6 +15,7 @@ import {GalleriaModule} from 'primeng/galleria';
 import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
 import {CarouselModule} from 'primeng/carousel';
+import {SpinnerModule} from 'primeng/spinner';
 
 
 
@@ -36,7 +37,8 @@ import {CarouselModule} from 'primeng/carousel';
     ButtonModule,
     TabViewModule,
     CarouselModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    SpinnerModule
   ]
 })
 export class ProductsModule { }

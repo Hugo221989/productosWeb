@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { actionSettingsBreadcrumbExist, actionSettingsNombreBreadcrumb } from 'src/app/settings/settings.actions';
+import { ProductsService } from '../service/products.service';
+import { Producto } from 'src/app/models/producto';
 
 @Component({
   selector: 'app-products-page',
@@ -11,8 +13,9 @@ import { actionSettingsBreadcrumbExist, actionSettingsNombreBreadcrumb } from 's
   styleUrls: ['./products-page.component.scss']
 })
 export class ProductsPageComponent implements OnInit {
+  products: Producto[] = [];
 
-  products: Product[] = [
+  /* products: Product[] = [
     {
       id : "1",
       nombre : "HP Pavilion 267H",
@@ -53,9 +56,9 @@ export class ProductsPageComponent implements OnInit {
       estrellas: 4,
       foto: "demo.jpg"
     }
-  ];
+  ]; */
   selectedCities: string[] = [];
-  selectedProduct: Product = new Product;
+  selectedProduct: Producto = new Producto;
 
   displayDialog: boolean;
 
@@ -68,6 +71,7 @@ export class ProductsPageComponent implements OnInit {
   sortOrder: number;
 
   constructor(private router:Router,
+              private productsService: ProductsService,
               private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit() {
@@ -85,9 +89,14 @@ export class ProductsPageComponent implements OnInit {
           {label: 'Precio', value: 'precio'},
           {label: 'Nombre', value: 'nombre'}
       ];
+
+      this.productsService.getProductsList().subscribe( data =>{
+        this.products = data;
+        console.log("PRODUCTOS: ",data);
+      })
   }
 
-  selectProduct(event: Event, product: Product) {
+  selectProduct(event: Event, product: Producto) {
       /* this.selectedProduct = product;
       this.displayDialog = true;
       event.preventDefault(); */
@@ -120,11 +129,3 @@ export class ProductsPageComponent implements OnInit {
 
 }
 
-export class Product {
-  id: string;
-  nombre: string;
-  descripcion: string;
-  precio: string;
-  estrellas: number;
-  foto: string;
-}

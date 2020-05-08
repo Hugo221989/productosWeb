@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../products-page/products-page.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Producto } from 'src/app/models/producto';
+import { ProductsService } from '../service/products.service';
+import { ValorNutricional, InfoBasica, Sabor, Comentario, InfoVitaminas, Foto } from 'src/app/models/productoOtrosDatos';
+import { SelectItem } from 'primeng/api/selectitem';
+import { actionSettingsNombreBreadcrumb } from 'src/app/settings/settings.actions';
+import { SettingsState } from 'src/app/settings/settings.model';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-product-detail',
@@ -10,62 +16,29 @@ import { Router } from '@angular/router';
 export class ProductDetailComponent implements OnInit {
 
   images: any[];
-  product: Product = {
-      id : "1",
-      nombre : "HP Pavilion 267H",
-      descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-      precio: "512€",
-      estrellas: 4,
-      foto: "demo.jpg"
-}
+  product: Producto;
+  valorNutricional: ValorNutricional;
+  infoBasica: InfoBasica;
+  vitaminas: InfoVitaminas[] = [];
+  idProduct;
+  productLoaded: Promise<boolean>;
+  sabores: Sabor[];
+  comentarios: Comentario[] = [];
+  fotos: Foto[] = [];
+  saboresItems: SelectItem[];
+  saborSelected: Sabor;
+  cantidadSeleccionadaProducto: number = 1;
 
-
-products: Product[] = [
-  {
-    id : "1",
-    nombre : "HP Pavilion 267H",
-    descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-    precio: "512€",
-    estrellas: 4,
-    foto: "demo.jpg"
-  },
-  {
-    id : "2",
-    nombre : "HP Pavilion 320H",
-    descripcion: "Portátil HP Pavilion 14\", 256 GB SSD, 8GB RAM DDR4",
-    precio: "599€",
-    estrellas: 5,
-    foto: "demo.jpg"
-  },
-  {
-    id : "3",
-    nombre : "HP Pavilion 267H",
-    descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-    precio: "512€",
-    estrellas: 4,
-    foto: "demo.jpg"
-  },
-  {
-    id : "4",
-    nombre : "HP Pavilion 267H",
-    descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-    precio: "512€",
-    estrellas: 4,
-    foto: "demo.jpg"
-  },
-  {
-    id : "5",
-    nombre : "ACER E-15 5500",
-    descripcion: "Portátil ACER E-15 15,6\", 1 TB SSD, 16GB RAM DDR4",
-    precio: "710€",
-    estrellas: 4,
-    foto: "demo.jpg"
-  }
-];
-
+  products: Producto[] = [];
   responsiveOptions;
 
-  constructor(private router:Router) {
+  sortField: string = "fecha";
+
+  sortOrder: number;
+
+  constructor(private router:Router, private productsService: ProductsService,
+              private route: ActivatedRoute,
+              private store: Store<{settings: SettingsState}>) {
     this.responsiveOptions = [
       {
           breakpoint: '1024px',
@@ -85,24 +58,70 @@ products: Product[] = [
   ];
    }
 
-   producto: Product;
+   producto: Producto;
 
    ngOnInit() {
-        this.images = [];
-        this.images.push({source:'assets/laptops/hp-envy-17/1.png', alt:'Description for Image 1', title:'Title 1'});
-        this.images.push({source:'assets/laptops/hp-envy-17/2.png', alt:'Description for Image 2', title:'Title 2'});
-        this.images.push({source:'assets/laptops/hp-envy-17/3.png', alt:'Description for Image 3', title:'Title 3'});
-        this.images.push({source:'assets/laptops/hp-envy-17/4.png', alt:'Description for Image 4', title:'Title 4'});
-        this.images.push({source:'assets/laptops/hp-envy-17/5.png', alt:'Description for Image 5', title:'Title 5'});
+       console.log("CARGANDO PAGINA")
+        //this.producto = history.state;
+        this.idProduct = this.route.snapshot.paramMap.get("id");
 
+        this.cargarProducto(this.idProduct);
+        this.cargarProductosRelacionados();
 
-
-        this.producto = history.state;
     }
 
-    verProducto(id:string){
+    cargarProducto(id: number){
+      this.productsService.getProductById(id).subscribe( data =>{
+        this.product = data;
+        if(this.product.valorNutricional){
+          this.valorNutricional = this.product.valorNutricional;
+          if(this.valorNutricional.infoBasica){
+            this.infoBasica = this.valorNutricional.infoBasica;
+          }
+          if(this.valorNutricional.infoVitaminas){
+            this.vitaminas = this.valorNutricional.infoVitaminas;
+          }
+        }
+        if(this.product.fotos){
+          this.fotos = this.product.fotos;
+        }
+        this.productLoaded = Promise.resolve(true); 
+        this.cargarSabores();
+        this.cargarComentarios();
+        this.cargarImagenes();
+      })
+    }
+
+    cargarSabores(){
+      this.sabores = this.product.sabores;
+      this.saboresItems = [];
+      for(let sabor of this.sabores){
+        this.saboresItems.push({label:sabor.sabor, value:sabor});
+      }
+    }
+
+    cargarComentarios(){
+      this.comentarios = this.product.comentarios;
+      console.log("COMENTARIOS: ",this.comentarios)
+    }
+
+    cargarImagenes(){
+      this.images = [];
+      for(let foto of this.fotos)
+        this.images.push({source:`http://127.0.0.1:8887/${foto.ruta}`, alt:'Description for Image 1', title:'Title 1'});
+    }
+
+    cargarProductosRelacionados(){
+      this.productsService.getProductsListRelacionados().subscribe( data =>{
+        this.products = data;
+      })
+    }
+
+    verProducto(id:number, nombre:string){
       this.gotoTop();
-      this.router.navigate(['/detail', id]);
+      this.cambiarBreadcrumb(nombre);
+      this.router.navigate(['products/detail', id]);
+      this.cargarProducto(id);
     }
 
     gotoTop() {
@@ -111,6 +130,12 @@ products: Product[] = [
         left: 0, 
         behavior: 'smooth' 
       });
+    }
+
+    cambiarBreadcrumb(nombre: string){
+      this.store.dispatch(actionSettingsNombreBreadcrumb({
+        nombreBreadcrumbFinal: nombre
+      }))
     }
 
 }

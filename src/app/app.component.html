@@ -19,15 +19,19 @@
             <div class="p-col top-help-container">
               <a href="#" class="linksRegistro"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">Ayuda</p></a>
             </div>
-         <!--    <div class="p-col top-help-container">
-              <a (click)="show()" class="pointer linksRegistroSimple"><p class="textoNormal">Iniciar Sesión</p></a>
-            </div>
-            <div class="p-col top-help-container">
-              <a href="#" class="linksRegistroSimple"><p class="textoNormal">Crear Cuenta</p></a>
-            </div> -->
-            <div class="p-col top-help-container">
+            <div class="p-col top-help-container" *ngIf="logged$">
               <a (click)="miCuenta()" class="pointer linksRegistroSimple"><p class="textoNormal">Mi Cuenta</p></a>
             </div>
+            <div class="p-col top-help-container" *ngIf="logged$">
+              <a (click)="cerrarSesion()" class="pointer linksRegistroSimple"><p class="textoNormal">Cerrar Sesión</p></a>
+            </div>
+           <div class="p-col top-help-container" *ngIf="!logged$">
+              <a (click)="showLoginModal()" class="pointer linksRegistroSimple"><p class="textoNormal">Iniciar Sesión</p></a>
+            </div>
+            <div class="p-col top-help-container" *ngIf="!logged$">
+              <a (click)="showRegisterModal()" class="pointer linksRegistroSimple"><p class="textoNormal">Crear Cuenta</p></a>
+            </div>
+            
             <div class="p-col top-help-container" >
               <a class="linksRegistro" style="cursor: pointer;">
                

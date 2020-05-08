@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from 'src/app/models/user';
+
+
+const AUTH_API = 'http://localhost:8182/restfull/api/auth/';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +19,20 @@ export class LoginService {
   constructor(private httpClient: HttpClient) { }
 
 
-  login(user: User){
-    console.log(user);
-    
+  login(credentials): Observable<any> {
+    return this.httpClient.post(AUTH_API + 'signin', {
+      username: credentials.username,
+      password: credentials.password,
+      rememberLogin: credentials.rememberLogin
+    }, httpOptions);
   }
- /*  login(user: User): Observable<any> {
-    return this.httpClient.post("https://reqres.in/api/login", user);
-  } */
+
+  register(user): Observable<any> {
+    return this.httpClient.post(AUTH_API + 'signup', {
+      username: user.usernameReg,
+      email: user.emailReg,
+      password: user.passwordReg
+    }, httpOptions);
+  }
 
 }

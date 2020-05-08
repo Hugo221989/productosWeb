@@ -1,16 +1,18 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
 import {DialogService} from 'primeng/dynamicdialog';
 import {Message, MenuItem} from 'primeng/api';
 import { LoginComponent } from './pages/login/login-component/login.component';
 import { faPhoneVolume, faShoppingCart, faInfoCircle, faTruck} from '@fortawesome/free-solid-svg-icons';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { ShoopingCartComponent } from './pages/account/shopping-cart/shooping-cart.component';
 import { isNullOrUndefined } from 'util';
 import { filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { SettingsState } from './settings/settings.model';
-import { selectSettingsHayBreadcrumb, selectSettingsNombreBreadcrumb } from './settings/settings.selectors';
+import { selectSettingsNombreBreadcrumb } from './settings/settings.selectors';
+import { RegisterComponent } from './pages/register/register-component/register.component';
+import { actionSettingsIsAuthenticated } from './settings/settings.actions';
+import { TokenStorageService } from './pages/login/logn-service/token-storage.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +25,8 @@ export class AppComponent {
   constructor(public dialogService: DialogService,
               private router:Router,
               private activatedRoute: ActivatedRoute,
-              private store: Store<{settings: SettingsState}>) {}
+              private store: Store<{settings: SettingsState}>,
+              private tokenStorage: TokenStorageService) {}
 
   faPhoneVolume = faPhoneVolume;
   faShoppingCart = faShoppingCart;
@@ -33,6 +36,11 @@ export class AppComponent {
   megaMenuItems: MenuItem[];
   breadCrumbItems: MenuItem[];
   carritoVacio: boolean = false;
+  refDialog;
+  isAuthenticated$: Observable<boolean>;
+  /* hayBreadcrumnFinal$: Observable<boolean>; */
+  nombreProductoBreadcrumb$: Observable<string>;
+  nombreString = null;
 
   autocompleteText: string;
   /* @ViewChild('shoppingCart')
@@ -52,22 +60,56 @@ export class AppComponent {
         }); */
     }
 
-    show() {
-      const ref = this.dialogService.open(LoginComponent, {
+    showLoginModal() {
+     /*    if(this.refDialog){
+            this.refDialog.close();
+        } */
+        const ref = this.dialogService.open(LoginComponent, {
           header: 'Iniciar Sesión',
-          width: '40%'
+          width: '40%',
+          dismissableMask: true,
+          closeOnEscape: true,
+          baseZIndex: 1010
       });
   }
+
+  showRegisterModal() {
+    
+    const ref = this.dialogService.open(RegisterComponent, {
+        header: 'Registrarse',
+        width: '40%',
+        dismissableMask: true,
+        autoZIndex: true,
+        closeOnEscape: true,
+        baseZIndex: 1010
+    });
+
+}
+
   miCuenta(){
     this.router.navigate(['/account/']);
   }
 
-hayBreadcrumnFinal$: Observable<boolean>;
-nombreProductoBreadcrumb$: Observable<string>;
-nombreString = null;
+  cerrarSesion(){
+    this.store.dispatch(actionSettingsIsAuthenticated({
+        isAuthenticated: false
+      }))
+      this.logged$ = false;
+      this.tokenStorage.signOut();
+      window.location.reload();
+  }
+
+  reloadPage() {
+    window.location.reload();
+  }
+
+  logged$:boolean = false;
     ngOnInit() {
 
-       /*  this.hayBreadcrumnFinal$ = this.store.pipe(select(selectSettingsHayBreadcrumb)); */
+        if(window.sessionStorage.getItem('authenticated') == 'true'){
+            this.logged$ = true;
+        }
+
         this.nombreProductoBreadcrumb$ = this.store.pipe(select(selectSettingsNombreBreadcrumb));
         if(this.nombreProductoBreadcrumb$ != null){
             this.nombreProductoBreadcrumb$.subscribe( (nombre) => {

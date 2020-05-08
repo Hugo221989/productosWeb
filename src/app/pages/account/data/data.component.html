@@ -1,6 +1,6 @@
 <p-tabView orientation="left">
     <p-tabPanel header="Información Personal">
-        <form [formGroup]="userform" (ngSubmit)="saveUserInfo(userform.value)">
+        <form [formGroup]="userform" (ngSubmit)="guardarUsuario()">
             <div class="ui-fluid" style="width: 90%; float: right;">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -12,7 +12,7 @@
                                 Nombre *:
                             </div>
                             <div class="ui-grid-col-6">
-                                <input pInputText type="text" formControlName="name"/>
+                                <input pInputText type="text" formControlName="name" (keyup)="form()"/>
                             </div>
                             <div class="ui-grid-col-4">
                                 <p-message severity="error" text="Nombre Obligatorio" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty"></p-message>
@@ -31,11 +31,15 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Nacimiento
+                                Nacimiento *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <p-inputMask mask="99/99/9999" formControlName="date" placeholder="31/12/2020" slotChar="dd/mm/aaaa"></p-inputMask>
                             </div>
+                            <div class="ui-grid-col-4">
+                                <p-message severity="error" [text]="userform.controls['date'].errors['required'] ? 'Fecha Nacimiento Obligatoria' : userform.controls['date'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                                        *ngIf="!userform.controls['date'].valid&&userform.controls['date'].dirty"></p-message>
+                                </div>
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
@@ -45,7 +49,7 @@
                                 <input pInputText type="text" formControlName="email"/>
                             </div>
                             <div class="ui-grid-col-4">
-                            <p-message severity="error" [text]="userform.controls['email'].errors['required'] ? 'Contraseña Obligatoria' : userform.controls['email'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                            <p-message severity="error" [text]="userform.controls['email'].errors['required'] ? 'Email Obligatoria' : userform.controls['email'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
                                     *ngIf="!userform.controls['email'].valid&&userform.controls['email'].dirty"></p-message>
                             </div>
                         </div>
@@ -57,7 +61,7 @@
                                 <input pInputText type="text" formControlName="phone" placeholder="Required - Min(6)"/>
                             </div>
                             <div class="ui-grid-col-4">
-                            <p-message severity="error" [text]="userform.controls['phone'].errors['required'] ? 'Contraseña Obligatoria' : userform.controls['phone'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                            <p-message severity="error" [text]="userform.controls['phone'].errors['required'] ? 'Telefono Obligatorio' : userform.controls['phone'].errors['minlength'] ? 'Debe tener al menos 9 dígitos' : ''" 
                                     *ngIf="!userform.controls['phone'].valid&&userform.controls['phone'].dirty"></p-message>
                             </div>
                         </div>
@@ -66,7 +70,7 @@
                                 Género *:
                             </div>
                             <div class="ui-grid-col-6">
-                                <p-dropdown [options]="genders" formControlName="gender"></p-dropdown>
+                                <p-dropdown [options]="genders" formControlName="gender" name="generoSelected"></p-dropdown>
                             </div>
                             <div class="ui-grid-col-4">
                                 <p-message severity="error" text="Género Obligatorio" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty"></p-message>
@@ -75,7 +79,7 @@
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2"></div>
                             <div class="ui-grid-col-6">
-                                <button pButton type="submit" label="Submit" [disabled]="!userform.valid"></button>
+                                <button pButton type="submit" label="Guardar" [disabled]="!userform.valid"></button>
                             </div>
                             <div class="ui-grid-col-4"></div>
                         </div>
@@ -120,7 +124,7 @@
 
 
     <p-tabPanel header="Dirección de Entrega">
-        <form [formGroup]="adressform" (ngSubmit)="saveAdressInfo(adressform.value)">
+        <form [formGroup]="adressform" (ngSubmit)="guardarDireccion()">
             <div class="ui-fluid" style="width: 90%; float: right;">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -151,7 +155,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Nº Calle *:
+                                Portal *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="number" formControlName="streetNum"/>
@@ -201,14 +205,14 @@
                                 <input pInputText type="text" formControlName="phone" placeholder="Required - Min(6)"/>
                             </div>
                             <div class="ui-grid-col-4">
-                            <p-message severity="error" [text]="adressform.controls['phone'].errors['required'] ? 'Contraseña Obligatoria' : adressform.controls['phone'].errors['minlength'] ? 'Must be longer than 6 characters' : ''" 
+                            <p-message severity="error" [text]="adressform.controls['phone'].errors['required'] ? 'Telefono Obligatorio' : adressform.controls['phone'].errors['minlength'] ? 'Debe tener al menos 9 dígitos' : ''" 
                                     *ngIf="!adressform.controls['phone'].valid&&adressform.controls['phone'].dirty"></p-message>
                             </div>
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2"></div>
                             <div class="ui-grid-col-6">
-                                <button pButton type="submit" label="Submit" [disabled]="!adressform.valid"></button>
+                                <button pButton type="submit" label="Guardar" [disabled]="!adressform.valid"></button>
                             </div>
                             <div class="ui-grid-col-4"></div>
                         </div>
@@ -241,6 +245,13 @@
                             <div>
                                 <textarea pInputTextarea formControlName="razones" [rows]="10" [cols]="100"></textarea>
                             </div>
+                        </div>
+                        <div class="ui-grid-row customInputsData">
+                            <div class="ui-grid-col-2"></div>
+                            <div class="ui-grid-col-6">
+                                <button pButton type="submit" label="Eliminar Cuenta" [disabled]="!adressform.valid" class="ui-button-raised ui-button-danger"></button>
+                            </div>
+                            <div class="ui-grid-col-4"></div>
                         </div>
                     </div>
                 </div>

@@ -45,14 +45,14 @@
                         <div>
                         <!--   <img src="assets/images/demo/car/{{car.brand}}.png"> -->
                         <div class="ui-g-4" style="min-width: 225px;">
-                            <img src="assets/images/demo.jpg">
+                            <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" style="max-height: 250px;">
                         </div>
                         <div class="ui-g-8">
                             <div class="ui-g">
-                                <div class="ui-g-12">Nombre: <b>{{product.nombre}}</b></div>
-                                <div class="ui-g-12">Descripción: <b>{{product.descripcion}}</b></div>
-                                <div class="ui-g-12">Precio: <b>{{product.precio}}</b></div>
-                                <div class="ui-g-12"><p-rating [ngModel]="product.estrellas" readonly="true" stars="5" [cancel]="false"></p-rating></div>
+                                <div class="ui-g-12"><b>{{product.nombre}}</b></div>
+                                <div class="ui-g-12"><b>{{product.descripcion.titulo}}</b></div>
+                                <div class="ui-g-12"><b>{{product.precio}} €</b></div>
+                                <div class="ui-g-12"><p-rating [ngModel]="product.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating></div>
                             </div>
                         </div>
                         </div>
@@ -63,10 +63,10 @@
             <ng-template let-product pTemplate="gridItem">
                 <div style="padding:.5em; cursor: pointer;" class="ui-g-12 ui-md-3" (click)="selectProduct($event, product)">
                     <p-panel [header]="product.nombre" [style]="{'text-align':'center'}" id="panelGrid">
-                        <img src="assets/images/demo.jpg" width="60">
+                        <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" width="60">
                         <div class="car-detail">
                         <div class="ui-g-12"> {{product.nombre}} </div>
-                        <div class="ui-g-12"><p-rating [ngModel]="product.estrellas" readonly="true" stars="5" [cancel]="false"></p-rating></div>
+                        <div class="ui-g-12"><p-rating [ngModel]="product.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating></div>
                         </div>
                         <hr class="ui-widget-content" style="border-top:0">
                         
@@ -98,6 +98,6 @@
         <div class="ui-g-8">{{selectedProduct.precio}}</div>
 
         <div class="ui-g-4">Color: </div>
-        <div class="ui-g-8">{{selectedProduct.estrellas}}</div>
+        <div class="ui-g-8">{{selectedProduct.puntuacion}}</div>
     </div>
 </p-dialog>

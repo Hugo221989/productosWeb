@@ -26,6 +26,7 @@ import {ScrollPanelModule} from 'primeng/scrollpanel';
 import { HomeModule } from './pages/home/home.module';
 import { settingsReducer } from './reducers/settings.reducer';
 import { SettingsEffect } from './settings/settings.effects';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 
@@ -55,6 +56,7 @@ import { SettingsEffect } from './settings/settings.effects';
     HttpClientModule,
     AccountModule,
     ScrollPanelModule,
+    InputTextModule,
     EffectsModule.forRoot([SettingsEffect]),
     StoreModule.forRoot({
       settingsState: settingsReducer

@@ -21,8 +21,8 @@ export class SettingsEffect{
                 ofType(actionSettingsIsAuthenticated),
                 withLatestFrom(this.store.pipe(select(selectSettingsIsAuthenticated))),
                 tap(([action, settings]) =>{
-                    console.log(action.isAuthenticated)
-                     localStorage.setItem('authenticated', JSON.stringify(settings))
+                    window.sessionStorage.setItem('authenticated', JSON.stringify(settings))
+                     //localStorage.setItem('authenticated', JSON.stringify(settings))
                 }
                 )
 

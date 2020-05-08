@@ -1,3 +1,5 @@
+import { Producto } from './producto';
+
 export class Pedido {
     numPedido: string;
     fecha: Date;
@@ -6,11 +8,4 @@ export class Pedido {
     destinatario: string;
     direccionEnvio: string
     productos: Producto[];
-}
-
-export class Producto {
-    nombre: string;
-    precio: string;
-    cantidad: number;
-    precioTotal: string;
 }

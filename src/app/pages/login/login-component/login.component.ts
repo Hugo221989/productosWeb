@@ -4,6 +4,11 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { User } from 'src/app/models/user';
 import {SelectItem} from 'primeng/api';
 import {MessageService} from 'primeng/api';
+import { LoginService } from '../logn-service/login.service';
+import { TokenStorageService } from '../logn-service/token-storage.service';
+import { actionSettingsIsAuthenticated } from 'src/app/settings/settings.actions';
+import { SettingsState } from 'src/app/settings/settings.model';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-login',
@@ -47,6 +52,12 @@ export class LoginComponent {
     this.usuario.email = this.profileForm.value.email;
     this.usuario.constrasena = this.profileForm.value.constrasena;
   } */
+  form: any = {};
+  isLoggedIn = false;
+  isLoginFailed = false;
+  errorMessage = '';
+  roles: string[] = [];
+
 
 
   userform: FormGroup;
@@ -57,9 +68,16 @@ export class LoginComponent {
 
     description: string;
 
-    constructor(private fb: FormBuilder, private messageService: MessageService, private router:Router) {}
+    constructor(private fb: FormBuilder, private messageService: MessageService, private router:Router,
+      private authService: LoginService, private tokenStorage: TokenStorageService, private store: Store<{settings: SettingsState}>) {}
 
     ngOnInit() {
+
+      if (this.tokenStorage.getToken()) {
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorage.getUser().roles;
+      }
+
         this.userform = this.fb.group({
             'email': new FormControl('', Validators.required),
             'lastname': new FormControl('', Validators.required),
@@ -75,9 +93,33 @@ export class LoginComponent {
         this.genders.push({label:'Female', value:'Female'});
     }
 
-    onSubmit(value: string) {
+    onSubmit() {
         this.submitted = true;
         this.messageService.add({severity:'info', summary:'Success', detail:'Form Submitted'});
+
+
+        this.authService.login(this.form).subscribe(
+          data => {
+            this.store.dispatch(actionSettingsIsAuthenticated({
+              isAuthenticated: true
+            }))
+            this.tokenStorage.saveToken(data.accessToken);
+            this.tokenStorage.saveUser(data);
+    
+            this.isLoginFailed = false;
+            this.isLoggedIn = true;
+            this.roles = this.tokenStorage.getUser().roles;
+            this.reloadPage();
+          },
+          err => {
+            this.errorMessage = err.error.message;
+            this.isLoginFailed = true;
+          }
+        );
+    }
+
+    reloadPage() {
+      window.location.reload();
     }
 
     get diagnostic() { return JSON.stringify(this.userform.value); }

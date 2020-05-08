@@ -5,21 +5,28 @@ import { FileUpload } from 'primeng/fileupload/fileupload';
 import { MessageService } from 'primeng/api';
 import { AccountService } from '../service/account.service';
 import { SpainCities } from 'src/app/models/spainCities';
+import { TokenStorageService } from '../../login/logn-service/token-storage.service';
+import { User, Genero, UsuarioDireccion } from '../../../models/user';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-data',
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.scss'],
-  providers: [MessageService]
+  providers: [MessageService, DatePipe]
 })
 export class DataComponent implements OnInit {
 
+  email: string = null;
+  usuario: User;
   date: string;
   userform: FormGroup;
   adressform: FormGroup;
   deleteAccountform: FormGroup;
   genders: SelectItem[];
-  es: any;
+  generos: Genero[];
+  generoSelected: Genero;
+  direccionUpdated: UsuarioDireccion
   submitted: boolean;
   selectedImage = null;
   uploadedFiles: any[] = [];
@@ -38,7 +45,8 @@ export class DataComponent implements OnInit {
   
   constructor(private fb: FormBuilder,
               private messageService: MessageService,
-              private accountService: AccountService) { }
+              private accountService: AccountService,
+              private tokenStorageService: TokenStorageService) { }
 
   ngOnInit(): void {
 
@@ -46,57 +54,116 @@ export class DataComponent implements OnInit {
             'email': new FormControl('', Validators.required),
             'name': new FormControl('', Validators.required),
             'lastname': new FormControl('', Validators.required),
-            'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])),
+            /* 'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])), */
             'description': new FormControl(''),
             'gender': new FormControl('', Validators.required),
             'rememberLogin': new FormControl(false),
             'date': new FormControl('', Validators.required),
-            'phone' : new FormControl('', Validators.required)
+            'phone' : new FormControl('', Validators.compose([Validators.required, Validators.minLength(9)]))
         });
 
         this.adressform = this.fb.group({
             'destinatari': new FormControl('', Validators.required),
             'street': new FormControl('', Validators.required),
             'streetNum': new FormControl('', Validators.required),
-            'aditionalData': new FormControl('', Validators.required),
+            'aditionalData': new FormControl(''),
             'postCode': new FormControl('', Validators.required),
             'locality': new FormControl('', Validators.required),
-            'phone': new FormControl('', Validators.required)
+            'phone': new FormControl('', Validators.compose([Validators.required, Validators.minLength(9)]))
         });
 
         this.deleteAccountform = this.fb.group({
           'razones' : new FormControl('')
         })
 
-
-
-
-        this.genders = [];
-        this.genders.push({label:'Selecciona Sexo', value:''});
-        this.genders.push({label:'Masculino', value:'Masculino'});
-        this.genders.push({label:'Femenino', value:'Femenino'});
-
-        this.es = {
-          firstDayOfWeek: 1,
-          dayNames: [ "domingo","lunes","martes","miércoles","jueves","viernes","sábado" ],
-          dayNamesShort: [ "dom","lun","mar","mié","jue","vie","sáb" ],
-          dayNamesMin: [ "D","L","M","X","J","V","S" ],
-            monthNames: [ "enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre" ],
-          monthNamesShort: [ "ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic" ],
-            today: 'Hoy',
-            clear: 'Borrar'
-        };
         this.getCities();
+        this.obtenerGeneros();
+        this.obtenerUsuario();
         
 
   }
 
-/*   getAccesToken(){
-    this.accountService.getCountryAccesToken().subscribe( (data)=> {
-      this.authToken = data.auth_token;
-      this.getCities();
-    });
-  } */
+  private obtenerUsuario(){
+    this.email = this.tokenStorageService.getEmail();console.log("EMAIL: ",this.email)
+    this.accountService.getUserInfo(this.email).subscribe( data =>{
+      if(data){
+        let date2 = data.nacimiento;
+
+        this.usuario = data;
+        this.userform.controls['name'].setValue(data.nombre);
+        this.userform.controls['lastname'].setValue(data.apellido);
+        this.userform.controls['date'].setValue(date2);
+        this.userform.controls['email'].setValue(data.email);
+        this.userform.controls['phone'].setValue(data.telefono);
+        if(data.genero){
+          this.generoSelected = this.generos.find(x => x.id == data.genero.id);
+          //this.generoSelected = {label:data.genero.nombre, value:data.genero};console.log("GENERO: ",this.generoSelected)
+          this.userform.controls['gender'].patchValue(this.generoSelected);
+        }
+        this.obtenerDireccionUsuario(data);
+      }
+    })
+  }
+
+  private obtenerDireccionUsuario(data: any){
+    let direccion: UsuarioDireccion;
+    direccion = data.direccion[0];
+    this.adressform.controls['destinatari'].setValue(direccion.destinatario);
+    this.adressform.controls['street'].setValue(direccion.calle);
+    this.adressform.controls['streetNum'].setValue(direccion.piso);
+    this.adressform.controls['aditionalData'].setValue(direccion.datosAdicionales);
+    this.adressform.controls['postCode'].setValue(direccion.codigoPostal);
+    this.adressform.controls['locality'].setValue(direccion.localidad);
+    this.adressform.controls['phone'].setValue(direccion.telefono); 
+  }
+
+  form(){
+    console.log(this.userform);
+  }
+  guardarUsuario(){
+    this.llenarInfoUsuario();
+    this.accountService.actualizarUsuario(this.usuario).subscribe();
+  }
+
+  guardarDireccion(){
+    this.llenarDireccionUsuario();
+    this.accountService.crearDireccionUsuario(this.direccionUpdated, this.usuario.email).subscribe();
+  }
+
+  private llenarInfoUsuario(){
+    this.usuario.nombre = this.userform.value.name;
+    this.usuario.apellido = this.userform.value.lastname;
+    this.usuario.nacimiento = this.userform.value.date;
+    this.usuario.email = this.userform.value.email;
+    this.usuario.telefono = this.userform.value.phone;
+    this.usuario.genero = this.userform.value.gender;
+  }
+
+  private llenarDireccionUsuario(){
+    let direccionUserArray: UsuarioDireccion[] = [];
+    this.direccionUpdated = {
+      destinatario : this.adressform.value.destinatari,
+      calle : this.adressform.value.street,
+      piso : this.adressform.value.streetNum,
+      codigoPostal : this.adressform.value.postCode,
+      localidad : this.adressform.value.locality.admin,
+      telefono : this.adressform.value.phone,
+      datosAdicionales : this.adressform.value.aditionalData
+    }
+
+  /*   direccionUserArray.push(direccionUpdated);
+    this.usuario.direccion = direccionUserArray; */
+  }
+
+  private obtenerGeneros(){
+    this.accountService.getGeneros().subscribe( data =>{
+      this.generos = data;
+      this.genders = [];
+      for(let genero of this.generos){
+        this.genders.push({label:genero.nombre, value:genero});
+      }
+    })
+  }
 
   getCities(){
       this.countryList = this.accountService.getCities();
@@ -112,10 +179,6 @@ export class DataComponent implements OnInit {
     
     this.messageService.add({severity: 'info', summary: 'Success', detail: 'File Uploaded'});
 }
-
-  saveUserInfo(user:string){
-
-  }
 
   saveAdressInfo(adress:string){
 

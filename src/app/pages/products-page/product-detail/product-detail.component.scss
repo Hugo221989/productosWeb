@@ -22,6 +22,9 @@ body .ui-button.ui-state-default.ui-button-danger, body .ui-buttonset.ui-button-
     padding: 8px;
     width: 55%;
 }
+.botonFavoritos{
+    width: 100% !important;
+}
 
 /*TAB INFERIOR*/
 body .ui-tabview .ui-tabview-panels{
@@ -54,3 +57,78 @@ body .ui-rating a .ui-rating-icon{
     box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0px 1px 30px 5px rgba(0,0,0,0.12), 0px 0px 20px 0px rgba(0,0,0,0.2);
 }
 /*CAROUSEL INFERIOR */
+
+.contenedorInfoNutricional{
+    width: 65%;
+    float: right;
+    margin-right: 5%;
+    border: 1px solid #c7c7c7;
+    padding: 4%;
+}
+/* .contenedorDescripcion{
+    width: 80%;
+}
+.contenedorOpiniones{
+    width: 80%;
+} */
+.divTitulo{
+    margin-bottom: 3%;
+    margin-top: 2%;
+}
+.divSubtitulo{
+    margin-bottom: 2%;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+
+:host ::ng-deep .tabViewProduct .ui-tabview-nav{
+    border-bottom: 1px solid #a9a8a8 !important;
+}
+
+:host ::ng-deep .tabViewProduct .ui-tabview-left-icon{
+    color: white !important;
+}
+:host ::ng-deep .tabViewProduct .ui-tabview-right-icon{
+    color: white !important;
+}
+:host ::ng-deep .tabViewProduct .ui-tabview-title{
+    color: white !important;
+}
+
+/*CANTIDAD Y SABORES*/
+.comboSabores{
+    width: 100% !important;
+    padding: 4px !important;
+}
+
+input.ui-spinner-input.ui-inputtext.ui-widget.ui-state-default.ui-corner-all{
+    padding: 10px !important;
+}
+
+.ui-dataview-content.ui-widget-content{
+    border: 0 !important;
+}
+
+.ui-dataview-header.ui-widget-header.ui-corner-top{
+    display: none;
+}
+.ui-paginator-bottom.ui-paginator.ui-widget.ui-widget-header.ui-unselectable-text.ui-helper-clearfix.ng-star-inserted{
+    border: 0 !important;
+}
+/* :host ::ng-deep .spinnerCantidad .ui-dropdown{
+    width: 100% !important;
+} */
+
+/*GALERIA*/
+li.ui-galleria-panel.ng-star-inserted{
+    text-align: center;
+}
+
+img.ui-panel-images{
+    width: 500px;
+    height: 500px;
+}

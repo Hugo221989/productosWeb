@@ -2,6 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import spainCities from '../../../../assets/spainCities/spainCities.json';
 import { SpainCities } from 'src/app/models/spainCities';
+import { Observable } from 'rxjs';
+import { User, Genero, UsuarioDireccion } from '../../../models/user';
+
+
+const USER_API = 'http://localhost:8182/restfull/usuario/';
+const USER_DIR_API = 'http://localhost:8182/restfull/usuarioDireccion/';
 
 @Injectable({
   providedIn: 'root'
@@ -12,21 +18,31 @@ export class AccountService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getCountryAccesToken() {
-    let headers = new HttpHeaders({
-      'api-token':'VKgwLR-rOdS9CHVD4fZ7Il8nUzOVaQadJmcAEwTNjQo8Wp-O6cO0yRWH6YoGg20w-YU',
-      'Accept': 'application/json',
-      'user-email': 'hugoonetto@gmail.com'
-    })
-    return this.httpClient.get<any>(
-      `https://www.universal-tutorial.com/api/getaccesstoken`, { headers:headers}
-    );
-  }
-
   public getCities() {
     spainCities.sort((a, b) => (a.city > b.city) ? 1 : -1)
     return spainCities;
   }
 
+  getUserInfo(email: string): Observable<any> {
+    return this.httpClient.get<User>(`${USER_API}obtenerUsuario?email=${email}`);
+  }
+
+  actualizarUsuario(usuario: User){
+    return this.httpClient.put(
+      `${USER_API}editarUsuario`,
+      usuario
+    );
+  }
+
+  crearDireccionUsuario(usuarioDireccion: UsuarioDireccion, email: string){
+    return this.httpClient.post<User>(
+      `${USER_DIR_API}crearUsuarioDireccion?email=${email}`,
+      usuarioDireccion
+    );
+  }
+
+  getGeneros(){
+    return this.httpClient.get<Genero[]>(`${USER_API}obtenerGeneros`);
+  }
 
 }

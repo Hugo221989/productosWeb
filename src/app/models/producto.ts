@@ -7,6 +7,7 @@ export class Producto {
     tamano: number;
     sabores: Sabor[];
     saborSeleccionado: string;
+    cantidad: number;
     puntuacion: number;
     comentarios: Comentario[];
     disponible: boolean;

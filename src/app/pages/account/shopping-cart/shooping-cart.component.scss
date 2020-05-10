@@ -32,6 +32,13 @@
 .tituloSubTotal{
     width: 100%;
 }
+.tituloTotal{
+    width: 100%;
+    font-size: 18px;
+}
+.importeTotal{
+    font-size: 18px;
+}
 .totalPedido{
     //margin-bottom: 2%;
 }
@@ -52,4 +59,8 @@
     padding-bottom: 2% !important;
     padding-top: 2% !important;
     width: 70%;
+}
+
+:host ::ng-deep .iconoEliminar span.ui-button-icon-left.ui-clickable.pi.pi-trash{
+    transform: scale(.7) !important;
 }

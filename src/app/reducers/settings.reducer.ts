@@ -6,7 +6,8 @@ import { SettingsState } from '../settings/settings.model';
 export const initialState: SettingsState = {
     isAuthenticated: false,
     hayBreadcrumbFinal: false,
-    nombreBreadcrumbFinal: null
+    nombreBreadcrumbFinal: null,
+    carritoEstaVacio: true
 }
 
 const reducer = createReducer( 
@@ -16,7 +17,9 @@ const reducer = createReducer(
     on(SettingsActions.actionSettingsBreadcrumbExist,
         (state, {hayBreadcrumbFinal}) => ({...state, hayBreadcrumbFinal}) ),
     on(SettingsActions.actionSettingsIsAuthenticated,
-            (state, {isAuthenticated}) => ({...state, isAuthenticated}) )
+            (state, {isAuthenticated}) => ({...state, isAuthenticated}) ),
+    on(SettingsActions.actionSettingsCarritoVacio,
+        (state, {carritoEstaVacio}) => ({...state, carritoEstaVacio}) )
 )
 
 export function settingsReducer(

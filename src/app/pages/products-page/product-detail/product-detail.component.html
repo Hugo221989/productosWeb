@@ -1,3 +1,7 @@
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<div *ngIf="blockedDocument" class="loadingSpinner">
+    <p-progressSpinner [style]="{width: '150px', height: '150px'}" strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+</div>
 <div class="ui-g contenedorDetalleProducto" *ngIf="productLoaded | async">
     <div class="ui-g-12 ui-md-12 minHeight720">
         <div class="ui-g-12 ui-md-6 h100">
@@ -11,7 +15,7 @@
             <div>
                 <h1>{{product.nombre}}</h1>
                 <h3>{{product.descripcion?.titulo}}</h3>
-                <h2 style="color: #d20404;">{{product.precio}}</h2> 
+                <h2 style="color: #d20404;">{{product.precio | number:'1.2-2'}}</h2> 
                 <div style="display: inline-flex;">
                     <div>
                         <p-rating [ngModel]="product.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating>
@@ -23,7 +27,7 @@
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-12 ui-md-4">
-                    <p-dropdown [options]="saboresItems" name="saborSelected" styleClass="comboSabores"></p-dropdown>
+                    <p-dropdown [options]="saboresItems" [(ngModel)]="saborSelected" styleClass="comboSabores"></p-dropdown>
                 </div>
                 <div class="ui-g-12 ui-md-4">
                     <p-spinner size="30" [(ngModel)]="cantidadSeleccionadaProducto" [min]="0" [max]="100" styleClass="spinnerCantidad"></p-spinner> 
@@ -35,7 +39,8 @@
                     <button pButton type="button" label="Favoritos" class="ui-button-raised ui-button-danger botonFavoritos" icon="pi pi-heart"></button>
                 </div>
                 <div class="ui-g-12 ui-md-4">
-                    <button pButton type="button" label="Añadir a la cesta" class="ui-button-raised ui-button-success botonCesta" icon="pi pi-shopping-cart"></button>
+                    <button pButton type="button" label="Añadir a la cesta" class="ui-button-raised ui-button-success botonCesta" 
+                    icon="pi pi-shopping-cart" (click)="addProduct(product)"></button>
                 </div>
                 <div class="ui-g-12 ui-md-4"></div>
             </div>

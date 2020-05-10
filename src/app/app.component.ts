@@ -9,10 +9,13 @@ import { filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { SettingsState } from './settings/settings.model';
-import { selectSettingsNombreBreadcrumb } from './settings/settings.selectors';
+import { selectSettingsNombreBreadcrumb, selectSettingsCarritoEstaVacio } from './settings/settings.selectors';
 import { RegisterComponent } from './pages/register/register-component/register.component';
 import { actionSettingsIsAuthenticated } from './settings/settings.actions';
 import { TokenStorageService } from './pages/login/logn-service/token-storage.service';
+import { OverlayPanel } from 'primeng/overlaypanel/public_api';
+import { Cesta } from './models/cesta';
+import { ProductsService } from './pages/products-page/service/products.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +29,8 @@ export class AppComponent {
               private router:Router,
               private activatedRoute: ActivatedRoute,
               private store: Store<{settings: SettingsState}>,
-              private tokenStorage: TokenStorageService) {}
+              private tokenStorage: TokenStorageService,
+              private productsService: ProductsService) {}
 
   faPhoneVolume = faPhoneVolume;
   faShoppingCart = faShoppingCart;
@@ -36,6 +40,7 @@ export class AppComponent {
   megaMenuItems: MenuItem[];
   breadCrumbItems: MenuItem[];
   carritoVacio: boolean = false;
+  carritoVacioObservable$: Observable<boolean>;
   refDialog;
   isAuthenticated$: Observable<boolean>;
   /* hayBreadcrumnFinal$: Observable<boolean>; */
@@ -43,6 +48,7 @@ export class AppComponent {
   nombreString = null;
 
   autocompleteText: string;
+  cesta: Cesta;
   /* @ViewChild('shoppingCart')
   private shoppingCart: ShoopingCartComponent;
  */
@@ -119,6 +125,63 @@ export class AppComponent {
         }
 
       /*MEGA MENU*/
+        this.createMegaMenu();
+        /*MEGA MENU*/
+
+        /*BREADCRUMB*/
+        this.router.events.pipe(
+            filter(
+                event => event instanceof NavigationEnd))
+                .subscribe( ()=> {
+                    this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
+                    if(this.nombreString != null){
+                        this.breadCrumbItems.splice(-1);
+                        this.breadCrumbItems.push({label: this.nombreString});
+                    }
+                });
+        /*BREADCRUMB*/
+
+        this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
+        this.carritoVacioObservable$.subscribe( vacio => {console.log("SUBSCRIPCION CARRITO")
+          this.carritoVacio = vacio
+        });
+      }
+
+      createBreadCrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[]{
+
+        const children: ActivatedRoute[] = route.children;
+        if (children.length === 0) {
+          return breadcrumbs;
+        }
+    
+        for (const child of children) {
+          const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
+          if (routeURL !== '') {
+            url += `/${routeURL}`;
+          }
+/*           console.log("------------------------------------")
+          console.log("RUTA: "+url)
+          console.log(" LABEL =>"+child.snapshot.data['breadcrumb']) */
+          const label = child.snapshot.data['breadcrumb'];
+          if (!isNullOrUndefined(label)) {
+            breadcrumbs.push({label, url});
+          }
+          return this.createBreadCrumbs(child, url, breadcrumbs);
+        }
+
+      }
+
+      openShoppingCartDialog($event, overlayPanel: OverlayPanel){
+        this.cesta = this.productsService.getProductosCesta();
+        if(this.cesta.productos.length == 0){
+          this.carritoVacio = true;
+        }else{
+          this.carritoVacio = false;
+        }
+        overlayPanel.toggle($event);
+      }
+
+      createMegaMenu(){
         this.megaMenuItems = [
             {
                 label: 'Nutrición', icon: 'pi pi-fw pi-video',
@@ -178,44 +241,7 @@ export class AppComponent {
                 ]
             }
         ]
-        /*MEGA MENU*/
-
-        /*BREADCRUMB*/
-        this.router.events.pipe(
-            filter(
-                event => event instanceof NavigationEnd))
-                .subscribe( ()=> {
-                    this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
-                    if(this.nombreString != null){
-                        this.breadCrumbItems.splice(-1);
-                        this.breadCrumbItems.push({label: this.nombreString});
-                    }
-                });
-        /*BREADCRUMB*/
       }
-
-      createBreadCrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[]{
-
-        const children: ActivatedRoute[] = route.children;
-        if (children.length === 0) {
-          return breadcrumbs;
-        }
-    
-        for (const child of children) {
-          const routeURL: string = child.snapshot.url.map(segment => segment.path).join('/');
-          if (routeURL !== '') {
-            url += `/${routeURL}`;
-          }
-/*           console.log("------------------------------------")
-          console.log("RUTA: "+url)
-          console.log(" LABEL =>"+child.snapshot.data['breadcrumb']) */
-          const label = child.snapshot.data['breadcrumb'];
-          if (!isNullOrUndefined(label)) {
-            breadcrumbs.push({label, url});console.log("BREADCRUMB: ",label)
-          }
-          return this.createBreadCrumbs(child, url, breadcrumbs);
-        }
-
-      }
+      
 
 }

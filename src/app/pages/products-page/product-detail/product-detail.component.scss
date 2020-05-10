@@ -132,3 +132,18 @@ img.ui-panel-images{
     width: 500px;
     height: 500px;
 }
+
+.loadingSpinner{
+    text-align: center;
+    top: 50%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1009;
+}
+
+.ui-blockui-document.ui-blockui.ui-widget-overlay{
+    z-index: 1010;
+}

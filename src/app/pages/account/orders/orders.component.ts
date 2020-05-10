@@ -55,7 +55,8 @@ export class OrdersComponent implements OnInit {
       saborSeleccionado: '',
       sabores: this.sabores,
       tamano: 2000,
-      valorNutricional: this.valorNutricional
+      valorNutricional: this.valorNutricional,
+      cantidad: 1
     },
     {
       nombre: 'Televisor 24',
@@ -71,7 +72,8 @@ export class OrdersComponent implements OnInit {
       saborSeleccionado: '',
       sabores: this.sabores,
       tamano: 2000,
-      valorNutricional: this.valorNutricional
+      valorNutricional: this.valorNutricional,
+      cantidad: 1
     }
   ]
 

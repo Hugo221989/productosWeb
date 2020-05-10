@@ -17,3 +17,8 @@ export const selectSettingsIsAuthenticated = createSelector(
     selectSettingsMemorized,
     (state: SettingsState) => state.isAuthenticated
 )
+
+export const selectSettingsCarritoEstaVacio = createSelector(
+    selectSettingsMemorized,
+    (state: SettingsState) => state.carritoEstaVacio
+)

@@ -1,8 +1,10 @@
 import { Producto } from './producto';
 
 export class Cesta {
-    id: number;
+    id?: number;
     cantidadProductos?: number;
-    precioTotal?: number;
+    importeTotal?: number;
+    importeSubTotal?: number;
+    envio?: number;
     productos: Producto[];
 }

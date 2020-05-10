@@ -16,7 +16,8 @@ import {ButtonModule} from 'primeng/button';
 import {TabViewModule} from 'primeng/tabview';
 import {CarouselModule} from 'primeng/carousel';
 import {SpinnerModule} from 'primeng/spinner';
-
+import {BlockUIModule} from 'primeng/blockui';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 
 
@@ -38,7 +39,9 @@ import {SpinnerModule} from 'primeng/spinner';
     TabViewModule,
     CarouselModule,
     FontAwesomeModule,
-    SpinnerModule
+    SpinnerModule,
+    BlockUIModule,
+    ProgressSpinnerModule
   ]
 })
 export class ProductsModule { }

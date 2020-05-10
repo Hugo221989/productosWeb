@@ -26,7 +26,7 @@ export class ProductDetailComponent implements OnInit {
   comentarios: Comentario[] = [];
   fotos: Foto[] = [];
   saboresItems: SelectItem[];
-  saborSelected: Sabor;
+  saborSelected: any;
   cantidadSeleccionadaProducto: number = 1;
 
   products: Producto[] = [];
@@ -35,6 +35,7 @@ export class ProductDetailComponent implements OnInit {
   sortField: string = "fecha";
 
   sortOrder: number;
+  blockedDocument: boolean = false
 
   constructor(private router:Router, private productsService: ProductsService,
               private route: ActivatedRoute,
@@ -61,7 +62,6 @@ export class ProductDetailComponent implements OnInit {
    producto: Producto;
 
    ngOnInit() {
-       console.log("CARGANDO PAGINA")
         //this.producto = history.state;
         this.idProduct = this.route.snapshot.paramMap.get("id");
 
@@ -94,6 +94,7 @@ export class ProductDetailComponent implements OnInit {
 
     cargarSabores(){
       this.sabores = this.product.sabores;
+      this.saborSelected = this.sabores[0];
       this.saboresItems = [];
       for(let sabor of this.sabores){
         this.saboresItems.push({label:sabor.sabor, value:sabor});
@@ -102,7 +103,6 @@ export class ProductDetailComponent implements OnInit {
 
     cargarComentarios(){
       this.comentarios = this.product.comentarios;
-      console.log("COMENTARIOS: ",this.comentarios)
     }
 
     cargarImagenes(){
@@ -136,6 +136,17 @@ export class ProductDetailComponent implements OnInit {
       this.store.dispatch(actionSettingsNombreBreadcrumb({
         nombreBreadcrumbFinal: nombre
       }))
+    }
+
+    addProduct(product: Producto){
+      product.saborSeleccionado = this.saborSelected.sabor;
+      product.cantidad = this.cantidadSeleccionadaProducto;  
+
+      this.blockedDocument = true;
+      setTimeout(() => {
+        this.blockedDocument = false;
+      }, 1000);
+      this.productsService.addProductToCart(product);
     }
 
 }

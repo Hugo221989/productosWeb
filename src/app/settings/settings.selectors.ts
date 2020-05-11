@@ -22,3 +22,8 @@ export const selectSettingsCarritoEstaVacio = createSelector(
     selectSettingsMemorized,
     (state: SettingsState) => state.carritoEstaVacio
 )
+
+export const selectSettingsBuscador = createSelector(
+    selectSettingsMemorized,
+    (state: SettingsState) => state.buscador
+)

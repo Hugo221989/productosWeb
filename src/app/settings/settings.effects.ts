@@ -36,10 +36,8 @@ export class SettingsEffect{
                 ofType(actionSettingsNombreBreadcrumb),
                 withLatestFrom(this.store.pipe(select(selectSettingsNombreBreadcrumb))),
                 tap(([action, settings]) =>{
-                console.log("NOMBRE: ",action.nombreBreadcrumbFinal )
-                localStorage.setItem('nombreBreadcrumb', settings)
-                }
-                )
+                    localStorage.setItem('nombreBreadcrumb', settings)
+                })
 
                 /** An EMPTY observable only emits completion. Replace with your own observable stream */
     ),{ dispatch: false }

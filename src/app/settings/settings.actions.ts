@@ -16,3 +16,7 @@ export const actionSettingsCarritoVacio = createAction(
     '[Settings] Carrito Vacio',
     props<{carritoEstaVacio: boolean}>()
 );
+export const actionSettingsBuscador = createAction(
+    '[Settings] Buscador Nav',
+    props<{buscador: string}>()
+);

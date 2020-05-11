@@ -7,7 +7,8 @@ export const initialState: SettingsState = {
     isAuthenticated: false,
     hayBreadcrumbFinal: false,
     nombreBreadcrumbFinal: null,
-    carritoEstaVacio: true
+    carritoEstaVacio: true,
+    buscador: null
 }
 
 const reducer = createReducer( 
@@ -19,7 +20,9 @@ const reducer = createReducer(
     on(SettingsActions.actionSettingsIsAuthenticated,
             (state, {isAuthenticated}) => ({...state, isAuthenticated}) ),
     on(SettingsActions.actionSettingsCarritoVacio,
-        (state, {carritoEstaVacio}) => ({...state, carritoEstaVacio}) )
+        (state, {carritoEstaVacio}) => ({...state, carritoEstaVacio}) ),
+    on(SettingsActions.actionSettingsBuscador,
+        (state, action) => ({...state, ...action}) ),
 )
 
 export function settingsReducer(

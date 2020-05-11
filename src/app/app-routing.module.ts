@@ -10,7 +10,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'products',
+    path: 'products/:cat',
     data:  {
       breadcrumb: 'Productos'
     },

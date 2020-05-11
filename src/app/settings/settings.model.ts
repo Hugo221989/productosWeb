@@ -3,4 +3,5 @@ export interface SettingsState {
     hayBreadcrumbFinal: boolean;
     nombreBreadcrumbFinal: string;
     carritoEstaVacio: boolean;
+    buscador: string;
 }

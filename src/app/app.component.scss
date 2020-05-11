@@ -4,6 +4,9 @@
 .divSearchbox{
     background-color: white;
 }
+.inputSearchNavBar{
+    width: 100%;
+}
 .contenedorPrincipal{
     display: flex;
     min-height: 100vh;
@@ -42,5 +45,10 @@ body .ui-breadcrumb{
     position: absolute;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+/*PROPIEDADES MEGA MENU*/
+:host ::ng-deep .megaMenuCustom ul.ui-megamenu-submenu.ng-star-inserted{
+    width: 25em !important;
 }
 

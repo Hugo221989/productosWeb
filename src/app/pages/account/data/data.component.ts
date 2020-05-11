@@ -84,7 +84,7 @@ export class DataComponent implements OnInit {
   }
 
   private obtenerUsuario(){
-    this.email = this.tokenStorageService.getEmail();console.log("EMAIL: ",this.email)
+    this.email = this.tokenStorageService.getEmail();
     this.accountService.getUserInfo(this.email).subscribe( data =>{
       if(data){
         let date2 = data.nacimiento;

@@ -25,8 +25,12 @@ export class ProductsService {
 
   constructor(private httpClient: HttpClient, private store: Store<{settings: SettingsState}>) { }
 
-  getProductsList(): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductos`);
+  getProductsList(buscador: string): Observable<any> {
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductos?buscador=${buscador}`);
+  }
+
+  getProductsListBySubCat(subCategoria: string): Observable<any> {
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosBySubCategoria?subCategoria=${subCategoria}`);
   }
 
   getProductsListRelacionados(): Observable<any> {
@@ -79,7 +83,7 @@ export class ProductsService {
   calcularImporteTotal(){
     this.importeTotal = 0;
     this.importeSubTotal = 0;
-    for(let product of this.cesta.productos){console.log(product.cantidad ," X ",  this.ConvertStringToNumber(product.precio))
+    for(let product of this.cesta.productos){
       this.importeSubTotal += (product.cantidad * this.ConvertStringToNumber(product.precio));
     }
     this.cesta.importeSubTotal = this.importeSubTotal;

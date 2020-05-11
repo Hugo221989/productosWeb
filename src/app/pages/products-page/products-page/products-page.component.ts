@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api/selectitem';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Store, select } from '@ngrx/store';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { actionSettingsBreadcrumbExist, actionSettingsNombreBreadcrumb } from 'src/app/settings/settings.actions';
 import { ProductsService } from '../service/products.service';
 import { Producto } from 'src/app/models/producto';
+import { Observable } from 'rxjs';
+import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 
 @Component({
   selector: 'app-products-page',
@@ -13,65 +15,25 @@ import { Producto } from 'src/app/models/producto';
   styleUrls: ['./products-page.component.scss']
 })
 export class ProductsPageComponent implements OnInit {
-  products: Producto[] = [];
+  subCatUrl: string;
 
-  /* products: Product[] = [
-    {
-      id : "1",
-      nombre : "HP Pavilion 267H",
-      descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-      precio: "512€",
-      estrellas: 4,
-      foto: "demo.jpg"
-    },
-    {
-      id : "2",
-      nombre : "HP Pavilion 320H",
-      descripcion: "Portátil HP Pavilion 14\", 256 GB SSD, 8GB RAM DDR4",
-      precio: "599€",
-      estrellas: 5,
-      foto: "demo.jpg"
-    },
-    {
-      id : "3",
-      nombre : "HP Pavilion 267H",
-      descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-      precio: "512€",
-      estrellas: 4,
-      foto: "demo.jpg"
-    },
-    {
-      id : "4",
-      nombre : "HP Pavilion 267H",
-      descripcion: "Portátil HP Pavilion 15,6\", 512 GB SSD, 8GB RAM DDR4",
-      precio: "512€",
-      estrellas: 4,
-      foto: "demo.jpg"
-    },
-    {
-      id : "5",
-      nombre : "ACER E-15 5500",
-      descripcion: "Portátil ACER E-15 15,6\", 1 TB SSD, 16GB RAM DDR4",
-      precio: "710€",
-      estrellas: 4,
-      foto: "demo.jpg"
-    }
-  ]; */
+  products: Producto[] = [];
   selectedCities: string[] = [];
   selectedProduct: Producto = new Producto;
 
   displayDialog: boolean;
-
   sortOptions: SelectItem[];
-
   sortKey: string;
-
   sortField: string = "nombre";
-
   sortOrder: number;
+
+  textoBuscadorOvservable$: Observable<string>;
+  textoBuscador: string = null;
+  subCategoria: string = null;
 
   constructor(private router:Router,
               private productsService: ProductsService,
+              private route: ActivatedRoute,
               private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit() {
@@ -79,27 +41,49 @@ export class ProductsPageComponent implements OnInit {
       /* this.store.dispatch(actionSettingsBreadcrumbExist({
         hayBreadcrumbFinal: false
       })) */
+       
+      this.getUrlParams();
       this.store.dispatch(actionSettingsNombreBreadcrumb({
         nombreBreadcrumbFinal: null
       }))
       localStorage.setItem('nombreBreadcrumb', null);
 
+      /*para el buscador*/
+      this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
+      this.textoBuscadorOvservable$.subscribe( (texto) => {
+          this.textoBuscador = texto;
+          if(this.textoBuscador != null && this.textoBuscador != ''){
+            this.getProductList();
+          }else{
+            this.getProductListBySubCat();
+          }
+      })
+
       this.sortOptions = [
           {label: 'Valoraciones', value: 'estrellas'},
           {label: 'Precio', value: 'precio'},
           {label: 'Nombre', value: 'nombre'}
-      ];
+      ];  
+  }
 
-      this.productsService.getProductsList().subscribe( data =>{
-        this.products = data;
-        console.log("PRODUCTOS: ",data);
-      })
+  getUrlParams(){
+    this.subCatUrl = this.route.snapshot.paramMap.get("cat");
+    this.subCategoria = this.subCatUrl;
+  }
+
+  getProductList(){
+    this.productsService.getProductsList(this.textoBuscador).subscribe( data =>{
+      this.products = data;
+    })
+  }
+
+  getProductListBySubCat(){
+    this.productsService.getProductsListBySubCat(this.subCategoria).subscribe( data =>{
+      this.products = data;
+    })
   }
 
   selectProduct(event: Event, product: Producto) {
-      /* this.selectedProduct = product;
-      this.displayDialog = true;
-      event.preventDefault(); */
       this.store.dispatch(actionSettingsBreadcrumbExist({
         hayBreadcrumbFinal: true
       }))
@@ -107,7 +91,6 @@ export class ProductsPageComponent implements OnInit {
         nombreBreadcrumbFinal: product.nombre
       }))
       this.router.navigate(['products/detail', product.id]);
-    /*   this.router.navigateByUrl('products/detail', { state: product }); */
   }
 
   onSortChange(event) {

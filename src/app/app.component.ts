@@ -11,7 +11,7 @@ import { Store, select } from '@ngrx/store';
 import { SettingsState } from './settings/settings.model';
 import { selectSettingsNombreBreadcrumb, selectSettingsCarritoEstaVacio } from './settings/settings.selectors';
 import { RegisterComponent } from './pages/register/register-component/register.component';
-import { actionSettingsIsAuthenticated } from './settings/settings.actions';
+import { actionSettingsIsAuthenticated, actionSettingsBuscador } from './settings/settings.actions';
 import { TokenStorageService } from './pages/login/logn-service/token-storage.service';
 import { OverlayPanel } from 'primeng/overlaypanel/public_api';
 import { Cesta } from './models/cesta';
@@ -43,24 +43,19 @@ export class AppComponent {
   carritoVacioObservable$: Observable<boolean>;
   refDialog;
   isAuthenticated$: Observable<boolean>;
-  /* hayBreadcrumnFinal$: Observable<boolean>; */
+  logged$:boolean = false;
   nombreProductoBreadcrumb$: Observable<string>;
   nombreString = null;
 
-  autocompleteText: string;
   cesta: Cesta;
-  /* @ViewChild('shoppingCart')
-  private shoppingCart: ShoopingCartComponent;
- */
-    results: string[];
-    resultados: string[] = [
-      "Albania", "Argentina", "España", "Suecia", "Francia", "Estonia"
-    ];
-    position: string;
-    msgs: Message[] = [];
 
     search(event) {
-      this.results = this.resultados;
+      let textoBuscador: string = event;
+      /* this.productsService.getProductsList(textoBuscador).subscribe( data =>{ */
+        this.store.dispatch(actionSettingsBuscador({
+          buscador: textoBuscador
+        }))
+     /*  }) */
         /* this.mylookupservice.getResults(event.query).then(data => {
             this.results = data;
         }); */
@@ -109,7 +104,7 @@ export class AppComponent {
     window.location.reload();
   }
 
-  logged$:boolean = false;
+
     ngOnInit() {
 
         if(window.sessionStorage.getItem('authenticated') == 'true'){
@@ -142,10 +137,12 @@ export class AppComponent {
         /*BREADCRUMB*/
 
         this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
-        this.carritoVacioObservable$.subscribe( vacio => {console.log("SUBSCRIPCION CARRITO")
+        this.carritoVacioObservable$.subscribe( vacio => {
           this.carritoVacio = vacio
         });
       }
+
+
 
       createBreadCrumbs(route: ActivatedRoute, url: string = '', breadcrumbs: MenuItem[] = []): MenuItem[]{
 
@@ -189,21 +186,30 @@ export class AppComponent {
                     [
                         {
                             label: 'Proteína',
-                            items: [{label: 'Concentrado de Suero'}, {label: 'Aislado de Proteína Whey'},{label: 'Hidrolizado de proteína Whey'}, {label: 'Proteína Vegetal'}]
+                            items: [{label: 'Concentrado de Suero', command: (event: any) => { this.irSeccionMenu('concentrado')} }, 
+                            {label: 'Aislado de Proteína Whey', command: (event: any) => { this.irSeccionMenu('aislado')}},
+                            {label: 'Hidrolizado de proteína Whey', command: (event: any) => { this.irSeccionMenu('hidrolizado')}}, 
+                            {label: 'Proteína Vegetal', command: (event: any) => { this.irSeccionMenu('vegetal')}}]
                         },
                         {
                             label: 'Hidratos de Carbono',
-                            items: [{label: 'Ganador de Masa'}, {label: 'Vitargo'}]
+                            items: [{label: 'Ganador de Masa', command: (event: any) => { this.irSeccionMenu('ganador')}}, 
+                            {label: 'Vitargo', command: (event: any) => { this.irSeccionMenu('vitargo')}}]
                         }
                     ],
                     [
                         {
                             label: 'Quemadores',
-                            items: [{label: 'Termogénicos'}, {label: 'L-Carnitina'},{label: 'Diuréticos'}, {label: 'CLA'}]
+                            items: [{label: 'Termogénicos', command: (event: any) => { this.irSeccionMenu('termogenico')}}, 
+                            {label: 'L-Carnitina', command: (event: any) => { this.irSeccionMenu('carnitina')}},
+                            {label: 'Diuréticos', command: (event: any) => { this.irSeccionMenu('diuretico')}}, 
+                            {label: 'CLA', command: (event: any) => { this.irSeccionMenu('cla')}}]
                         },
                         {
                             label: 'Energía',
-                            items: [{label: 'Preentrenamiento y Óxido Nítrico'}, {label: 'Cafeína'}, {label: 'Creatina'}]
+                            items: [{label: 'Preentrenamiento y Óxido Nítrico', command: (event: any) => { this.irSeccionMenu('preentreno')}}, 
+                            {label: 'Cafeína', command: (event: any) => { this.irSeccionMenu('cafeina')}}, 
+                            {label: 'Creatina', command: (event: any) => { this.irSeccionMenu('creatina')}}]
                         }
                     ]
                 ]
@@ -214,11 +220,15 @@ export class AppComponent {
                     [
                         {
                             label: 'Barritas y Snacks',
-                            items: [{label: 'Barritas Protéicas'}, {label: 'Galletas'}, {label: 'Snacks Salados'}]
+                            items: [{label: 'Barritas Protéicas', command: (event: any) => { this.irSeccionMenu('barritaProteica')}}, 
+                            {label: 'Galletas', command: (event: any) => { this.irSeccionMenu('galleta')}}, 
+                            {label: 'Snacks Salados', command: (event: any) => { this.irSeccionMenu('snack')}}]
                         },
                         {
                             label: 'Bebidas',
-                            items: [{label: 'Bebidas Protéicas'}, {label: 'Bebidas Vegetales'}, {label: 'Infusiones'}]
+                            items: [{label: 'Bebidas Protéicas', command: (event: any) => { this.irSeccionMenu('bebidaProteica')}}, 
+                            {label: 'Bebidas Vegetales', command: (event: any) => { this.irSeccionMenu('bebidaVegetal')}}, 
+                            {label: 'Infusiones', command: (event: any) => { this.irSeccionMenu('infusion')}}]
                         },
                     ]
                 ]
@@ -229,18 +239,27 @@ export class AppComponent {
                     [
                         {
                             label: 'Outlet',
-                            items: [{label: 'Outlet Ropa'}, {label: 'Outlet Nutrición'}]
+                            items: [{label: 'Outlet Ropa', command: (event: any) => { this.irSeccionMenu('outletRopa')}}, 
+                            {label: 'Outlet Nutrición', command: (event: any) => { this.irSeccionMenu('outletNutricion')}}]
                         }
                     ],
                     [
                         {
                             label: 'Liquidación',
-                            items: [{label: 'Últimas Unidades'}]
+                            items: [{label: 'Últimas Unidades', command: (event: any) => { this.irSeccionMenu('ultimasUnidades')}}]
                         }
                     ]
                 ]
             }
         ]
+      }
+
+      irSeccionMenu(subCat: string){
+        this.router.navigate(['products', subCat]);
+        setTimeout(() => {
+          this.reloadPage();  
+        }, 500);
+        
       }
       
 

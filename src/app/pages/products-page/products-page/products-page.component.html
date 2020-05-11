@@ -16,7 +16,7 @@
         </p-panel>
     </div>
     <div class="ui-g-12 ui-md-10 ui-g-nopad">
-        <p-dataView #dv [value]="products" [paginator]="true" [rows]="20" paginatorPosition="both" filterBy="nombre"
+        <p-dataView #dv [value]="products" [paginator]="true" [rows]="20" paginatorPosition="bottom" filterBy="nombre"
             [sortField]="sortField" [sortOrder]="sortOrder">
             <p-header>
                 <div class="ui-helper-clearfix">
@@ -51,7 +51,7 @@
                             <div class="ui-g">
                                 <div class="ui-g-12"><b>{{product.nombre}}</b></div>
                                 <div class="ui-g-12"><b>{{product.descripcion.titulo}}</b></div>
-                                <div class="ui-g-12"><b>{{product.precio}} €</b></div>
+                                <div class="ui-g-12"><b>{{product.precio | number:'1.2-2'}} €</b></div>
                                 <div class="ui-g-12"><p-rating [ngModel]="product.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating></div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@
         <div class="ui-g-8">{{selectedProduct.descripcion}}</div>
 
         <div class="ui-g-4">Year: </div>
-        <div class="ui-g-8">{{selectedProduct.precio}}</div>
+        <div class="ui-g-8">{{selectedProduct.precio | number:'1.2-2'}}</div>
 
         <div class="ui-g-4">Color: </div>
         <div class="ui-g-8">{{selectedProduct.puntuacion}}</div>

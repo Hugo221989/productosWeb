@@ -52,3 +52,9 @@ body .ui-breadcrumb{
     width: 25em !important;
 }
 
+:host ::ng-deep .megaMenuCustom li.ui-widget-header.ui-megamenu-submenu-header.ui-corner-all{
+    display: none;
+}
+:host ::ng-deep .megaMenuCustom ul.ui-megamenu-submenu.ng-star-inserted>li:nth-child(2)>a>span{
+    font-weight: bolder !important;
+}

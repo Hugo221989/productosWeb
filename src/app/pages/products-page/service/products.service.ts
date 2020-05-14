@@ -30,8 +30,22 @@ export class ProductsService {
   }
 
   getProductsListBySubCat(subCategoria: string): Observable<any> {
+    if(subCategoria == 'all'){
+      subCategoria = null;
+    }
     return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosBySubCategoria?subCategoria=${subCategoria}`);
   }
+
+  getProductsListByCat(categoria: string): Observable<any> {
+    if(categoria == 'all'){
+      categoria = null;
+    }
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoria?categoria=${categoria}`);
+  }
+  getProductsListByCatPadre(categoriaPadre: number): Observable<any> {
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoriaPadre?categoriaPadre=${categoriaPadre}`);
+  }
+
 
   getProductsListRelacionados(): Observable<any> {
     return this.httpClient.get<Producto[]>(`${PRODUCT_API}obtenerProductosRelacionados`);

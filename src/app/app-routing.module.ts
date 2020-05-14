@@ -10,9 +10,9 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'products/:cat',
+    path: 'products/:cat/:subcat',
     data:  {
-      breadcrumb: 'Productos'
+      breadcrumb: 'Nutrición'
     },
     loadChildren: () =>
       import('./pages/products-page/products.module').then(m => m.ProductsModule)

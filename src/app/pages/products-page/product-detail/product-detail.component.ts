@@ -4,9 +4,11 @@ import { Producto } from 'src/app/models/producto';
 import { ProductsService } from '../service/products.service';
 import { ValorNutricional, InfoBasica, Sabor, Comentario, InfoVitaminas, Foto } from 'src/app/models/productoOtrosDatos';
 import { SelectItem } from 'primeng/api/selectitem';
-import { actionSettingsNombreBreadcrumb } from 'src/app/settings/settings.actions';
+import { actionSettingsNombreBreadcrumb, actionSettingsCambiarProductoId } from 'src/app/settings/settings.actions';
 import { SettingsState } from 'src/app/settings/settings.model';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
+import { selectSettingsBuscador, selectSettingsProductoId } from 'src/app/settings/settings.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -37,6 +39,12 @@ export class ProductDetailComponent implements OnInit {
   sortOrder: number;
   blockedDocument: boolean = false
 
+  textoBuscadorOvservable$: Observable<string>;
+  textoBuscador: string = null;
+  contenedorBusquedaProducto: boolean = false;
+
+  productoIdOvservable$: Observable<number>;
+
   constructor(private router:Router, private productsService: ProductsService,
               private route: ActivatedRoute,
               private store: Store<{settings: SettingsState}>) {
@@ -65,9 +73,27 @@ export class ProductDetailComponent implements OnInit {
         //this.producto = history.state;
         this.idProduct = this.route.snapshot.paramMap.get("id");
 
+        this.setProductoId();
+        this.cambiarProducto();
         this.cargarProducto(this.idProduct);
         this.cargarProductosRelacionados();
 
+        /*para el buscador*/
+      this.manageBuscadorSuperior();
+
+    }
+
+    manageBuscadorSuperior(){
+      /*para el buscador*/
+      this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
+      this.textoBuscadorOvservable$.subscribe( (texto) => {
+          this.textoBuscador = texto;
+          if(this.textoBuscador != null && this.textoBuscador != ''){
+            this.contenedorBusquedaProducto = true;
+          }else{
+            this.contenedorBusquedaProducto = false;
+          }
+      })
     }
 
     cargarProducto(id: number){
@@ -120,7 +146,7 @@ export class ProductDetailComponent implements OnInit {
     verProducto(id:number, nombre:string){
       this.gotoTop();
       this.cambiarBreadcrumb(nombre);
-      this.router.navigate(['products/detail', id]);
+      this.router.navigate([`products/all/detail`, id]);
       this.cargarProducto(id);
     }
 
@@ -149,4 +175,16 @@ export class ProductDetailComponent implements OnInit {
       this.productsService.addProductToCart(product);
     }
 
+    cambiarProducto(){
+      this.productoIdOvservable$ = this.store.pipe(select(selectSettingsProductoId));
+      this.productoIdOvservable$.subscribe( (id) => {
+        this.cargarProducto(id);
+      })
+    }
+
+    setProductoId(){
+      this.store.dispatch(actionSettingsCambiarProductoId({
+        productoId: this.idProduct
+      }))
+    }
 }

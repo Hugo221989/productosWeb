@@ -14,6 +14,7 @@
   .contenedorBody{
     margin-top: 160px;
     background-color: white;
+    min-height: 800px;
   }
   h1 {
     margin: 0;
@@ -134,9 +135,7 @@
     cursor: pointer;
   }
 
-  .panelGeneralProducto:hover{
-    box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
-  }
+
 
   #panelGrid .ui-panel:hover{
     box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
@@ -181,14 +180,7 @@
   transform: scale(1.3);
 }
 
-/*Header Mask*/
-.headerMask{
-  height: 40px;
-  padding: 0;
-  margin: 0;
-  margin-top: -1px;
-  background-color: gray;
-}
+
 
 /*MegaMenu*/
 .ui-megamenu-horizontal .ui-megamenu-root-list>.ui-menuitem{
@@ -218,7 +210,22 @@ body .ui-paginator{
 .panelFiltroLateral .ui-panel .ui-panel-titlebar .ui-panel-titlebar-icon{
   color: black !important;
 }
-/*MENU LATERAL*/
+
+/* SEGUNDO NIVEL TREE */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label.ui-state-highlight{
+  background-color: transparent !important;
+  color: black !important;
+  font-weight: bold !important;
+}
+/* TERCER NIVEL TREE */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-treenode-selectable .ui-treenode-label.ui-state-highlight{
+  font-weight: bold !important;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content:focus{
+  box-shadow: 0 0 0 0.2em #8dcdff00 !important;
+}
+/*MENU LATERAL*/    
 
 
 body .ui-spinner .ui-spinner-button.ui-spinner-up{
@@ -229,3 +236,12 @@ body .ui-spinner .ui-spinner-button.ui-spinner-down{
   background-color: black;
   border: 1px solid #000000 !important;
 }
+
+/* 
+body .ui-megamenu .ui-menuitem-link .ui-menuitem-text:nth-child(2){
+  color: red;
+} */
+
+/* body .ui-menu .ui-menuitem-link .ui-menuitem-text, body .ui-menubar .ui-menuitem-link .ui-menuitem-text, body .ui-tieredmenu .ui-menuitem-link .ui-menuitem-text, body .ui-contextmenu .ui-menuitem-link .ui-menuitem-text, body .ui-megamenu .ui-menuitem-link .ui-menuitem-text, body .ui-slidemenu .ui-menuitem-link .ui-menuitem-text:nth-child(2){
+  color: red !important;
+} */

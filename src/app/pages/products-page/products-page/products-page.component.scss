@@ -1,0 +1,29 @@
+
+:host ::ng-deep .menuLateral.ui-tree.ui-widget.ui-widget-content.ui-corner-all.ui-tree-selectable.ng-star-inserted{
+    border: 0 !important;
+}
+
+.contenedorFiltrosLateral{
+    border: 1px solid #e4dfdf;
+    min-height: 760px;
+}
+
+.divRangoPrecios{
+    margin-top: 25%;
+}
+.panelGeneralProducto{
+    cursor: pointer; 
+    border: 1px solid #ece9e9; 
+    width: 27% !important; 
+    margin: 2%;
+  }
+.panelGeneralProducto:hover{
+    box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -7px rgba(0,0,0,0.2);
+}
+
+.divImagenProducto{
+    min-width: 225px;
+}
+.imagenProducto{
+    max-height: 385px;
+}

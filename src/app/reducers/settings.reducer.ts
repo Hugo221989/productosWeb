@@ -8,7 +8,8 @@ export const initialState: SettingsState = {
     hayBreadcrumbFinal: false,
     nombreBreadcrumbFinal: null,
     carritoEstaVacio: true,
-    buscador: null
+    buscador: null,
+    productoId: 0
 }
 
 const reducer = createReducer( 
@@ -22,6 +23,8 @@ const reducer = createReducer(
     on(SettingsActions.actionSettingsCarritoVacio,
         (state, {carritoEstaVacio}) => ({...state, carritoEstaVacio}) ),
     on(SettingsActions.actionSettingsBuscador,
+        (state, action) => ({...state, ...action}) ),
+    on(SettingsActions.actionSettingsCambiarProductoId,
         (state, action) => ({...state, ...action}) ),
 )
 

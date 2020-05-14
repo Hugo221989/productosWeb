@@ -13,7 +13,7 @@
         <div class="p-col">1</div>
         <div class="p-col mt-12">
           <!-- <p-autoComplete [(ngModel)]="autocompleteText" placeholder="Buscar" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete> -->
-          <input class="inputSearchNavBar" type="text" pInputText (input)="search($event.target.value)"/>
+          <input [(ngModel)]="inputSearch" class="inputSearchNavBar" type="text" pInputText (input)="search($event.target.value)" #inputSearchNavBar/>
         </div>
         <div class="p-col">
           <div class="p-grid w100 divRegistro">

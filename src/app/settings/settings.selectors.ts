@@ -27,3 +27,8 @@ export const selectSettingsBuscador = createSelector(
     selectSettingsMemorized,
     (state: SettingsState) => state.buscador
 )
+
+export const selectSettingsProductoId = createSelector(
+    selectSettingsMemorized,
+    (state: SettingsState) => state.productoId
+)

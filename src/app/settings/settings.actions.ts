@@ -20,3 +20,7 @@ export const actionSettingsBuscador = createAction(
     '[Settings] Buscador Nav',
     props<{buscador: string}>()
 );
+export const actionSettingsCambiarProductoId = createAction(
+    '[Settings] Cambiar Producto',
+    props<{productoId: number}>()
+);

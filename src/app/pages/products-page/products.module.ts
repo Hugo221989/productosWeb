@@ -18,7 +18,8 @@ import {CarouselModule} from 'primeng/carousel';
 import {SpinnerModule} from 'primeng/spinner';
 import {BlockUIModule} from 'primeng/blockui';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
-
+import {TreeModule} from 'primeng/tree';
+import {SliderModule} from 'primeng/slider';
 
 
 @NgModule({
@@ -41,7 +42,10 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
     FontAwesomeModule,
     SpinnerModule,
     BlockUIModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    TreeModule,
+    SliderModule
+
   ]
 })
 export class ProductsModule { }

@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
 
   
   goToProduct() {
-    this.router.navigate(['/products/all']);
+    this.router.navigate(['/products/proteina/all']);
 }
 
 }

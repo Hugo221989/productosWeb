@@ -4,4 +4,5 @@ export interface SettingsState {
     nombreBreadcrumbFinal: string;
     carritoEstaVacio: boolean;
     buscador: string;
+    productoId: number;
 }

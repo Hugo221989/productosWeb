@@ -39,8 +39,10 @@ export class OrdersComponent implements OnInit {
     modoEmpleo: '',
     otrosIngredientes: ''
   }
+  productos: Producto[] = [];
+  pedidos: Pedido[] = [];
   
-  productos: Producto[] = [
+/*   productos: Producto[] = [
     {
       nombre: 'Televisor 24',
       precio: '344',
@@ -75,8 +77,8 @@ export class OrdersComponent implements OnInit {
       valorNutricional: this.valorNutricional,
       cantidad: 1
     }
-  ]
-
+  ] */
+/* 
   pedidos: Pedido[] = [
     {
       precio: '23.50',
@@ -103,7 +105,7 @@ export class OrdersComponent implements OnInit {
       numPedido: 'IZ99117S',
       productos: this.productos
     }
-  ]
+  ] */
 
   constructor() { }
 

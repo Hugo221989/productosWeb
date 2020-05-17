@@ -1,4 +1,5 @@
 import { Sabor, Comentario, ValorNutricional, Descripcion, Foto } from './productoOtrosDatos';
+import { Categoria, SubCategoria } from './categoria';
 
 export class Producto {
     id: number;
@@ -16,4 +17,14 @@ export class Producto {
     valorNutricional: ValorNutricional;
     descripcion: Descripcion;
     precioFinal: string;
+    categoria: Categoria;
+    subCategoria: SubCategoria;
+}
+
+export class CatProductoDto{
+    id: number;
+    categoriaNombre: string;
+    categoriaKey: string;
+    subCategoriaNombre: string;
+    subCategoriaKey: string;
 }

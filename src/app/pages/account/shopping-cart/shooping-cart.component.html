@@ -1,5 +1,4 @@
-<div class="ui-g-12" style="text-align: center;">
-    <h3 class="first">Carrito de la compra</h3>
+<div class="ui-g-12 divCarritoDesktop" style="text-align: center;">
         <p-table [value]="products" [responsive]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr class="trHeadPedidos">
@@ -21,11 +20,84 @@
                             </div>
                         </div>
                     </td>
-                    <td class="tdPedidosRight">{{product.precio}} €</td>
+                    <td class="tdPedidosRight">{{product.precio | number:'1.2-2'}} €</td>
                     <td class="tdPedidosRight">{{product.cantidad}}</td>
-                    <td class="tdPedidosRight">{{product.precio*product.cantidad}} €</td>
+                    <td class="tdPedidosRight">{{product.precio*product.cantidad | number:'1.2-2'}} €</td>
                     <td class="tdPedidosRight">
                         <button pButton type="button" class="ui-button-secondary iconoEliminar" icon="pi pi-trash" (click)="eliminarProducto(i)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="divInferiorTotal">
+            <div class="ui-grid-row totalPedido"> 
+                <div class="p-col-2 p-md-6 p-lg-8"></div>
+                <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
+                    <div class="tituloSubTotal">Sub-total:</div>
+                    <div class="w100">{{cesta.importeSubTotal | number:'1.2-2'}} €</div>
+                </div>
+            </div>
+            <div class="ui-grid-row totalPedido">
+                <div class="p-col-2 p-md-6 p-lg-8"></div>
+                <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
+                    <div class="tituloSubTotal">Envío:</div>
+                    <div class="w100">{{cesta.envio | number:'1.2-2'}} €</div>
+                </div>
+            </div>
+            <div class="ui-grid-row totalPedido">
+                <div class="p-col-2 p-md-6 p-lg-8"></div>
+                <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
+                    <div class="tituloSubTotal ">Total:</div>
+                    <div class="w100"><b class="importeTotal">{{cesta.importeTotal | number:'1.2-2'}} €</b></div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="ui-grid-col-8 divButtonPagoCesta">
+                <button pButton type="button" label="Proceder con el pago" class="buttonBigCesta" icon="pi pi-id-card"></button>
+            </div>
+        </div>
+</div>
+
+<div class="ui-g-12 divCarritoMobile" style="text-align: center;">
+        <p-table [value]="products" [responsive]="true">
+            <ng-template pTemplate="header" let-columns>
+                <tr class="trHeadPedidos">
+                    <th class="thHeadPedidos">Producto</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-i="rowIndex">
+                <tr class="trPedidos">
+                    <td class="tdPedidos">
+                        <div class="ui-g-12 cabeceraProductoCestaMobile">
+                            <div class="ui-g-12 nombreProductoCesta">
+                                <span><b>{{product.nombre}}</b></span>
+                                - <span>{{product.saborSeleccionado}}</span>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 contenedorProductoCestaMobile">
+                            <div class="ui-g-5 contenedorCestaImagenMobile">
+                                <div class="ui-g-3 divIconoEliminar">
+                                    <button pButton type="button" class="ui-button-secondary iconoEliminar" icon="pi pi-trash" (click)="eliminarProducto(i)"></button>
+                                </div>
+                                <div class="ui-g-9">
+                                    <img [alt]="product.nombre" src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" width="64" />
+                                </div>
+                            </div>
+                            <div class="ui-g-2 divInfoProducto">
+                                {{product.precio | number:'1.2-2'}} €
+                            </div>
+                            <div class="ui-g-2 divInfoProducto">
+                                X {{product.cantidad}}
+                            </div>
+                            <div class="ui-g-3 divInfoProducto">
+                                = {{product.precio*product.cantidad | number:'1.2-2'}} €
+                            </div>
+                         <!--    <div class="ui-g-3">
+                                <button pButton type="button" class="ui-button-secondary iconoEliminar" icon="pi pi-trash" (click)="eliminarProducto(i)"></button>
+                            </div> -->
+                        </div>
+                        <hr>
                     </td>
                 </tr>
             </ng-template>

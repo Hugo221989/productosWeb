@@ -43,14 +43,13 @@
 
 
             <ng-template let-product pTemplate="listItem">
-                <div class="ui-g-4 panelGeneralProducto" (click)="selectProductDetail($event, product)">
+                <div class="ui-g-6 ui-md-4 panelGeneralProducto" (click)="selectProductDetail($event, product)">
                     <div class="car-details">
                         <div>
-                        <!--   <img src="assets/images/demo/car/{{car.brand}}.png"> -->
                         <div class="ui-g-4 divImagenProducto">
                             <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenProducto">
                         </div>
-                        <div class="ui-g-8">
+                        <div class="ui-g-12">
                             <div class="ui-g">
                                 <div class="ui-g-12"><b>{{product.nombre}}</b></div>
                                 <div class="ui-g-12"><b>{{product.descripcion.titulo}}</b></div>
@@ -59,7 +58,6 @@
                             </div>
                         </div>
                         </div>
-                        <!-- <button pButton type="button" icon="pi pi-search" (click)="selectProduct($event, product)"></button> -->
                     </div>
                 </div>
             </ng-template>

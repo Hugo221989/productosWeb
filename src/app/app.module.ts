@@ -27,7 +27,10 @@ import { HomeModule } from './pages/home/home.module';
 import { settingsReducer } from './reducers/settings.reducer';
 import { SettingsEffect } from './settings/settings.effects';
 import { InputTextModule } from 'primeng/inputtext';
-
+import {SidebarModule} from 'primeng/sidebar';
+import {PanelMenuModule} from 'primeng/panelmenu';
+import {DialogModule} from 'primeng/dialog';
+import {SelectButtonModule} from 'primeng/selectbutton';
 
 
 @NgModule({
@@ -57,6 +60,10 @@ import { InputTextModule } from 'primeng/inputtext';
     AccountModule,
     ScrollPanelModule,
     InputTextModule,
+    SidebarModule,
+    PanelMenuModule,
+    DialogModule,
+    SelectButtonModule,
     EffectsModule.forRoot([SettingsEffect]),
     StoreModule.forRoot({
       settingsState: settingsReducer

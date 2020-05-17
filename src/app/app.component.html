@@ -10,13 +10,15 @@
       <div class="p-col"></div>
     </div>
     <div class="p-grid w100 headerPrincipal">
-        <div class="p-col">1</div>
-        <div class="p-col mt-12">
+        <div class="p-col divNavBarLeft">
+          <button pButton type="button" (click)="visibleSidebar1 = true" icon="pi pi-bars" class="buttonBars botonMenuBarMobile"></button>
+        </div>
+        <div class="p-col mt-12 divNavBarCenter">
           <!-- <p-autoComplete [(ngModel)]="autocompleteText" placeholder="Buscar" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete> -->
           <input [(ngModel)]="inputSearch" class="inputSearchNavBar" type="text" pInputText (input)="search($event.target.value)" #inputSearchNavBar/>
         </div>
-        <div class="p-col">
-          <div class="p-grid w100 divRegistro">
+        <div class="p-col divNavBarRight">
+          <div class="p-grid w100 divRegistro" id="divRegistro">
             <div class="p-col top-help-container">
               <a href="#" class="linksRegistro"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">Ayuda</p></a>
             </div>
@@ -52,6 +54,38 @@
             </p-overlayPanel>
             </div>
           </div>
+
+          <div class="p-col top-help-container cestaIconMobile" id="cestaIconMobile">
+            <a class="linksRegistro" style="cursor: pointer;">
+             
+                <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12" (click)="showCartMobileDialog()" id="botonShoppingCartMobile"></fa-icon><p> </p>
+       
+            </a>
+
+            <p-dialog [(visible)]="displayCartMobile" position="top" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+                [draggable]="false" [resizable]="false" styleClass="overlayShoppingCartMobile" header="Carrito de la compra">
+                <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">Tu carrito está vacío</p></div>
+
+                  <div *ngIf="!carritoVacio">
+                    <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+                        <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
+                    </p-scrollPanel>
+                  </div>
+              </p-dialog>
+
+
+          <!--   <p-overlayPanel #op2 styleClass="overlayShoppingCartMobile">
+              <ng-template pTemplate>
+                 <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">Tu carrito está vacío</p></div>
+
+                 <div *ngIf="!carritoVacio">
+                  <p-scrollPanel [style]="{width: '100%', height: '400px'}">
+                      <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
+                   </p-scrollPanel>
+                 </div>
+              </ng-template>
+          </p-overlayPanel> -->
+          </div>
         </div>
     </div>
     
@@ -60,6 +94,29 @@
     <p-breadcrumb [model]="breadCrumbItems"></p-breadcrumb>
 
 </div>
+
+<p-sidebar [(visible)]="visibleSidebar1" [baseZIndex]="10000">
+  <div class="ui-g-12 divTituloLateral"><h1>MCyclo</h1></div>
+  <p-panelMenu [model]="panelMenuItems" styleClass="panelSideMenuCustom"></p-panelMenu> 
+  <div class="ui-g-12 divRegistroLateral"><a href="#" class="linksRegistroLateral" style="display: flex;"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">Ayuda</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="logged$"><a (click)="miCuenta()" class="pointer linksRegistroLateral"><p class="textoNormal">Mi Cuenta</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="logged$"><a (click)="cerrarSesion()" class="pointer linksRegistroLateral"><p class="textoNormal">Cerrar Sesión</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$"><a (click)="showLoginModalMobile()" class="pointer linksRegistroLateral"><p class="textoNormal">Iniciar Sesión</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$"><a (click)="showRegisterModalMobile()" class="pointer linksRegistroLateral"><p class="textoNormal">Crear Cuenta</p></a></div>
+  <div class="ui-g-12 divRegistroLateral">
+    <p-selectButton [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" styleClass="buttonCountries" style="width: 100%;">
+        <ng-template let-item>
+            <div style="padding: 0; padding-left: 7%;">
+                <img style="vertical-align: middle; margin-right: .5em" src="assets/images/flags/{{item.value.flag}}" height="35px"/>
+            </div>
+        </ng-template>
+    </p-selectButton>
+    
+  </div>
+  <div class="ui-g-12 divRegistroLateral">
+    <p>Selected Country: <span style="font-weight: bold">{{selectedCountry?.name}}</span></p>
+  </div>
+</p-sidebar>
 
 
 <div class="contenedorBody">

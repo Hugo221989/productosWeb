@@ -3,15 +3,16 @@
     <p-progressSpinner [style]="{width: '150px', height: '150px'}" strokeWidth="4" animationDuration="1s"></p-progressSpinner>
 </div>
 <div class="ui-g contenedorDetalleProducto" *ngIf="(productLoaded | async) && !contenedorBusquedaProducto">
-    <div class="ui-g-12 ui-md-12 minHeight720">
-        <div class="ui-g-12 ui-md-6 h100">
-            <div class="ui-g-12">
+    <div class="ui-g-12 ui-md-12 contenedorImagenesGaleria">
+        <div class="ui-g-12 ui-md-6 contenedorDescripcionIzquierda">
+            <div class="ui-g-12 subContenedorDescripcionIzquierda" >
                 <div class="contenedorGaleria">
-                    <p-galleria [images]="images" panelWidth="650" panelHeight="520" [showCaption]="false" [frameWidth]="180" [frameHeight]="120" [autoPlay]="false"></p-galleria>
+                    <p-galleria [images]="images" panelWidth="650" panelHeight="520" [showCaption]="false" [frameWidth]="180" [frameHeight]="120" [autoPlay]="false"
+                    styleClass="galeriaDetalleProducto"></p-galleria>
                 </div>
             </div>
         </div>
-        <div class="ui-g-12 ui-md-6 h100">
+        <div class="ui-g-12 ui-md-6 contenerdorDescripcionDerecha">
             <div>
                 <h1>{{product.nombre}}</h1>
                 <h3>{{product.descripcion?.titulo}}</h3>
@@ -25,8 +26,8 @@
                     </div>
                 </div>
             </div>
-            <div class="ui-g-12">
-                <div class="ui-g-12 ui-md-4">
+            <div class="ui-g-12 padding0mobile">
+                <div class="ui-g-12 ui-md-4 contenedorPDropdown">
                     <p-dropdown [options]="saboresItems" [(ngModel)]="saborSelected" styleClass="comboSabores"></p-dropdown>
                 </div>
                 <div class="ui-g-12 ui-md-4">
@@ -35,10 +36,10 @@
                 <div class="ui-g-12 ui-md-4"></div>
             </div>
             <div class="ui-g-12">
-                <div class="ui-g-12 ui-md-4">
+                <div class="ui-g-12 ui-md-4 contenedorBotonFavoritos">
                     <button pButton type="button" label="Favoritos" class="ui-button-raised ui-button-danger botonFavoritos" icon="pi pi-heart"></button>
                 </div>
-                <div class="ui-g-12 ui-md-4">
+                <div class="ui-g-12 ui-md-4 contenedorBotonAnadir">
                     <button pButton type="button" label="Añadir a la cesta" class="ui-button-raised ui-button-success botonCesta" 
                     icon="pi pi-shopping-cart" (click)="addProduct(product)"></button>
                 </div>
@@ -47,10 +48,10 @@
         </div>
     </div>
 
-    <div class="ui-g-12 ui-md-12 minHeight720">
-        <div class="ui-g-12 ui-md-6">
+    <div class="ui-g-12 ui-md-12 minHeight720 divContenedorTab">
+        <div class="ui-g-12 ui-md-6 divSubContenedorTab">
             <p-tabView styleClass="tabViewProduct">
-                <p-tabPanel header="Descripción" leftIcon="pi pi-calendar">
+                <p-tabPanel header="Descripción">
                     <div class="contenedorDescripcion">
                         <div class="divTitulo">
                         <p><b>{{product.descripcion?.titulo}}</b></p>
@@ -72,15 +73,15 @@
                     </div>
                 </p-tabPanel>
                 
-                <p-tabPanel header="Opiniones" leftIcon="pi pi-user" rightIcon="pi pi-star">
+                <p-tabPanel header="Opiniones">
                     <div class="contenedorOpiniones">
                         <div class="ui-g-12 ui-md-12 ui-g-nopad">
                             <p-dataView #dv [value]="comentarios" [paginator]="true" [rows]="5" paginatorPosition="bottom" filterBy="autor"
                                 [sortField]="sortField" [sortOrder]="sortOrder" layout="list">
                                 <ng-template let-comentario pTemplate="listItem">
-                                    <div class="ui-g-6" style="border: 1px solid #ece9e9; margin: 5px;">
+                                    <div class="ui-g-6 padding0mobile" style="border: 1px solid #ece9e9; margin: 5px;">
                                         <div class="car-details">
-                                            <div class="ui-g-12">
+                                            <div class="ui-g-12 padding0mobile">
                                                 <div class="ui-g-4 ui-md-4" style="min-width: 138px;">
                                                     <div class="ui-g-12"><p-rating [ngModel]="comentario.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating></div>
                                                     <div class="ui-g-12"><b>{{comentario.fecha | date : 'dd/MM/yyyy'}}</b></div>
@@ -161,19 +162,19 @@
                 </div>
 
                 <!-- MAS DATOS -->
-                <div class="ui-g-12" *ngIf="valorNutricional.ingredientes">
+                <div class="ui-g-12 divIngredientes padding0mobile" *ngIf="valorNutricional.ingredientes">
                     <b>Ingredientes:</b> <span style="margin-left: 1%;">{{valorNutricional.ingredientes}}</span>
                 </div>
-                <div class="ui-g-12" *ngIf="valorNutricional.modoEmpleo">
+                <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.modoEmpleo">
                     <b>Modo de Empleo:</b> <span style="margin-left: 1%;">{{valorNutricional.modoEmpleo}}</span>
                 </div>
-                <div class="ui-g-12" *ngIf="valorNutricional.conservacion">
+                <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.conservacion">
                     <b>Conservación:</b> <span style="margin-left: 1%;">{{valorNutricional.conservacion}}</span>
                 </div>
-                <div class="ui-g-12" *ngIf="valorNutricional.alergias">
+                <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.alergias">
                     <b>Alergias:</b> <span style="margin-left: 1%;">{{valorNutricional.alergias}}</span>
                 </div>
-                <div class="ui-g-12" *ngIf="valorNutricional.advertencias">
+                <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.advertencias">
                     <b>Advertencias:</b> <span style="margin-left: 1%;">{{valorNutricional.advertencias}}</span>
                 </div>
             </div>
@@ -189,11 +190,11 @@
             <ng-template let-product pTemplate="item">
                     <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre)">
                         <div class="p-grid p-nogutter">
-                            <div class="p-col-12 text-center" *ngIf="product.fotos.length > 0">
-                                <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" style="max-height: 250px;"/>
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
+                                <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
                             </div>
-                            <div class="p-col-12 text-center" *ngIf="product.fotos.length === 0">
-                                <img src="http://127.0.0.1:8887/not-found.png" style="max-height: 250px;"/>
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length === 0">
+                                <img src="http://127.0.0.1:8887/not-found.png" class="imagenCarouselInferior"/>
                             </div>
                             <div class="p-col-12 car-data text-center">
                                 <div class="car-title">{{product.nombre}}</div>

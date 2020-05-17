@@ -21,6 +21,7 @@ export class ShoopingCartComponent implements OnInit {
 
   ngOnInit(): void {
     this.products = [];
+    this.cesta = this.productsService.getProductosCesta();
     this.products = this.cesta.productos;
   }
 

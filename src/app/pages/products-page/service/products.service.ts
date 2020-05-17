@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Producto } from 'src/app/models/producto';
+import { Producto, CatProductoDto } from 'src/app/models/producto';
 import { Sabor } from 'src/app/models/productoOtrosDatos';
 import { Cesta } from 'src/app/models/cesta';
 import { SettingsState } from 'src/app/settings/settings.model';
@@ -53,6 +53,10 @@ export class ProductsService {
 
   getProductById(idProducto: number): Observable<any> {
     return this.httpClient.get<Producto>(`${USER_API}obtenerProductoById?idProducto=${idProducto}`);
+  }
+
+  getCatSubCatProduct(idProducto: number){
+    return this.httpClient.get<CatProductoDto>(`${PRODUCT_API}obtenerCatAndSubCatByProductoId?idProducto=${idProducto}`);
   }
 
   getSabores(): Observable<any> {
@@ -156,9 +160,29 @@ export class ProductsService {
 
   triggerBotonCesta(){
     let botonCesta: HTMLElement = document.getElementById('botonShoppingCart') as HTMLElement;
-    setTimeout(() => {
-      botonCesta.click();
-    }, 1000);
+    let contenedorCestaNormal: HTMLElement = document.getElementById('divRegistro') as HTMLElement;
+    if(this.isElementVisible(contenedorCestaNormal)){console.log("BOTON NORMAL: ")
+      setTimeout(() => {
+        botonCesta.click();
+      }, 1000);
+    }
+   
+    let botonCestaMobile: HTMLElement = document.getElementById('botonShoppingCartMobile') as HTMLElement;
+    let contenedorCestaMobile: HTMLElement = document.getElementById('cestaIconMobile') as HTMLElement;
+    if(this.isElementVisible(contenedorCestaMobile)){console.log("BOTON MOBILE: ")
+      setTimeout(() => {
+        botonCestaMobile.click();
+      }, 1000);
+    }
   }
+
+  isElementVisible(element) { 
+    if (element.offsetWidth ||  
+       element.offsetHeight ||  
+       element.getClientRects().length) 
+        return true; 
+    else 
+        return false; 
+} 
 
 }

@@ -114,6 +114,9 @@
   .ml-2{
     margin-left: 2%;;
   }
+  .padding0{
+    padding: 0 !important;
+  }
   .text-center{
     text-align: center;
   }
@@ -150,12 +153,7 @@
     padding-right: 0!important;
 }
 
-.divRegistro{
-  margin-top: 0px !important;
-  text-align: right;
-  width: 70%;
-  float: right;
-}
+
 .linksRegistro{
   display: contents;
   color: white;
@@ -245,3 +243,37 @@ body .ui-megamenu .ui-menuitem-link .ui-menuitem-text:nth-child(2){
 /* body .ui-menu .ui-menuitem-link .ui-menuitem-text, body .ui-menubar .ui-menuitem-link .ui-menuitem-text, body .ui-tieredmenu .ui-menuitem-link .ui-menuitem-text, body .ui-contextmenu .ui-menuitem-link .ui-menuitem-text, body .ui-megamenu .ui-menuitem-link .ui-menuitem-text, body .ui-slidemenu .ui-menuitem-link .ui-menuitem-text:nth-child(2){
   color: red !important;
 } */
+
+
+/* PANEL LATERAL MOVIL*/
+body .ui-panelmenu .ui-panelmenu-header > a{
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+body .ui-panelmenu .ui-panelmenu-header.ui-state-active > a:hover{
+  border: 1px solid #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+body .ui-panelmenu .ui-panelmenu-header > a .ui-panelmenu-icon{
+  color: black !important;
+}
+body .ui-panelmenu .ui-panelmenu-content .ui-menuitem .ui-menuitem-link .ui-menuitem-text{
+  color: black !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-content{
+    border: 0 !important;
+    border-bottom: 1px solid #c1bdbd !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-header > a:focus{
+  box-shadow: 0 0 0 0.2em #ffffff !important;
+}
+
+body .ui-panelmenu .ui-panelmenu-panel{
+  border-top: 1px solid #dadada !important;
+  border-bottom: 1px solid #dadada !important;
+  margin-bottom: 5% !important;
+}

@@ -30,7 +30,9 @@ export class AppComponent {
               private activatedRoute: ActivatedRoute,
               private store: Store<{settings: SettingsState}>,
               private tokenStorage: TokenStorageService,
-              private productsService: ProductsService) {}
+              private productsService: ProductsService) {
+                this.languages()
+              }
 
   faPhoneVolume = faPhoneVolume;
   faShoppingCart = faShoppingCart;
@@ -38,7 +40,9 @@ export class AppComponent {
   faTruck = faTruck;
   title = 'productosWeb';
   megaMenuItems: MenuItem[];
+  panelMenuItems: MenuItem[];
   breadCrumbItems: MenuItem[];
+  displayCartMobile: boolean;
   carritoVacio: boolean = false;
   carritoVacioObservable$: Observable<boolean>;
   refDialog;
@@ -48,9 +52,13 @@ export class AppComponent {
   nombreString = null;
 
   cesta: Cesta;
+  visibleSidebar1;
 
   textoBuscadorOvservable$: Observable<string>;
   inputSearch: string = '';
+
+  countries: any[];
+  selectedCountry: any;
 
     search(event) {
       let textoBuscador: string = event;
@@ -68,6 +76,16 @@ export class AppComponent {
           baseZIndex: 1010
       });
   }
+  showLoginModalMobile() {
+    this.visibleSidebar1 = false;
+    const ref = this.dialogService.open(LoginComponent, {
+      header: 'Iniciar Sesión',
+      width: '90%',
+      dismissableMask: true,
+      closeOnEscape: true,
+      baseZIndex: 1010
+  });
+}
 
   showRegisterModal() {
     const ref = this.dialogService.open(RegisterComponent, {
@@ -78,6 +96,18 @@ export class AppComponent {
         closeOnEscape: true,
         baseZIndex: 1010
     });
+
+}
+showRegisterModalMobile() {
+  this.visibleSidebar1 = false;
+  const ref = this.dialogService.open(RegisterComponent, { 
+      header: 'Registrarse',
+      width: '90%',
+      dismissableMask: true,
+      autoZIndex: true,
+      closeOnEscape: true,
+      baseZIndex: 1010
+  });
 
 }
 
@@ -139,7 +169,7 @@ ngOnInit() {
   clearSearchinput(){
     this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador)); 
     this.textoBuscadorOvservable$.subscribe( (texto) => {
-      if(texto == null || texto == ''){console.log("LIMPIAR INPUT")
+      if(texto == null || texto == ''){
         this.inputSearch = null;
       }
     })
@@ -183,13 +213,29 @@ ngOnInit() {
   }
 
   openShoppingCartDialog($event, overlayPanel: OverlayPanel){
+    this.getProductosCesta();
+    overlayPanel.toggle($event);
+  }
+
+  showCartMobileDialog() {
+    this.getProductosCesta();
+    this.displayCartMobile = true;
+  }
+
+  getProductosCesta() {
     this.cesta = this.productsService.getProductosCesta();
     if(this.cesta.productos.length == 0){
       this.carritoVacio = true;
     }else{
       this.carritoVacio = false;
     }
-    overlayPanel.toggle($event);
+  }
+
+  languages(){
+    this.countries = [
+      {name: 'espanish', flag: 'spain.png'},
+      {name: 'english', flag: 'uk.png'}
+    ];
   }
 
   createMegaMenu(){
@@ -201,7 +247,7 @@ ngOnInit() {
                     {
                         label: 'Proteína', 
                         items: [
-                          {label: 'Proteína', style: "{'color':'red'}", command: (event: any) => { this.irSeccionMenu('proteina','all')} }, 
+                          {label: 'Proteína', command: (event: any) => { this.irSeccionMenu('proteina','all')} }, 
                           {label: 'Concentrado de Suero', command: (event: any) => { this.irSeccionMenu('proteina','concentrado')} }, 
                           {label: 'Aislado de Proteína Whey', command: (event: any) => { this.irSeccionMenu('proteina','aislado')}},
                           {label: 'Hidrolizado de proteína Whey', command: (event: any) => { this.irSeccionMenu('proteina','hidrolizado')}}, 
@@ -282,6 +328,88 @@ ngOnInit() {
             ]
         }
     ]
+
+/* MENU LATERAL MOVIL */
+
+    this.panelMenuItems = [
+      {
+          label: 'Nutrición', icon: 'pi pi-fw pi-video',
+          items: [
+                  {
+                      label: 'Proteína', 
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('proteina','all')} }, 
+                        {label: 'Concentrado de Suero', command: (event: any) => { this.irSeccionMenu('proteina','concentrado')} }, 
+                        {label: 'Aislado de Proteína Whey', command: (event: any) => { this.irSeccionMenu('proteina','aislado')}},
+                        {label: 'Hidrolizado de proteína Whey', command: (event: any) => { this.irSeccionMenu('proteina','hidrolizado')}}, 
+                        {label: 'Proteína Vegetal', command: (event: any) => { this.irSeccionMenu('proteina','vegetal')}}]
+                  },
+                  {
+                      label: 'Hidratos de Carbono',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('hidratos','all')}},
+                        {label: 'Ganador de Masa', command: (event: any) => { this.irSeccionMenu('hidratos','ganador')}}, 
+                        {label: 'Vitargo', command: (event: any) => { this.irSeccionMenu('hidratos','vitargo')}}]
+                  },
+                  {
+                      label: 'Quemadores',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('quemadores','all')}},
+                        {label: 'Termogénicos', command: (event: any) => { this.irSeccionMenu('quemadores','termogenico')}}, 
+                        {label: 'L-Carnitina', command: (event: any) => { this.irSeccionMenu('quemadores','carnitina')}},
+                        {label: 'Diuréticos', command: (event: any) => { this.irSeccionMenu('quemadores','diuretico')}}, 
+                        {label: 'CLA', command: (event: any) => { this.irSeccionMenu('quemadores','cla')}}]
+                  },
+                  {
+                      label: 'Energía',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('energia','all')}},
+                        {label: 'Preentrenamiento y Óxido Nítrico', command: (event: any) => { this.irSeccionMenu('energia','preentreno')}}, 
+                        {label: 'Cafeína', command: (event: any) => { this.irSeccionMenu('energia','cafeina')}}, 
+                        {label: 'Creatina', command: (event: any) => { this.irSeccionMenu('energia','creatina')}}]
+                  }
+              ]
+      },
+      {
+          label: 'Alimentación', icon: 'pi pi-fw pi-users',
+          items: [
+                  {
+                      label: 'Barritas y Snacks',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('barritas','all')}},
+                        {label: 'Barritas Protéicas', command: (event: any) => { this.irSeccionMenu('barritas','barritaProteica')}}, 
+                        {label: 'Galletas', command: (event: any) => { this.irSeccionMenu('barritas','galleta')}}, 
+                        {label: 'Snacks Salados', command: (event: any) => { this.irSeccionMenu('barritas','snack')}}]
+                  },
+                  {
+                      label: 'Bebidas',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('bebidas','all')}},
+                        {label: 'Bebidas Protéicas', command: (event: any) => { this.irSeccionMenu('bebidas','bebidaProteica')}}, 
+                        {label: 'Bebidas Vegetales', command: (event: any) => { this.irSeccionMenu('bebidas','bebidaVegetal')}}, 
+                        {label: 'Infusiones', command: (event: any) => { this.irSeccionMenu('bebidas','infusion')}}]
+                  },
+              ]
+      },
+      {
+          label: 'Promociones', icon: 'pi pi-fw pi-calendar',
+          items: [
+                  {
+                      label: 'Outlet',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('outlet','all')}},
+                        {label: 'Outlet Ropa', command: (event: any) => { this.irSeccionMenu('outlet','outletRopa')}}, 
+                        {label: 'Outlet Nutrición', command: (event: any) => { this.irSeccionMenu('outlet','outletNutricion')}}]
+                  },
+                  {
+                      label: 'Liquidación',
+                      items: [
+                        {label: 'Todos', command: (event: any) => { this.irSeccionMenu('liquidacion','all')}},
+                        {label: 'Últimas Unidades', command: (event: any) => { this.irSeccionMenu('liquidacion','ultimasUnidades')}}]
+                  }
+              ]
+      }
+  ]
   }
 
   irSeccionMenu(cat: string, subCat: string){

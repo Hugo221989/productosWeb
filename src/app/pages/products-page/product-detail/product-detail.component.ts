@@ -9,6 +9,7 @@ import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
 import { selectSettingsBuscador, selectSettingsProductoId } from 'src/app/settings/settings.selectors';
 import { Observable } from 'rxjs';
+import { Carousel } from 'primeng/carousel';
 
 @Component({
   selector: 'app-product-detail',
@@ -45,9 +46,13 @@ export class ProductDetailComponent implements OnInit {
 
   productoIdOvservable$: Observable<number>;
 
+  subCatUrl: string;
+  catUrl: string;
+
   constructor(private router:Router, private productsService: ProductsService,
               private route: ActivatedRoute,
               private store: Store<{settings: SettingsState}>) {
+    Carousel.prototype.changePageOnTouch = (e,diff) => {}
     this.responsiveOptions = [
       {
           breakpoint: '1024px',
@@ -72,7 +77,6 @@ export class ProductDetailComponent implements OnInit {
    ngOnInit() {
         //this.producto = history.state;
         this.idProduct = this.route.snapshot.paramMap.get("id");
-
         this.setProductoId();
         this.cambiarProducto();
         this.cargarProducto(this.idProduct);
@@ -82,6 +86,7 @@ export class ProductDetailComponent implements OnInit {
       this.manageBuscadorSuperior();
 
     }
+
 
     manageBuscadorSuperior(){
       /*para el buscador*/
@@ -144,10 +149,17 @@ export class ProductDetailComponent implements OnInit {
     }
 
     verProducto(id:number, nombre:string){
-      this.gotoTop();
-      this.cambiarBreadcrumb(nombre);
-      this.router.navigate([`products/all/detail`, id]);
-      this.cargarProducto(id);
+      this.productsService.getCatSubCatProduct(id).subscribe( data =>{
+        if(data){
+          this.catUrl = data.categoriaKey;
+          this.subCatUrl = data.subCategoriaKey;
+
+          this.cambiarBreadcrumb(nombre);
+          this.router.navigate([`products`, this.catUrl, this.subCatUrl, 'detail', id]);
+          this.cargarProducto(id);
+          this.gotoTop();
+        }
+      })
     }
 
     gotoTop() {

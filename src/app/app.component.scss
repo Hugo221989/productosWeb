@@ -1,3 +1,102 @@
+@media screen and (min-width: 320px) and (max-width: 480px){
+    .divRegistro{
+        display: none;
+    }
+    .divCarritoDesktop{
+        display: none;
+    }
+    .cestaIconMobile{
+        text-align: right;
+        width: 60%;
+        float: right;
+        padding-bottom: 20%;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile{
+        width: 98vw !important;
+        height: 140vw;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
+        width: 98vw;
+        height: 100vw;
+        padding: 0;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
+        height: 100%;
+    }
+    .divNavBarLeft{
+        max-width: 20%;
+    }
+    .divNavBarCenter{
+        max-width: 60%;
+    }
+    .divNavBarRight{
+        max-width: 20%;
+    }
+    :host ::ng-deep .buttonCountries.ui-selectbutton.ui-buttonset.ui-widget.ui-corner-all.ui-buttonset-2{
+        width: 100%;
+    }
+    :host ::ng-deep .buttonCountries .ui-button{
+        margin-right: 2% !important;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 768px){
+    .divRegistro{
+        display: none;
+    }
+    .divCarritoDesktop{ 
+        display: none;
+    }
+    :host ::ng-deep .panelSideMenuCustom .ng-tns-c72-2.ui-panelmenu.ui-widget{
+        width: 16em;
+    }
+    .cestaIconMobile{
+        text-align: right;
+        width: 30%;
+        float: right;
+        padding-bottom: 20%;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile{
+        width: 94vw !important;
+        height: 100vw;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
+        width: 94vw;
+        height: 100vw;
+        padding: 0;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
+        height: 100%;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .cestaIconMobile{
+        display: none;
+    }
+    .divCarritoMobile{
+        display: none;
+    }
+    .botonMenuBarMobile{
+        display: none;
+    }
+}
+
+
+.buttonBars{
+    background-color: transparent;
+    border: 0;
+    padding: .8em;
+    margin-left: .5em;
+}
+
+.divRegistro{
+    margin-top: 0px !important;
+    text-align: right;
+    width: 70%;
+    float: right;
+  }
+
 .iconColor{
     color: black;
 }
@@ -57,4 +156,23 @@ body .ui-breadcrumb{
 }
 :host ::ng-deep .megaMenuCustom ul.ui-megamenu-submenu.ng-star-inserted>li:nth-child(2)>a>span{
     font-weight: bolder !important;
+}
+
+.linksRegistroLateral{
+    color: black;
+}
+
+.divRegistroLateral{
+    border-bottom: 1px solid #dadada;
+    display: flex;
+    padding-left: 10%;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+
+.divTituloLateral{
+    background-color: black;
+    color: white;
+    margin-bottom: 10%;
+    padding-left: 8%;
 }

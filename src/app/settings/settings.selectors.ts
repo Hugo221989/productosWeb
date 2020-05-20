@@ -13,6 +13,11 @@ export const selectSettingsNombreBreadcrumb = createSelector(
     (state: SettingsState) => state.nombreBreadcrumbFinal
 )
 
+export const selectSettingsNombreBreadcrumbEng = createSelector(
+    selectSettingsMemorized,
+    (state: SettingsState) => state.nombreBreadcrumbFinalEng
+)
+
 export const selectSettingsIsAuthenticated = createSelector(
     selectSettingsMemorized,
     (state: SettingsState) => state.isAuthenticated

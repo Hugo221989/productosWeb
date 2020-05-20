@@ -38,6 +38,13 @@
     :host ::ng-deep .buttonCountries .ui-button{
         margin-right: 2% !important;
     }
+    :host ::ng-deep .buttonCountries .ui-button.ui-widget.ui-state-default.ui-button-text-only.ng-star-inserted.ui-state-active{
+        background-color: #000000 !important;
+        border-color: #000000 !important;
+    }
+    :host ::ng-deep.dropdownLanguages .ui-dropdown{
+        min-width: 4em !important;
+    }
 }
 
 @media screen and (min-width: 480px) and (max-width: 768px){
@@ -80,8 +87,25 @@
     .botonMenuBarMobile{
         display: none;
     }
+    :host ::ng-deep.dropdownLanguages .ui-dropdown{
+        min-width: 4em !important;
+    }
 }
-
+:host ::ng-deep .dropdownLanguages .ui-inputtext{
+    background-color: black !important;
+    color: white !important;
+}
+:host ::ng-deep .dropdownLanguages .ui-dropdown-trigger{
+    background-color: black !important;
+    color: white !important;
+}
+:host ::ng-deep .dropdownLanguages .ui-dropdown-panel .ui-dropdown-items .ui-dropdown-item.ui-state-highlight{
+    background-color: black !important;
+}
+body .ui-dropdown .ui-state-focus{
+    box-shadow: 0 0 0 0.2em black !important;
+    border-color: black !important;
+}
 
 .buttonBars{
     background-color: transparent;
@@ -93,7 +117,7 @@
 .divRegistro{
     margin-top: 0px !important;
     text-align: right;
-    width: 70%;
+    width: 80%;
     float: right;
   }
 

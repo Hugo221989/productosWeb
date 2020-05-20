@@ -1,8 +1,52 @@
-.ui-tabview.ui-tabview-left>.ui-tabview-nav li{
-    background-color: white !important;
-    padding: 5px !important;
-    border: #d6d2d2 !important;
+@media screen and (min-width: 320px) and (max-width: 480px){
+    .divDataApartado{
+        width: 100%; 
+        float: right;
+    }
+    :host ::ng-deep .tabViewCustom .ui-tabview-nav{
+        width: 100%;
+        border: 1px solid #bfbbbb !important;
+    }
+    .tabViewCustom{
+        padding: 0 !important;
+    }
+    body .ui-tabview .ui-tabview-panels{
+        border: 0 !important;
+        margin-top: 0em;
+        padding: 0.3em !important;
+        width: 100%;
+    }
+    .ui-tabview.ui-tabview-left>.ui-tabview-nav li{
+        background-color: white !important;
+        padding: 5px !important;
+        border: #d6d2d2 !important;
+        width: 100% !important;
+    }
 }
+@media screen and (min-width: 480px) and (max-width: 768px){
+    .divDataApartado{
+        width: 100%; 
+        float: right;
+    }
+    .ui-tabview.ui-tabview-left>.ui-tabview-nav li{
+        background-color: white !important;
+        padding: 5px !important;
+        border: #d6d2d2 !important;
+    }
+}
+@media screen and (min-width: 1200px){
+    .divDataApartado{
+        width: 90%; 
+        float: right;
+    }
+    .ui-tabview.ui-tabview-left>.ui-tabview-nav li{
+        background-color: white !important;
+        padding: 5px !important;
+        border: #d6d2d2 !important;
+    }
+}
+
+
 .ui-tabview .ui-tabview-nav li a{
     color: black !important;
 }

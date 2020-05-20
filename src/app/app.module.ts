@@ -31,6 +31,8 @@ import {SidebarModule} from 'primeng/sidebar';
 import {PanelMenuModule} from 'primeng/panelmenu';
 import {DialogModule} from 'primeng/dialog';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import { I18nModule } from './translate/i18n/i18n.module';
+import {DropdownModule} from 'primeng/dropdown';
 
 
 @NgModule({
@@ -39,7 +41,7 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     RegisterComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
@@ -64,11 +66,13 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     PanelMenuModule,
     DialogModule,
     SelectButtonModule,
+    DropdownModule,
     EffectsModule.forRoot([SettingsEffect]),
     StoreModule.forRoot({
       settingsState: settingsReducer
     }),
-    StoreDevtoolsModule.instrument({ maxAge: 25})
+    StoreDevtoolsModule.instrument({ maxAge: 25}),
+    I18nModule
   ],
   providers: [],
   bootstrap: [AppComponent]

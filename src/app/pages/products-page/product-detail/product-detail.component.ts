@@ -17,6 +17,7 @@ import { Carousel } from 'primeng/carousel';
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent implements OnInit {
+  language: string = "es";
 
   images: any[];
   product: Producto;
@@ -76,6 +77,7 @@ export class ProductDetailComponent implements OnInit {
 
    ngOnInit() {
         //this.producto = history.state;
+        this.getLanguageBrowser();
         this.idProduct = this.route.snapshot.paramMap.get("id");
         this.setProductoId();
         this.cambiarProducto();
@@ -128,7 +130,13 @@ export class ProductDetailComponent implements OnInit {
       this.saborSelected = this.sabores[0];
       this.saboresItems = [];
       for(let sabor of this.sabores){
-        this.saboresItems.push({label:sabor.sabor, value:sabor});
+        let saborText: string = "";
+        if(this.language == "en"){
+          saborText =sabor.saborEng;
+        }else{
+          saborText = sabor.sabor;
+        }
+        this.saboresItems.push({label:saborText, value:sabor});
       }
     }
 
@@ -148,13 +156,13 @@ export class ProductDetailComponent implements OnInit {
       })
     }
 
-    verProducto(id:number, nombre:string){
+    verProducto(id:number, nombre:string, nombreEng: string){
       this.productsService.getCatSubCatProduct(id).subscribe( data =>{
         if(data){
           this.catUrl = data.categoriaKey;
           this.subCatUrl = data.subCategoriaKey;
 
-          this.cambiarBreadcrumb(nombre);
+          this.cambiarBreadcrumb(nombre, nombreEng);
           this.router.navigate([`products`, this.catUrl, this.subCatUrl, 'detail', id]);
           this.cargarProducto(id);
           this.gotoTop();
@@ -170,14 +178,12 @@ export class ProductDetailComponent implements OnInit {
       });
     }
 
-    cambiarBreadcrumb(nombre: string){
-      this.store.dispatch(actionSettingsNombreBreadcrumb({
-        nombreBreadcrumbFinal: nombre
-      }))
+    cambiarBreadcrumb(nombre: string, nombreEng: string){
+      this.productsService.cambiarBreadcrumb(nombre, nombreEng);
     }
 
     addProduct(product: Producto){
-      product.saborSeleccionado = this.saborSelected.sabor;
+      product.saborSeleccionado = this.saborSelected;
       product.cantidad = this.cantidadSeleccionadaProducto;  
 
       this.blockedDocument = true;
@@ -199,4 +205,8 @@ export class ProductDetailComponent implements OnInit {
         productoId: this.idProduct
       }))
     }
+
+    getLanguageBrowser(){
+      this.language = this.productsService.getLanguageBrowser();
+      }
 }

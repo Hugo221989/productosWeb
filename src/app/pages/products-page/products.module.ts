@@ -20,6 +20,8 @@ import {BlockUIModule} from 'primeng/blockui';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {TreeModule} from 'primeng/tree';
 import {SliderModule} from 'primeng/slider';
+import { I18nModule } from 'src/app/translate/i18n/i18n.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @NgModule({
@@ -44,8 +46,12 @@ import {SliderModule} from 'primeng/slider';
     BlockUIModule,
     ProgressSpinnerModule,
     TreeModule,
-    SliderModule
-
+    SliderModule,
+    I18nModule,
+    TranslateModule
+  ],
+  exports: [
+    I18nModule
   ]
 })
 export class ProductsModule { }

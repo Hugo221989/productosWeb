@@ -1,26 +1,26 @@
-<p-tabView orientation="left">
-    <p-tabPanel header="Información Personal">
+<p-tabView orientation="left" styleClass="tabViewCustom">
+    <p-tabPanel header="{{'info.personal' | translate}}">
         <form [formGroup]="userform" (ngSubmit)="guardarUsuario()">
-            <div class="ui-fluid" style="width: 90%; float: right;">
+            <div class="ui-fluid divDataApartado">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                         <div class="ui-g-12">
-                            <h3>Editar información personal</h3>
+                            <h3>{{'editar.info.pers' | translate}}</h3>
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Nombre *:
+                                {{'nombre' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="name" (keyup)="form()"/>
                             </div>
                             <div class="ui-grid-col-4">
-                                <p-message severity="error" text="Nombre Obligatorio" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty"></p-message>
+                                <p-message severity="error" text="{{'nombre.obligatorio' | translate}}" *ngIf="!userform.controls['name'].valid&&userform.controls['name'].dirty"></p-message>
                             </div>
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Apellido *:
+                                {{'apellido' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="lastname"/>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Nacimiento *:
+                                {{'nacimiento' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <p-inputMask mask="99/99/9999" formControlName="date" placeholder="31/12/2020" slotChar="dd/mm/aaaa"></p-inputMask>
@@ -43,7 +43,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Email *:
+                                {{'email' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="email"/>
@@ -55,7 +55,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Teléfono *:
+                                {{'telefono' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="phone" placeholder="Required - Min(6)"/>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Género *:
+                                {{'genero' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <p-dropdown [options]="genders" formControlName="gender" name="generoSelected"></p-dropdown>
@@ -95,11 +95,11 @@
     </p-tabPanel>
 
 
-    <p-tabPanel header="Foto de Perfil">
+    <p-tabPanel header="{{'foto.perfil' | translate}}">
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
-            <div class="" style="margin: 10px 0px; width: 90%; float: right;">
+            <div class="divDataApartado" style="margin: 10px 0px;">
                 <div class="ui-g-12">
-                    <h3>Editar información personal</h3>
+                    <h3>{{'editar.info.pers' | translate}}</h3>
                 </div>
                 <div style="text-align: center;">
                     <div class="ui-grid-row">
@@ -123,17 +123,17 @@
     </p-tabPanel>
 
 
-    <p-tabPanel header="Dirección de Entrega">
+    <p-tabPanel header="{{'direccion.entrega' | translate}}">
         <form [formGroup]="adressform" (ngSubmit)="guardarDireccion()">
-            <div class="ui-fluid" style="width: 90%; float: right;">
+            <div class="ui-fluid divDataApartado">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                         <div class="ui-g-12">
-                            <h3>Editar dirección</h3>
+                            <h3>{{'editar.direccion' | translate}}</h3>
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Nombre del Destinatario*:
+                                {{'nombre.destinatario' | translate}}*:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="destinatari"/>
@@ -144,7 +144,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Calle *:
+                                {{'calle' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="street"/>
@@ -155,7 +155,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Portal *:
+                                {{'portal' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="number" formControlName="streetNum"/>
@@ -166,7 +166,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Datos Adicionales :
+                                {{'datos.adicionales' | translate}} :
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="aditionalData"/>
@@ -176,7 +176,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Código Postal *:
+                                {{'cod.postal' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="postCode" placeholder="Required - Min(6)"/>
@@ -188,10 +188,10 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Localidad *:
+                                {{'localidad' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
-                                <p-dropdown [options]="countryList" optionLabel="city" formControlName="locality" [(ngModel)]="locality" [filter]="true"></p-dropdown>
+                                <p-dropdown [options]="countryList" optionLabel="city" formControlName="locality" [filter]="true"></p-dropdown>
                             </div>
                             <div class="ui-grid-col-4">
                                 <p-message severity="error" text="Localidad Obligatoria" *ngIf="!adressform.controls['locality'].valid&&adressform.controls['locality'].dirty"></p-message>
@@ -199,7 +199,7 @@
                         </div>
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2">
-                                Teléfono *:
+                                {{'telefono' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
                                 <input pInputText type="text" formControlName="phone" placeholder="Required - Min(6)"/>
@@ -228,17 +228,16 @@
     </p-tabPanel>
 
 
-    <p-tabPanel header="Eliminar Cuenta">
+    <p-tabPanel header="{{'eliminar.cuenta' | translate}}">
         <form [formGroup]="deleteAccountform" (ngSubmit)="saveAdressInfo(adressform.value)">
-            <div class="ui-fluid" style="width: 90%; float: right;">
+            <div class="ui-fluid divDataApartado">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
                         <div class="ui-g-12">
-                            <h3>Eliminar la Cuenta</h3>
-                            <p class="eliminarCuentaParrafo1">Al eliminar tu cuenta ya no podrás seguir disfrutando de las ventajas de ser cliente de ProductosWeb ni podrás hacer pedidos en la web</p>
-                            <p>¿Seguro que no quieres cambiar de opinión?</p>
-                            <p class="eliminarCuentaParrafo2">Antes de eliminar tu cuenta, podrás ejercer tus derechps a la portabilidad de datos
-                                enviando un mensaje a nuestro Servicio de Atención al Cliente
+                            <h3>{{'eliminar.cuenta' | translate}}</h3>
+                            <p class="eliminarCuentaParrafo1">{{'eliminar.cuenta.parr1' | translate}}</p>
+                            <p>{{'eliminar.cuenta.pregunta' | translate}}</p>
+                            <p class="eliminarCuentaParrafo2">{{'eliminar.cuenta.parr2' | translate}}
                             </p>
                         </div>
                         <div class="ui-g-12">
@@ -249,7 +248,7 @@
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2"></div>
                             <div class="ui-grid-col-6">
-                                <button pButton type="submit" label="Eliminar Cuenta" [disabled]="!adressform.valid" class="ui-button-raised ui-button-danger"></button>
+                                <button pButton type="submit" label="{{'eliminar.cuenta.button' | translate}}" [disabled]="!adressform.valid" class="ui-button-raised ui-button-danger"></button>
                             </div>
                             <div class="ui-grid-col-4"></div>
                         </div>

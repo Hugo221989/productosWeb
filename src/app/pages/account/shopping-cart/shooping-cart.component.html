@@ -2,10 +2,10 @@
         <p-table [value]="products" [responsive]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr class="trHeadPedidos">
-                    <th class="thHeadPedidos">Producto</th>
-                    <th class="thHeadPedidosRight">Precio</th>
-                    <th class="thHeadPedidosRight">Cantidad</th>
-                    <th class="thHeadPedidosRight">Total</th>
+                    <th class="thHeadPedidos">{{'producto' | translate}}Producto</th>
+                    <th class="thHeadPedidosRight">{{'precio' | translate}}</th>
+                    <th class="thHeadPedidosRight">{{'cantidad' | translate}}</th>
+                    <th class="thHeadPedidosRight">{{'total' | translate}}</th>
                     <th class="thHeadPedidosRight"></th>
                 </tr>
             </ng-template>
@@ -16,7 +16,7 @@
                             <div><img [alt]="product.nombre" src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" width="64" /></div>
                             <div class="nombreProductoCesta">
                                 <span><b>{{product.nombre}}</b></span>
-                                <p>Sabor {{product.saborSeleccionado}}</p>
+                                <p>{{language == 'en' ? product.saborSeleccionado.saborEng : product.saborSeleccionado.sabor}}</p>
                             </div>
                         </div>
                     </td>
@@ -33,21 +33,21 @@
             <div class="ui-grid-row totalPedido"> 
                 <div class="p-col-2 p-md-6 p-lg-8"></div>
                 <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
-                    <div class="tituloSubTotal">Sub-total:</div>
+                    <div class="tituloSubTotal">{{'subtotal' | translate}}:</div>
                     <div class="w100">{{cesta.importeSubTotal | number:'1.2-2'}} €</div>
                 </div>
             </div>
             <div class="ui-grid-row totalPedido">
                 <div class="p-col-2 p-md-6 p-lg-8"></div>
                 <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
-                    <div class="tituloSubTotal">Envío:</div>
+                    <div class="tituloSubTotal">{{'envio' | translate}}:</div>
                     <div class="w100">{{cesta.envio | number:'1.2-2'}} €</div>
                 </div>
             </div>
             <div class="ui-grid-row totalPedido">
                 <div class="p-col-2 p-md-6 p-lg-8"></div>
                 <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
-                    <div class="tituloSubTotal ">Total:</div>
+                    <div class="tituloSubTotal ">{{'total' | translate}}:</div>
                     <div class="w100"><b class="importeTotal">{{cesta.importeTotal | number:'1.2-2'}} €</b></div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
         <p-table [value]="products" [responsive]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr class="trHeadPedidos">
-                    <th class="thHeadPedidos">Producto</th>
+                    <th class="thHeadPedidos">{{'producto' | translate}}</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-product let-i="rowIndex">
@@ -72,7 +72,7 @@
                         <div class="ui-g-12 cabeceraProductoCestaMobile">
                             <div class="ui-g-12 nombreProductoCesta">
                                 <span><b>{{product.nombre}}</b></span>
-                                - <span>{{product.saborSeleccionado}}</span>
+                                - <span>{{language == 'en' ? product.saborSeleccionado.saborEng : product.saborSeleccionado.sabor}}</span>
                             </div>
                         </div>
                         <div class="ui-g-12 contenedorProductoCestaMobile">
@@ -106,28 +106,28 @@
             <div class="ui-grid-row totalPedido"> 
                 <div class="p-col-2 p-md-6 p-lg-8"></div>
                 <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
-                    <div class="tituloSubTotal">Sub-total:</div>
+                    <div class="tituloSubTotal">{{'subtotal' | translate}}:</div>
                     <div class="w100">{{cesta.importeSubTotal | number:'1.2-2'}} €</div>
                 </div>
             </div>
             <div class="ui-grid-row totalPedido">
                 <div class="p-col-2 p-md-6 p-lg-8"></div>
                 <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
-                    <div class="tituloSubTotal">Envío:</div>
+                    <div class="tituloSubTotal">{{'envio' | translate}}:</div>
                     <div class="w100">{{cesta.envio | number:'1.2-2'}} €</div>
                 </div>
             </div>
             <div class="ui-grid-row totalPedido">
                 <div class="p-col-2 p-md-6 p-lg-8"></div>
                 <div class="subdivInferiorTotal p-col-10 p-md-6 p-lg-4">
-                    <div class="tituloSubTotal ">Total:</div>
+                    <div class="tituloSubTotal ">{{'total' | translate}}:</div>
                     <div class="w100"><b class="importeTotal">{{cesta.importeTotal | number:'1.2-2'}} €</b></div>
                 </div>
             </div>
         </div>
         <div>
             <div class="ui-grid-col-8 divButtonPagoCesta">
-                <button pButton type="button" label="Proceder con el pago" class="buttonBigCesta" icon="pi pi-id-card"></button>
+                <button pButton type="button" label="{{'proceder.pago' | translate}}" class="buttonBigCesta" icon="pi pi-id-card"></button>
             </div>
         </div>
 </div>

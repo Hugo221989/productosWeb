@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { actionSettingsIsAuthenticated, actionSettingsNombreBreadcrumb } from "./settings.actions";
+import { actionSettingsIsAuthenticated, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng } from "./settings.actions";
 import { map, withLatestFrom, tap } from "rxjs/operators";
 import { Store, select } from "@ngrx/store";
 import { SettingsState } from "./settings.model";
-import { selectSettingsNombreBreadcrumb, selectSettingsIsAuthenticated } from './settings.selectors';
+import { selectSettingsNombreBreadcrumb, selectSettingsIsAuthenticated, selectSettingsNombreBreadcrumbEng } from './settings.selectors';
 
 
 export const SETTINGS_KEY = 'settingsState';
@@ -37,6 +37,18 @@ export class SettingsEffect{
                 withLatestFrom(this.store.pipe(select(selectSettingsNombreBreadcrumb))),
                 tap(([action, settings]) =>{
                     localStorage.setItem('nombreBreadcrumb', settings)
+                })
+
+                /** An EMPTY observable only emits completion. Replace with your own observable stream */
+    ),{ dispatch: false }
+    )
+
+    persistSettingsProductNameEng$ = createEffect(() => 
+        this.actions$.pipe(
+                ofType(actionSettingsNombreBreadcrumbEng),
+                withLatestFrom(this.store.pipe(select(selectSettingsNombreBreadcrumbEng))),
+                tap(([action, settings]) =>{
+                    localStorage.setItem('nombreBreadcrumbEng', settings)
                 })
 
                 /** An EMPTY observable only emits completion. Replace with your own observable stream */

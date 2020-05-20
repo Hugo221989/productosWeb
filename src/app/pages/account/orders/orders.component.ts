@@ -16,7 +16,12 @@ export class OrdersComponent implements OnInit {
     subtitulo: 'Suero de Proteina',
     apartado: 'Apartado 1 con muchos datos',
     beneficios: 'Beneficios multiples',
-    caracteristicas: 'Muchas caracteristicas'
+    caracteristicas: 'Muchas caracteristicas',
+    apartadoEng: '',
+    beneficiosEng: '',
+    caracteristicasEng: '',
+    subtituloEng: '',
+    tituloEng: ''
   }
   comentarios: Comentario[] = [];
   fotos: Foto[] = [];
@@ -37,7 +42,13 @@ export class OrdersComponent implements OnInit {
     infoVitaminas: this.infoVitaminas,
     ingredientes: '',
     modoEmpleo: '',
-    otrosIngredientes: ''
+    otrosIngredientes: '',
+    advertenciasEng:'',
+    alergiasEng:'',
+    conservacionEng:'',
+    ingredientesEng:'',
+    modoEmpleoEng:'',
+    otrosIngredientesEng:''
   }
   productos: Producto[] = [];
   pedidos: Pedido[] = [];

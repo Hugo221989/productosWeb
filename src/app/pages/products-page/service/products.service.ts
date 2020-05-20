@@ -6,7 +6,9 @@ import { Sabor } from 'src/app/models/productoOtrosDatos';
 import { Cesta } from 'src/app/models/cesta';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store } from '@ngrx/store';
-import { actionSettingsCarritoVacio } from 'src/app/settings/settings.actions';
+import { actionSettingsCarritoVacio, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng } from 'src/app/settings/settings.actions';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateCacheService } from 'ngx-translate-cache';
 
 const USER_API = 'http://localhost:8182/restfull/usuario/';
 const PRODUCT_API = 'http://localhost:8182/restfull/producto/';
@@ -23,44 +25,55 @@ export class ProductsService {
   envio: number;
   carritoVacio: boolean = true;
 
-  constructor(private httpClient: HttpClient, private store: Store<{settings: SettingsState}>) { }
+  browserLang: string = "es";
+
+  constructor(private httpClient: HttpClient, private store: Store<{settings: SettingsState}>
+              , translateCacheService: TranslateCacheService, translate: TranslateService) { 
+
+                this.browserLang = translateCacheService.getCachedLanguage() || translate.getBrowserLang();console.log("browserLang: ",this.browserLang)
+
+              }
+
+  getLanguageBrowser(){
+    return this.browserLang;
+  }
 
   getProductsList(buscador: string): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductos?buscador=${buscador}`);
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductos?buscador=${buscador}&language=${this.browserLang}`);
   }
 
   getProductsListBySubCat(subCategoria: string): Observable<any> {
     if(subCategoria == 'all'){
       subCategoria = null;
     }
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosBySubCategoria?subCategoria=${subCategoria}`);
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosBySubCategoria?subCategoria=${subCategoria}&language=${this.browserLang}`);
   }
 
   getProductsListByCat(categoria: string): Observable<any> {
     if(categoria == 'all'){
       categoria = null;
     }
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoria?categoria=${categoria}`);
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoria?categoria=${categoria}&language=${this.browserLang}`);
   }
   getProductsListByCatPadre(categoriaPadre: number): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoriaPadre?categoriaPadre=${categoriaPadre}`);
+    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoriaPadre?categoriaPadre=${categoriaPadre}&language=${this.browserLang}`);
   }
 
 
   getProductsListRelacionados(): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${PRODUCT_API}obtenerProductosRelacionados`);
+    return this.httpClient.get<Producto[]>(`${PRODUCT_API}obtenerProductosRelacionados?language=${this.browserLang}`);
   }
 
   getProductById(idProducto: number): Observable<any> {
-    return this.httpClient.get<Producto>(`${USER_API}obtenerProductoById?idProducto=${idProducto}`);
+    return this.httpClient.get<Producto>(`${USER_API}obtenerProductoById?idProducto=${idProducto}&language=${this.browserLang}`);
   }
 
   getCatSubCatProduct(idProducto: number){
-    return this.httpClient.get<CatProductoDto>(`${PRODUCT_API}obtenerCatAndSubCatByProductoId?idProducto=${idProducto}`);
+    return this.httpClient.get<CatProductoDto>(`${PRODUCT_API}obtenerCatAndSubCatByProductoId?idProducto=${idProducto}&language=${this.browserLang}`);
   }
 
   getSabores(): Observable<any> {
-    return this.httpClient.get<Sabor[]>(`${USER_API}obtenerProductoById`);
+    return this.httpClient.get<Sabor[]>(`${USER_API}obtenerProductoById?language=${this.browserLang}`);
   }
   
   /* SHOPPING CART */
@@ -161,7 +174,7 @@ export class ProductsService {
   triggerBotonCesta(){
     let botonCesta: HTMLElement = document.getElementById('botonShoppingCart') as HTMLElement;
     let contenedorCestaNormal: HTMLElement = document.getElementById('divRegistro') as HTMLElement;
-    if(this.isElementVisible(contenedorCestaNormal)){console.log("BOTON NORMAL: ")
+    if(this.isElementVisible(contenedorCestaNormal)){
       setTimeout(() => {
         botonCesta.click();
       }, 1000);
@@ -169,7 +182,7 @@ export class ProductsService {
    
     let botonCestaMobile: HTMLElement = document.getElementById('botonShoppingCartMobile') as HTMLElement;
     let contenedorCestaMobile: HTMLElement = document.getElementById('cestaIconMobile') as HTMLElement;
-    if(this.isElementVisible(contenedorCestaMobile)){console.log("BOTON MOBILE: ")
+    if(this.isElementVisible(contenedorCestaMobile)){
       setTimeout(() => {
         botonCestaMobile.click();
       }, 1000);
@@ -183,6 +196,14 @@ export class ProductsService {
         return true; 
     else 
         return false; 
-} 
+  }
+  cambiarBreadcrumb(nombre: string, nombreEng: string){
+    this.store.dispatch(actionSettingsNombreBreadcrumb({
+      nombreBreadcrumbFinal: nombre
+    }))
+    this.store.dispatch(actionSettingsNombreBreadcrumbEng({
+      nombreBreadcrumbFinalEng: nombreEng
+    }))
+  } 
 
 }

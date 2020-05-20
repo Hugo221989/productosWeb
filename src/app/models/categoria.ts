@@ -1,6 +1,7 @@
 export class CategoriaPadre {
     id: number;
     nombre: string;
+    nombreEng: string;
     key: string;
     categoria: Categoria[];
 }
@@ -8,6 +9,7 @@ export class CategoriaPadre {
 export class Categoria {
     id: number;
     nombre: string;
+    nombreEng: string;
     subCategoria: SubCategoria[];
     key: string;
 }
@@ -15,5 +17,6 @@ export class Categoria {
 export class SubCategoria {
     id: number;
     nombre: string;
+    nombreEng: string;
     key: string;
 }

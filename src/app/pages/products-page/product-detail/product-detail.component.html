@@ -14,15 +14,15 @@
         </div>
         <div class="ui-g-12 ui-md-6 contenerdorDescripcionDerecha">
             <div>
-                <h1>{{product.nombre}}</h1>
-                <h3>{{product.descripcion?.titulo}}</h3>
+                <h1>{{language == 'en' ? product.nombreEng : product.nombre}}</h1>
+                <h3>{{language == 'en' ? product.descripcion?.tituloEng : product.descripcion?.titulo}}</h3>
                 <h2 style="color: #d20404;">{{product.precio | number:'1.2-2'}}</h2> 
                 <div style="display: inline-flex;">
                     <div>
                         <p-rating [ngModel]="product.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating>
                     </div>
                     <div>    
-                        <p class="divEstrellasReviews">{{ product.comentarios.length }} reviews</p>
+                        <p class="divEstrellasReviews">{{ product.comentarios.length }} {{'opiniones' | translate}}</p>
                     </div>
                 </div>
             </div>
@@ -37,10 +37,10 @@
             </div>
             <div class="ui-g-12">
                 <div class="ui-g-12 ui-md-4 contenedorBotonFavoritos">
-                    <button pButton type="button" label="Favoritos" class="ui-button-raised ui-button-danger botonFavoritos" icon="pi pi-heart"></button>
+                    <button pButton type="button" label="{{'favoritos' | translate}}" class="ui-button-raised ui-button-danger botonFavoritos" icon="pi pi-heart"></button>
                 </div>
                 <div class="ui-g-12 ui-md-4 contenedorBotonAnadir">
-                    <button pButton type="button" label="Añadir a la cesta" class="ui-button-raised ui-button-success botonCesta" 
+                    <button pButton type="button" label="{{'add.cesta' | translate}}" class="ui-button-raised ui-button-success botonCesta" 
                     icon="pi pi-shopping-cart" (click)="addProduct(product)"></button>
                 </div>
                 <div class="ui-g-12 ui-md-4"></div>
@@ -51,29 +51,29 @@
     <div class="ui-g-12 ui-md-12 minHeight720 divContenedorTab">
         <div class="ui-g-12 ui-md-6 divSubContenedorTab">
             <p-tabView styleClass="tabViewProduct">
-                <p-tabPanel header="Descripción">
+                <p-tabPanel header="{{'descripcion' | translate}}">
                     <div class="contenedorDescripcion">
                         <div class="divTitulo">
-                        <p><b>{{product.descripcion?.titulo}}</b></p>
+                        <p><b>{{language == 'en' ? product.descripcion?.tituloEng : product.descripcion?.titulo}}</b></p>
                         </div>
                         <div class="divSubtitulo">
-                            <p><b>{{product.descripcion?.subtitulo}}</b></p>
+                            <p><b>{{language == 'en' ? product.descripcion?.subtituloEng : product.descripcion?.subtitulo}}</b></p>
                         </div>
                         <div class="divApartado">
-                            <p>{{product.descripcion?.apartado}}</p>
+                            <p>{{language == 'en' ? product.descripcion?.apartadoEng : product.descripcion?.apartado}}</p>
                         </div>
                         <div class="divCaracteristicas">
-                            <p style="margin-bottom: 2%;">Características principales:</p>
-                            <p>{{product.descripcion?.caracteristicas}}</p>
+                            <p style="margin-bottom: 2%;">{{'caracteristicas.principales' | translate}}:</p>
+                            <p>{{language == 'en' ? product.descripcion?.caracteristicasEng : product.descripcion?.caracteristicas}}</p>
                         </div>
                         <div class="divBeneficios">
-                            <p style="margin-bottom: 2%;">Beneficios de {{ product.nombre }}:</p>
-                            <p>{{product.descripcion?.beneficios}}</p>
+                            <p style="margin-bottom: 2%;">{{'beneficios.de' | translate}} {{language == 'en' ? product.nombreEng : product.nombre}}:</p>
+                            <p>{{language == 'en' ? product.descripcion?.beneficiosEng : product.descripcion?.beneficios}}</p>
                         </div>
                     </div>
                 </p-tabPanel>
                 
-                <p-tabPanel header="Opiniones">
+                <p-tabPanel header="{{'opiniones' | translate}}">
                     <div class="contenedorOpiniones">
                         <div class="ui-g-12 ui-md-12 ui-g-nopad">
                             <p-dataView #dv [value]="comentarios" [paginator]="true" [rows]="5" paginatorPosition="bottom" filterBy="autor"
@@ -107,75 +107,76 @@
             <div class="contenedorInfoNutricional">
                 <!-- VALOR NUTRICIONAL -->
                 <div class="ui-g-12">
-                    <b class="left">Inf. Nutricional</b>
+                    <b class="left">{{'info.nutricional' | translate}}</b>
                 </div>
                 <hr>
                 <div class="ui-g-12">
-                    <span class="left">Dosis</span><span class="right">{{valorNutricional.dosis}}</span>
+                    <span class="left">{{'dosis' | translate}}</span><span class="right">{{valorNutricional.dosis}}</span>
                 </div>
                 <hr>
                 <div class="ui-g-12">
-                    <span class="left">Dosis Envase</span><span class="right">{{valorNutricional.dosisEnvase}}</span>
+                    <span class="left">{{'dosis.envase' | translate}}</span><span class="right">{{valorNutricional.dosisEnvase}}</span>
                 </div>
                 <hr>
                 <div class="ui-g-12">
-                    <span class="left">Dosis diaria</span><span class="right">{{valorNutricional.dosisDiaria}}</span>
+                    <span class="left">{{'dosis.diaria' | translate}}</span><span class="right">{{valorNutricional.dosisDiaria}}</span>
                 </div>
                 <hr>
                 <!-- INFO BASICA -->
                 <div class="ui-g-12" *ngIf="infoBasica.valorEnergetico">
-                    <b class="left">Valor Energético</b><span class="right">{{infoBasica.valorEnergetico}}Kcal</span>
+                    <b class="left">{{'valor.energetico' | translate}}</b><span class="right">{{infoBasica.valorEnergetico}}Kcal</span>
                 </div>
                 <hr *ngIf="infoBasica.valorEnergetico">
                 <div class="ui-g-12" *ngIf="infoBasica.proteinas">
-                    <b class="left">Proteínas</b><span class="right">{{infoBasica.proteinas}}g</span>
+                    <b class="left">{{'proteinas' | translate}}</b><span class="right">{{infoBasica.proteinas}}g</span>
                 </div>
                 <hr *ngIf="infoBasica.proteinas">
                 <div class="ui-g-12" *ngIf="infoBasica.hidratos">
                     <div class="w100">
-                        <b class="left">Hidratos de Carbono</b><span class="right">{{infoBasica.hidratos}}g</span>
+                        <b class="left">{{'ch' | translate}}</b><span class="right">{{infoBasica.hidratos}}g</span>
                     </div>
                     <div class="ui-g-12">
-                        <span class="left">Azúcares</span><span class="right">{{infoBasica.azucares}}g</span>
+                        <span class="left">{{'azucares' | translate}}</span><span class="right">{{infoBasica.azucares}}g</span>
                     </div>
                 </div>
                 <hr *ngIf="infoBasica.hidratos">
                 <div class="ui-g-12" *ngIf="infoBasica.grasas">
                     <div class="w100">
-                        <b class="left">Grasas Totales</b><span class="right">{{infoBasica.grasas}}g</span>
+                        <b class="left">{{'grasas.totales' | translate}}</b><span class="right">{{infoBasica.grasas}}g</span>
                     </div>
                     <div class="ui-g-12">
-                        <span class="left">Grasas Saturadas</span><span class="right">{{infoBasica.saturadas}}g</span>
+                        <span class="left">{{'grasas.saturadas' | translate}}</span><span class="right">{{infoBasica.saturadas}}g</span>
                     </div>
                 </div>
                 <hr *ngIf="infoBasica.grasas">
                 <div class="ui-g-12" *ngIf="infoBasica.sodio">
-                    <b class="left">Sodio</b><span class="right">{{infoBasica.sodio}}g</span>
+                    <b class="left">{{'sodio' | translate}}</b><span class="right">{{infoBasica.sodio}}g</span>
                 </div>
                 <hr *ngIf="infoBasica.sodio">
                 <!-- VITAMINAS -->
                 <div *ngFor="let vitamina of vitaminas">
                     <div class="ui-g-12">
-                        <b class="left">{{ vitamina.nombre }}</b><span class="right">{{vitamina.valor}}g</span>
+                        <b class="left">{{language == 'en' ? vitamina.nombreEng : vitamina.nombre}}</b>
+                        <span class="right">{{vitamina.valor}}g</span>
                     </div>
                     <hr>
                 </div>
 
                 <!-- MAS DATOS -->
                 <div class="ui-g-12 divIngredientes padding0mobile" *ngIf="valorNutricional.ingredientes">
-                    <b>Ingredientes:</b> <span style="margin-left: 1%;">{{valorNutricional.ingredientes}}</span>
+                    <b>{{'ingredientes' | translate}}:</b> <span style="margin-left: 1%;">{{language == 'en' ? valorNutricional.ingredientesEng : valorNutricional.ingredientes}}</span>
                 </div>
                 <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.modoEmpleo">
-                    <b>Modo de Empleo:</b> <span style="margin-left: 1%;">{{valorNutricional.modoEmpleo}}</span>
+                    <b>{{'modo.empleo' | translate}}:</b> <span style="margin-left: 1%;">{{language == 'en' ? valorNutricional.modoEmpleoEng : valorNutricional.modoEmpleo}}</span>
                 </div>
                 <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.conservacion">
-                    <b>Conservación:</b> <span style="margin-left: 1%;">{{valorNutricional.conservacion}}</span>
+                    <b>{{'conservacion' | translate}}:</b> <span style="margin-left: 1%;">{{language == 'en' ? valorNutricional.conservacionEng : valorNutricional.conservacion}}</span>
                 </div>
                 <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.alergias">
-                    <b>Alergias:</b> <span style="margin-left: 1%;">{{valorNutricional.alergias}}</span>
+                    <b>{{'alergias' | translate}}:</b> <span style="margin-left: 1%;">{{language == 'en' ? valorNutricional.alergiasEng : valorNutricional.alergias}}</span>
                 </div>
                 <div class="ui-g-12 padding0mobile" *ngIf="valorNutricional.advertencias">
-                    <b>Advertencias:</b> <span style="margin-left: 1%;">{{valorNutricional.advertencias}}</span>
+                    <b>{{'advertencias' | translate}}:</b> <span style="margin-left: 1%;">{{language == 'en' ? valorNutricional.advertenciasEng : valorNutricional.advertencias}}</span>
                 </div>
             </div>
         </div>
@@ -185,10 +186,10 @@
         <p-carousel [value]="products" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" 
         [circular]="true" [autoplayInterval]="6000" [responsiveOptions]="responsiveOptions">
             <p-header>
-                <h3>También te podría interesar</h3>
+                <h3>{{'podria.interesar' | translate}}</h3>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre)">
+                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng)">
                         <div class="p-grid p-nogutter">
                             <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
                                 <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
@@ -197,7 +198,7 @@
                                 <img src="http://127.0.0.1:8887/not-found.png" class="imagenCarouselInferior"/>
                             </div>
                             <div class="p-col-12 car-data text-center">
-                                <div class="car-title">{{product.nombre}}</div>
+                                <div class="car-title">{{language == 'en' ? product.nombreEng : product.nombre}}</div>
                                 <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}}</h3> </div>
             
                                 <div class="car-buttons">

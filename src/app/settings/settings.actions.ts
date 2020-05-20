@@ -12,6 +12,10 @@ export const actionSettingsNombreBreadcrumb = createAction(
     '[Settings] Breadcrumb Name',
     props<{nombreBreadcrumbFinal: string}>()
 );
+export const actionSettingsNombreBreadcrumbEng = createAction(
+    '[Settings] Breadcrumb Name ENg',
+    props<{nombreBreadcrumbFinalEng: string}>()
+);
 export const actionSettingsCarritoVacio = createAction(
     '[Settings] Carrito Vacio',
     props<{carritoEstaVacio: boolean}>()

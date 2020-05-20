@@ -11,6 +11,7 @@ import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { Categoria, SubCategoria, CategoriaPadre } from 'src/app/models/categoria';
 import { TreeNode, MessageService } from 'primeng/api';
 import { CategoriaService } from '../service/categoria.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-products-page',
@@ -22,6 +23,8 @@ import { CategoriaService } from '../service/categoria.service';
 })
 
 export class ProductsPageComponent implements OnInit {
+  language: string = "es";
+
   subCatUrl: string;
   catUrl: string;
 
@@ -52,17 +55,18 @@ export class ProductsPageComponent implements OnInit {
               private productsService: ProductsService,
               private route: ActivatedRoute,
               private categoriaService: CategoriaService,
-              private store: Store<{settings: SettingsState}>) { }
+              private store: Store<{settings: SettingsState}>,
+              public translate: TranslateService) { }
 
   ngOnInit() {
+      this.getLanguageBrowser();
       this.getUrlParams();
       this.getSessionCatUrl();
       this.getFiltroPriceSession();
       this.getCategoriaPadre();
-      this.store.dispatch(actionSettingsNombreBreadcrumb({
-        nombreBreadcrumbFinal: null
-      }))
+      this.productsService.cambiarBreadcrumb(null, null);
       localStorage.setItem('nombreBreadcrumb', null);
+      localStorage.setItem('nombreBreadcrumbEng', null);
 
       /*para el buscador*/
       this.manageBuscadorSuperior();
@@ -72,6 +76,10 @@ export class ProductsPageComponent implements OnInit {
           {label: 'Precio', value: 'precio'},
           {label: 'Nombre', value: 'nombre'}
       ];  
+  }
+
+  getLanguageBrowser(){
+  this.language = this.productsService.getLanguageBrowser();
   }
 
   getUrlParams(){
@@ -142,9 +150,7 @@ export class ProductsPageComponent implements OnInit {
       this.store.dispatch(actionSettingsBreadcrumbExist({
         hayBreadcrumbFinal: true
       }))
-      this.store.dispatch(actionSettingsNombreBreadcrumb({
-        nombreBreadcrumbFinal: product.nombre
-      }))
+      this.productsService.cambiarBreadcrumb(product.nombre, product.nombreEng);
       if(this.subCategoriaText == null){
         this.subCategoriaText = 'all';
         window.sessionStorage.setItem('categoria', this.catUrl);
@@ -196,22 +202,41 @@ export class ProductsPageComponent implements OnInit {
     this.segundoNivelTree = [];
     this.tercerNivelTree = [];
 
+    let labelCatPadre: string;
+      if(this.language == "en"){
+        labelCatPadre = this.categoriaPadre.nombreEng;
+      }else{
+        labelCatPadre = this.categoriaPadre.nombre;
+      }
+
     for(let cat of this.categoriaPadre.categoria){ 
       let catNode: TreeNode;
+      let labelCat: string;
+      if(this.language == "en"){
+        labelCat = cat.nombreEng;
+      }else{
+        labelCat = cat.nombre;
+      }
 
       /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
       if(cat.key == selectedCat){
         let subCatNode: TreeNode;
+        let labelSubcat: string;
         for(let subCat of cat.subCategoria){
+          if(this.language == "en"){
+            labelSubcat = subCat.nombreEng;
+          }else{
+            labelSubcat = subCat.nombre;
+          }
           subCatNode = {
-            label: subCat.nombre,
+            label: labelSubcat,
             key: cat.key+'/'+subCat.key
           }
           this.tercerNivelTree.push(subCatNode);
         }
 
         catNode = {
-          label: cat.nombre,
+          label: labelCat,
           key: cat.key,
           children: this.tercerNivelTree,
           expanded: true
@@ -222,7 +247,7 @@ export class ProductsPageComponent implements OnInit {
 
       /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
         catNode = {
-          label: cat.nombre,
+          label: labelCat,
           key: cat.key
         }
         this.segundoNivelTree.push(catNode);
@@ -231,7 +256,7 @@ export class ProductsPageComponent implements OnInit {
 
     this.primerNivelTree = [
       {
-        label: this.categoriaPadre.nombre,
+        label: labelCatPadre,
         key: this.categoriaPadre.key+'/all',
         children: this.segundoNivelTree,
         expanded: true

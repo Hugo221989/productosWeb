@@ -3,6 +3,7 @@ import { Producto } from 'src/app/models/producto';
 import { Comentario, Sabor, Foto, Descripcion, InfoBasica, InfoVitaminas, ValorNutricional } from 'src/app/models/productoOtrosDatos';
 import { ProductsService } from '../../products-page/service/products.service';
 import { Cesta } from 'src/app/models/cesta';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-shooping-cart',
@@ -11,15 +12,19 @@ import { Cesta } from 'src/app/models/cesta';
 })
 export class ShoopingCartComponent implements OnInit {
 
+  language: string = "es";
+
   @Input()
   cesta: Cesta;
   products: Producto[];
   subtotal: string;
   total: string;
   envio: string;
-  constructor(private productsService: ProductsService) { }
+  constructor(private productsService: ProductsService,
+    public translate: TranslateService) { }
 
   ngOnInit(): void {
+    this.getLanguageBrowser();
     this.products = [];
     this.cesta = this.productsService.getProductosCesta();
     this.products = this.cesta.productos;
@@ -29,5 +34,9 @@ export class ShoopingCartComponent implements OnInit {
     this.cesta = this.productsService.removeProductoCesta(index);
     this.products = this.cesta.productos;
   }
+
+  getLanguageBrowser(){
+    this.language = this.productsService.getLanguageBrowser();
+    }
 
 }

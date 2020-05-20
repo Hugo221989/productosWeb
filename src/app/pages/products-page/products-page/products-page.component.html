@@ -4,14 +4,14 @@
        <!--  <p-tree [value]="filtrosTree"></p-tree> -->
        <div>
             <div class="ui-g-12">
-                <h3>Categoría</h3>
+                <h3>{{'categoria' | translate}}</h3>
                 <hr>
                 <p-tree [value]="primerNivelTree" selectionMode="single" [(selection)]="selectedMenuNode"
                 (onNodeSelect)="nodeSelect($event)" styleClass="menuLateral"></p-tree>
                 <div style="margin-top:8px">Selected Node: {{selectedMenuNode ? selectedMenuNode.key : 'none'}}</div>
             </div>
             <div class="ui-g-12 divRangoPrecios">
-                <h3>Precio</h3>
+                <h3>{{'precio' | translate}}</h3>
                 <hr>
                 <h3>{{rangePriceValues[0] + '€ - ' + rangePriceValues[1]+'€'}}</h3>
                 <p-slider [(ngModel)]="rangePriceValues" [style]="{'width':'14em'}" [range]="true" (onSlideEnd)="filtrarPorPrecio()"></p-slider>

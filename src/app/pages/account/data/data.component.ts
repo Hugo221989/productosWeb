@@ -8,6 +8,7 @@ import { SpainCities } from 'src/app/models/spainCities';
 import { TokenStorageService } from '../../login/logn-service/token-storage.service';
 import { User, Genero, UsuarioDireccion } from '../../../models/user';
 import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-data',
@@ -46,7 +47,8 @@ export class DataComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private messageService: MessageService,
               private accountService: AccountService,
-              private tokenStorageService: TokenStorageService) { }
+              private tokenStorageService: TokenStorageService,
+              public translate: TranslateService) { }
 
   ngOnInit(): void {
 

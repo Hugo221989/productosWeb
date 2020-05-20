@@ -7,6 +7,7 @@ export const initialState: SettingsState = {
     isAuthenticated: false,
     hayBreadcrumbFinal: false,
     nombreBreadcrumbFinal: null,
+    nombreBreadcrumbFinalEng: null,
     carritoEstaVacio: true,
     buscador: null,
     productoId: 0
@@ -15,6 +16,8 @@ export const initialState: SettingsState = {
 const reducer = createReducer( 
     initialState, 
     on(SettingsActions.actionSettingsNombreBreadcrumb,
+        (state, action) => ({...state, ...action}) ),
+    on(SettingsActions.actionSettingsNombreBreadcrumbEng,
         (state, action) => ({...state, ...action}) ),
     on(SettingsActions.actionSettingsBreadcrumbExist,
         (state, {hayBreadcrumbFinal}) => ({...state, hayBreadcrumbFinal}) ),

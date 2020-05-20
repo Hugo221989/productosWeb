@@ -1,10 +1,45 @@
-body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem{
-    width: 20% !important;
-    padding: 4px;
+
+@media screen and (min-width: 320px) and (max-width: 480px){
+    body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem{
+        width: 49% !important;
+        padding: 4px;
+    }
+    .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem a{
+        width: 100% !important;
+        padding-left: 0 !important;
+    }
+    .ui-tabview-left>.ui-tabview-nav{
+        padding-top: 0% !important;
+        height: 100% !important;
+    }
 }
-.ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem a{
-    width: 100% !important;
+@media screen and (min-width: 480px) and (max-width: 768px){
+    body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem{
+        width: 40% !important;
+        padding: 4px;
+    }
+    .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem a{
+        width: 100% !important;
+    }
+    .ui-tabview-left>.ui-tabview-nav{
+        padding-top: 25px !important;
+        height: 100%;
+    }
 }
+@media screen and (min-width: 1200px){
+    body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem{
+        width: 20% !important;
+        padding: 4px;
+    }
+    .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem a{
+        width: 100% !important;
+    }
+    .ui-tabview-left>.ui-tabview-nav{
+        padding-top: 25px !important;
+    }
+}
+
+
 body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active{
     background-color: #d90000 !important;
     border: 1px solid #ff0000 !important;
@@ -12,7 +47,4 @@ body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active{
 }
 body .ui-tabview.ui-tabview-left .ui-tabview-nav li:focus{
     box-shadow: 0 0 0 0 #ffffff !important;
-}
-.ui-tabview-left>.ui-tabview-nav{
-    padding-top: 25px !important;
 }

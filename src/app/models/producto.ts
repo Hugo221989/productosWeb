@@ -4,10 +4,11 @@ import { Categoria, SubCategoria } from './categoria';
 export class Producto {
     id: number;
     nombre: string;
+    nombreEng: string;
     precio: string;
     tamano: number;
     sabores: Sabor[];
-    saborSeleccionado: string;
+    saborSeleccionado: Sabor;
     cantidad: number;
     puntuacion: number;
     comentarios: Comentario[];

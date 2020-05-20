@@ -9,15 +9,21 @@ export class Comentario{
 export class Descripcion{
     id: number;
     titulo: string;
+    tituloEng: string;
     subtitulo: string;
+    subtituloEng: string;
     apartado: string;
+    apartadoEng: string;
     caracteristicas: string;
+    caracteristicasEng: string;
     beneficios: string;
+    beneficiosEng: string;
 }
 
 export class InfoVitaminas{
     id: number;
     nombre?: string;
+    nombreEng?: string;
     valor?: string;
 }
 
@@ -45,11 +51,18 @@ export class ValorNutricional{
     alergias: string;
     modoEmpleo: string;
     advertencias: string;
+    ingredientesEng: string;
+    otrosIngredientesEng: string;
+    conservacionEng: string;
+    alergiasEng: string;
+    modoEmpleoEng: string;
+    advertenciasEng: string;
 }
 
 export class Sabor{
     id: number;
     sabor: string;
+    saborEng: string;
 }
 
 export class Foto{

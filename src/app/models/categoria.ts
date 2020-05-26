@@ -1,3 +1,5 @@
+import { Producto } from './producto';
+
 export class CategoriaPadre {
     id: number;
     nombre: string;
@@ -11,6 +13,7 @@ export class Categoria {
     nombre: string;
     nombreEng: string;
     subCategoria: SubCategoria[];
+    productos: Producto[];
     key: string;
 }
 

@@ -5,7 +5,7 @@
        <p class="textoPequeno ml-2"> <fa-icon [icon]="faInfoCircle" class="iconCustom"></fa-icon> COVID-19: {{'infoEntregasCovid' | translate}}.</p>
       </div>
       <div class="p-col text-center">
-        <p class="textoPequeno"><fa-icon [icon]="faTruck" class="iconCustom"></fa-icon>{{'infoEnvioGratuito' | translate}} €24.99</p>
+        <p class="textoPequeno"><fa-icon [icon]="faTruck" class="iconCustom"></fa-icon>{{'infoEnvioGratuito' | translate}} €</p>
       </div>
       <div class="p-col"></div>
     </div>
@@ -14,7 +14,6 @@
           <button pButton type="button" (click)="visibleSidebar1 = true" icon="pi pi-bars" class="buttonBars botonMenuBarMobile"></button>
         </div>
         <div class="p-col mt-12 divNavBarCenter">
-          <!-- <p-autoComplete [(ngModel)]="autocompleteText" placeholder="Buscar" [suggestions]="results" (completeMethod)="search($event)"></p-autoComplete> -->
           <input [(ngModel)]="inputSearch" class="inputSearchNavBar" type="text" pInputText (input)="search($event.target.value)" #inputSearchNavBar/>
         </div>
         <div class="p-col divNavBarRight">
@@ -77,7 +76,7 @@
             </a>
 
             <p-dialog [(visible)]="displayCartMobile" position="top" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
-                [draggable]="false" [resizable]="false" styleClass="overlayShoppingCartMobile" header="Carrito de la compra">
+                [draggable]="false" [resizable]="false" styleClass="overlayShoppingCartMobile" header="{{'cesta.compra' | translate}}">
                 <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
 
                   <div *ngIf="!carritoVacio">

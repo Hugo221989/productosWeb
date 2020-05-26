@@ -28,3 +28,7 @@ export const actionSettingsCambiarProductoId = createAction(
     '[Settings] Cambiar Producto',
     props<{productoId: number}>()
 );
+export const actionSettingsCambiarLanguage = createAction(
+    '[Settings] Cambiar Idioma',
+    props<{language: number}>()
+);

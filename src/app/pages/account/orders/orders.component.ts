@@ -1,136 +1,85 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Pedido } from 'src/app/models/pedido';
 import { Producto } from 'src/app/models/producto';
-import { Descripcion, Comentario, Foto, Sabor, ValorNutricional, InfoBasica, InfoVitaminas } from 'src/app/models/productoOtrosDatos';
+import { AccountService } from '../service/account.service';
+import { TranslateService } from '@ngx-translate/core';
+import { User } from 'src/app/models/user';
+import { ProductsService } from '../../products-page/service/products.service';
+import { Observable, Subscription } from 'rxjs';
+import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
+import { SettingsState } from 'src/app/settings/settings.model';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss']
 })
-export class OrdersComponent implements OnInit {
+export class OrdersComponent implements OnInit, OnDestroy {
+  language: string = "es";
 
-  descripcion:Descripcion = {
-    id: 1,
-    titulo: 'Proteina',
-    subtitulo: 'Suero de Proteina',
-    apartado: 'Apartado 1 con muchos datos',
-    beneficios: 'Beneficios multiples',
-    caracteristicas: 'Muchas caracteristicas',
-    apartadoEng: '',
-    beneficiosEng: '',
-    caracteristicasEng: '',
-    subtituloEng: '',
-    tituloEng: ''
-  }
-  comentarios: Comentario[] = [];
-  fotos: Foto[] = [];
-  sabores: Sabor[] = [];
-  inforBasica: InfoBasica = {
-    id: 1
-  }
-  infoVitaminas: InfoVitaminas[] = [];
-  valorNutricional: ValorNutricional = {
-    id: 1,
-    advertencias: '',
-    alergias: '',
-    conservacion: '',
-    dosis: 35,
-    dosisDiaria: 35,
-    dosisEnvase: 66,
-    infoBasica: this.inforBasica,
-    infoVitaminas: this.infoVitaminas,
-    ingredientes: '',
-    modoEmpleo: '',
-    otrosIngredientes: '',
-    advertenciasEng:'',
-    alergiasEng:'',
-    conservacionEng:'',
-    ingredientesEng:'',
-    modoEmpleoEng:'',
-    otrosIngredientesEng:''
-  }
-  productos: Producto[] = [];
   pedidos: Pedido[] = [];
+  selectedPedido: Pedido;
+  selectedPedidoFecha: Date;
+  productos: Producto[] = [];
+  displayDialog: boolean;
+  textoBuscadorOvservable$: Observable<string>;
+  textoBuscador: string = null;
+  contenedorBusquedaProducto: boolean = false;
+  private subscription: Subscription[] = [];
   
-/*   productos: Producto[] = [
-    {
-      nombre: 'Televisor 24',
-      precio: '344',
-      precioFinal: '344',
-      descripcion: this.descripcion,
-      disponible: true,
-      comentarios: this.comentarios,
-      descuento: 0,
-      fotos: this.fotos,
-      id: 1,
-      puntuacion: 4,
-      saborSeleccionado: '',
-      sabores: this.sabores,
-      tamano: 2000,
-      valorNutricional: this.valorNutricional,
-      cantidad: 1
-    },
-    {
-      nombre: 'Televisor 24',
-      precio: '344',
-      precioFinal: '344',
-      descripcion: this.descripcion,
-      disponible: true,
-      comentarios: this.comentarios,
-      descuento: 0,
-      fotos: this.fotos,
-      id: 2,
-      puntuacion: 5,
-      saborSeleccionado: '',
-      sabores: this.sabores,
-      tamano: 2000,
-      valorNutricional: this.valorNutricional,
-      cantidad: 1
-    }
-  ] */
-/* 
-  pedidos: Pedido[] = [
-    {
-      precio: '23.50',
-      metodoEnvio: 'Nacex 24h',
-      destinatario: 'Hugo Onetto',
-      direccionEnvio: 'Francisco Moreno Usedo 18',
-      fecha: new Date(),
-      numPedido: 'IX99877S',
-      productos: this.productos
-    },{
-      precio: '100',
-      metodoEnvio: 'Correos Express',
-      destinatario: 'Hugo Onetto',
-      direccionEnvio: 'Francisco Moreno Usedo 18',
-      fecha: new Date(),
-      numPedido: 'PX99878G',
-      productos: this.productos
-    },{
-      precio: '10.95',
-      metodoEnvio: 'Nacex 24h',
-      destinatario: 'Hugo Onetto',
-      direccionEnvio: 'Francisco Moreno Usedo 18',
-      fecha: new Date(),
-      numPedido: 'IZ99117S',
-      productos: this.productos
-    }
-  ] */
-
-  constructor() { }
+  constructor(private accountService: AccountService,
+              private productsService: ProductsService,
+              public translate: TranslateService,
+              private store: Store<{settings: SettingsState}>) { }
 
   cols: any[];
 
   ngOnInit(): void {
 
-    this.cols = [
-      { field: 'nombre', header: 'Productos' },
-      { field: 'precio', header: 'Precio' },
-      { field: 'cantidad', header: 'Cantidad' },
-      { field: 'precioTotal', header: 'Sub-total' }
-  ];
+    this.getLanguageBrowser();
+    this.manageBuscadorSuperior();
+    this.getOrders();
+  }
 
+  getOrders(){
+    let usuario: User;
+    let idUsuario: number;
+    if(sessionStorage.getItem('auth-user')){
+      usuario = JSON.parse(sessionStorage.getItem('auth-user'));
+      idUsuario = usuario.id;
+    }
+    
+    this.accountService.getOrders(idUsuario).subscribe( data => {
+      this.pedidos = data;
+    })
+  }
+
+  onRowSelect(event) {
+    this.selectedPedidoFecha = this.selectedPedido.fechaPedido;
+    this.productos = this.selectedPedido.productos;
+    this.displayDialog = true;
+}
+
+  getLanguageBrowser(){
+    this.language = this.productsService.getLanguageBrowser();
+    }
+
+    manageBuscadorSuperior(){
+    /*para el buscador*/
+    this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
+    this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
+        this.textoBuscador = texto;
+        if(this.textoBuscador != null && this.textoBuscador != ''){
+          this.contenedorBusquedaProducto = true;
+        }else{
+          this.contenedorBusquedaProducto = false;
+        }
+    }))
+  }
+
+  ngOnDestroy(){
+    this.subscription.forEach(s => s.unsubscribe());
   }
 
 }

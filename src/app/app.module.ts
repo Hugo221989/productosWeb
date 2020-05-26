@@ -33,12 +33,16 @@ import {DialogModule} from 'primeng/dialog';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import { I18nModule } from './translate/i18n/i18n.module';
 import {DropdownModule} from 'primeng/dropdown';
+import { FeedingPageComponent } from './pages/feeding/feeding-page/feeding-page.component';
+import { FeedingDetailComponent } from './pages/feeding/feeding-detail/feeding-detail.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    RegisterComponent
+    RegisterComponent,
+    FeedingPageComponent,
+    FeedingDetailComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

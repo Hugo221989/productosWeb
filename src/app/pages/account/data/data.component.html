@@ -1,4 +1,4 @@
-<p-tabView orientation="left" styleClass="tabViewCustom">
+<p-tabView orientation="left" styleClass="tabViewCustom" *ngIf="!contenedorBusquedaProducto">
     <p-tabPanel header="{{'info.personal' | translate}}">
         <form [formGroup]="userform" (ngSubmit)="guardarUsuario()">
             <div class="ui-fluid divDataApartado">
@@ -79,7 +79,7 @@
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2"></div>
                             <div class="ui-grid-col-6">
-                                <button pButton type="submit" label="Guardar" [disabled]="!userform.valid"></button>
+                                <button pButton type="submit" label="{{'guardar' | translate}}" [disabled]="!userform.valid"></button>
                             </div>
                             <div class="ui-grid-col-4"></div>
                         </div>
@@ -212,7 +212,7 @@
                         <div class="ui-grid-row customInputsData">
                             <div class="ui-grid-col-2"></div>
                             <div class="ui-grid-col-6">
-                                <button pButton type="submit" label="Guardar" [disabled]="!adressform.valid"></button>
+                                <button pButton type="submit" label="{{'guardar' | translate}}" [disabled]="!adressform.valid"></button>
                             </div>
                             <div class="ui-grid-col-4"></div>
                         </div>
@@ -242,10 +242,10 @@
                         </div>
                         <div class="ui-g-12">
                             <div>
-                                <textarea pInputTextarea formControlName="razones" [rows]="10" [cols]="100"></textarea>
+                                <textarea pInputTextarea formControlName="razones" [rows]="10" [cols]="100" class="textAreaEliminar"></textarea>
                             </div>
                         </div>
-                        <div class="ui-grid-row customInputsData">
+                        <div class="ui-grid-row botonEliminar">
                             <div class="ui-grid-col-2"></div>
                             <div class="ui-grid-col-6">
                                 <button pButton type="submit" label="{{'eliminar.cuenta.button' | translate}}" [disabled]="!adressform.valid" class="ui-button-raised ui-button-danger"></button>

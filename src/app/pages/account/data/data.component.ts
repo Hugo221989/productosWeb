@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { SelectItem } from 'primeng/api/selectitem';
 import { FileUpload } from 'primeng/fileupload/fileupload';
@@ -9,6 +9,10 @@ import { TokenStorageService } from '../../login/logn-service/token-storage.serv
 import { User, Genero, UsuarioDireccion } from '../../../models/user';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription, Observable } from 'rxjs';
+import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
+import { SettingsState } from 'src/app/settings/settings.model';
+import { Store, select } from '@ngrx/store';
 
 @Component({
   selector: 'app-data',
@@ -16,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./data.component.scss'],
   providers: [MessageService, DatePipe]
 })
-export class DataComponent implements OnInit {
+export class DataComponent implements OnInit, OnDestroy {
 
   email: string = null;
   usuario: User;
@@ -43,12 +47,18 @@ export class DataComponent implements OnInit {
     "lng": "-3.707721", 
     "population": "5567000"
 };
+
+private subscription: Subscription[] = [];
+textoBuscadorOvservable$: Observable<string>;
+textoBuscador: string = null;
+contenedorBusquedaProducto: boolean = false;
   
   constructor(private fb: FormBuilder,
               private messageService: MessageService,
               private accountService: AccountService,
               private tokenStorageService: TokenStorageService,
-              public translate: TranslateService) { }
+              public translate: TranslateService,
+              private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit(): void {
 
@@ -78,6 +88,7 @@ export class DataComponent implements OnInit {
           'razones' : new FormControl('')
         })
 
+        this.manageBuscadorSuperior();
         this.getCities();
         this.obtenerGeneros();
         this.obtenerUsuario();
@@ -109,7 +120,7 @@ export class DataComponent implements OnInit {
 
   private obtenerDireccionUsuario(data: any){
     let direccion: UsuarioDireccion;
-    direccion = data.direccion[0];
+    direccion = data.direccion;
     this.adressform.controls['destinatari'].setValue(direccion.destinatario);
     this.adressform.controls['street'].setValue(direccion.calle);
     this.adressform.controls['streetNum'].setValue(direccion.piso);
@@ -184,6 +195,23 @@ export class DataComponent implements OnInit {
 
   saveAdressInfo(adress:string){
 
+  }
+
+  manageBuscadorSuperior(){
+  /*para el buscador*/
+  this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
+  this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
+      this.textoBuscador = texto;
+      if(this.textoBuscador != null && this.textoBuscador != ''){
+        this.contenedorBusquedaProducto = true;
+      }else{
+        this.contenedorBusquedaProducto = false;
+      }
+  }))
+}
+
+  ngOnDestroy(){
+    this.subscription.forEach(s => s.unsubscribe());
   }
 
 }

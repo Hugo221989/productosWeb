@@ -22,6 +22,21 @@
         border: #d6d2d2 !important;
         width: 100% !important;
     }
+    .uploadButton{
+        width: 100% !important;
+    }
+    /*INPUTS DATOS*/
+    .customInputsData{
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+    .textAreaEliminar{
+        width: 100%;
+    }
+    /*INPUTS DATOS*/
+    .botonEliminar{
+        text-align: center;
+    }
 }
 @media screen and (min-width: 480px) and (max-width: 768px){
     .divDataApartado{
@@ -32,6 +47,19 @@
         background-color: white !important;
         padding: 5px !important;
         border: #d6d2d2 !important;
+    }
+    .uploadButton{
+        width: 100% !important;
+    }
+    /*INPUTS DATOS*/
+    .customInputsData{
+        margin-top: 2%;
+        margin-bottom: 2%;
+        text-align: center;
+    }
+    /*INPUTS DATOS*/
+    .botonEliminar{
+        text-align: center;
     }
 }
 @media screen and (min-width: 1200px){
@@ -44,6 +72,15 @@
         padding: 5px !important;
         border: #d6d2d2 !important;
     }
+    .uploadButton{
+        width: 625px !important;
+    }
+    /*INPUTS DATOS*/
+    .customInputsData{
+        margin-top: 2%;
+        margin-bottom: 2%;
+    }
+    /*INPUTS DATOS*/
 }
 
 
@@ -62,12 +99,7 @@ body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem .ui-menuitem-link:focus{
     box-shadow: 0 0 0 0 #fbfbfb !important;
 }
 
-/*INPUTS DATOS*/
-.customInputsData{
-    margin-top: 2%;
-    margin-bottom: 2%;
-}
-/*INPUTS DATOS*/
+
 
 .ui-fileupload-choose >.ui-button-icon-left {
     font-size: 1em !important;
@@ -86,9 +118,7 @@ body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem .ui-menuitem-link:focus{
     height: 300px;
     width: 300px;
 }
-.uploadButton{
-    width: 625px !important;
-}
+
 
 .eliminarCuentaParrafo1{
     margin-top: 5%;

@@ -10,7 +10,8 @@ export const initialState: SettingsState = {
     nombreBreadcrumbFinalEng: null,
     carritoEstaVacio: true,
     buscador: null,
-    productoId: 0
+    productoId: 0,
+    language: 0
 }
 
 const reducer = createReducer( 
@@ -28,6 +29,8 @@ const reducer = createReducer(
     on(SettingsActions.actionSettingsBuscador,
         (state, action) => ({...state, ...action}) ),
     on(SettingsActions.actionSettingsCambiarProductoId,
+        (state, action) => ({...state, ...action}) ),
+    on(SettingsActions.actionSettingsCambiarLanguage,
         (state, action) => ({...state, ...action}) ),
 )
 

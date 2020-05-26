@@ -17,9 +17,10 @@ import {InputMaskModule} from 'primeng/inputmask';
 import {FileUploadModule} from 'primeng/fileupload';
 import { TableModule } from 'primeng/table';
 import { ShoopingCartComponent } from './shopping-cart/shooping-cart.component';
-import { I18nModule } from 'src/app/translate/i18n/i18n.module';
 import { TranslateModule } from '@ngx-translate/core';
-
+import { DialogModule } from 'primeng/dialog';
+import { ProductsModule } from '../products-page/products.module';
+import { ProductsPageComponent } from '../products-page/products-page/products-page.component';
 
 
 
@@ -41,7 +42,9 @@ import { TranslateModule } from '@ngx-translate/core';
     InputMaskModule,
     FileUploadModule,
     TableModule,
-    TranslateModule
+    TranslateModule,
+    DialogModule,
+    ProductsModule
     ],
     exports: [
       ShoopingCartComponent

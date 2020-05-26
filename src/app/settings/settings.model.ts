@@ -6,4 +6,6 @@ export interface SettingsState {
     carritoEstaVacio: boolean;
     buscador: string;
     productoId: number;
+    language: number;
 }
+

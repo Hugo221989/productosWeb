@@ -51,7 +51,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule
   ],
   exports: [
-    I18nModule
+    I18nModule,
+    ProductsPageComponent
   ]
 })
 export class ProductsModule { }

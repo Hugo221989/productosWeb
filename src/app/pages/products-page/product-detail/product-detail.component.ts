@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Producto } from 'src/app/models/producto';
 import { ProductsService } from '../service/products.service';
@@ -8,15 +8,16 @@ import { actionSettingsNombreBreadcrumb, actionSettingsCambiarProductoId } from 
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
 import { selectSettingsBuscador, selectSettingsProductoId } from 'src/app/settings/settings.selectors';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Carousel } from 'primeng/carousel';
+import { CategoriaPadre, Categoria } from 'src/app/models/categoria';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.scss']
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
   language: string = "es";
 
   images: any[];
@@ -33,7 +34,9 @@ export class ProductDetailComponent implements OnInit {
   saborSelected: any;
   cantidadSeleccionadaProducto: number = 1;
 
-  products: Producto[] = [];
+  productsNutrition: Producto[] = [];
+  productsFeeding: Producto[] = [];
+  productsPromotions: Producto[] = [];
   responsiveOptions;
 
   sortField: string = "fecha";
@@ -42,6 +45,7 @@ export class ProductDetailComponent implements OnInit {
   blockedDocument: boolean = false
 
   textoBuscadorOvservable$: Observable<string>;
+  private subscription: Subscription[] = [];
   textoBuscador: string = null;
   contenedorBusquedaProducto: boolean = false;
 
@@ -93,14 +97,14 @@ export class ProductDetailComponent implements OnInit {
     manageBuscadorSuperior(){
       /*para el buscador*/
       this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
-      this.textoBuscadorOvservable$.subscribe( (texto) => {
+      this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
           this.textoBuscador = texto;
           if(this.textoBuscador != null && this.textoBuscador != ''){
             this.contenedorBusquedaProducto = true;
           }else{
             this.contenedorBusquedaProducto = false;
           }
-      })
+      }))
     }
 
     cargarProducto(id: number){
@@ -151,8 +155,14 @@ export class ProductDetailComponent implements OnInit {
     }
 
     cargarProductosRelacionados(){
-      this.productsService.getProductsListRelacionados().subscribe( data =>{
-        this.products = data;
+      this.productsService.getProductsNutritionListRelacionados().subscribe( data =>{
+        let categoriaPadre: CategoriaPadre = data;
+        this.productsNutrition = [];
+        for(let cats of categoriaPadre.categoria){
+          for(let prod of cats.productos){
+            this.productsNutrition.push(prod);
+          }
+        }
       })
     }
 
@@ -208,5 +218,9 @@ export class ProductDetailComponent implements OnInit {
 
     getLanguageBrowser(){
       this.language = this.productsService.getLanguageBrowser();
+      }
+
+      ngOnDestroy(){
+        this.subscription.forEach(s => s.unsubscribe());
       }
 }

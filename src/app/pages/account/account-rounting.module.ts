@@ -8,7 +8,8 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      breadcrumb: 'Mi cuenta'
+      breadcrumb: 'Mi cuenta',
+      breadcrumbEng: 'My account'
     },
     component: PanelComponent,
     children: [
@@ -19,13 +20,15 @@ const routes: Routes = [
       },{
         path: 'data',
         data: {
-          breadcrumb: 'Datos personales'
+          breadcrumb: 'Datos personales',
+          breadcrumbEng: 'Personal data'
         },
         component: DataComponent
       },{
         path: 'orders',
         data: {
-          breadcrumb: 'Pedidos'
+          breadcrumb: 'Pedidos',
+          breadcrumbEng: 'Orders'
         },
         component: OrdersComponent
       }

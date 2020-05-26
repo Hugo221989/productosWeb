@@ -7,13 +7,15 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      breadcrumb: null
+      breadcrumb: null,
+      breadcrumbEng: null
     },
     component: ProductsPageComponent
   },{
     path: 'detail/:id',
     data: {
       breadcrumb: localStorage.getItem('nombreBreadcrumb'),
+      breadcrumbEng: localStorage.getItem('nombreBreadcrumbEng')
     },
     component: ProductDetailComponent
   }

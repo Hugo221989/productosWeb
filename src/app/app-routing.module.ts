@@ -13,7 +13,17 @@ const routes: Routes = [
   {
     path: 'products/:cat/:subcat',
     data:  {
-      breadcrumb: 'Nutrición'
+      breadcrumb: 'Nutrición',
+      breadcrumbEng: 'Nutrition'
+    },
+    loadChildren: () =>
+      import('./pages/products-page/products.module').then(m => m.ProductsModule)
+  },
+  {
+    path: 'feeding/:cat/:subcat',
+    data:  {
+      breadcrumb: 'Alimentacion',
+      breadcrumbEng: 'Feeding'
     },
     loadChildren: () =>
       import('./pages/products-page/products.module').then(m => m.ProductsModule)

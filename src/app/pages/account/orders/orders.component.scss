@@ -1,3 +1,163 @@
+@media screen and (min-width: 320px) and (max-width: 480px){
+    .divCarritoDesktop{ 
+        display: none;
+    }
+    .contenedorCestaImagenMobile{
+        padding: 0 !important;
+    }
+    /*TABLA CUSTOM*/
+    .tdPedidos{
+        border: 0 !important;
+        padding: 0 !important;
+    }
+    .contenedorProductoCestaMobile{
+        padding: 0 !important;
+    }
+    .cabeceraProductoCestaMobile{
+        background-color: #4c4a4a;
+        color: white;
+        margin-bottom: 5%;
+    }
+    .contenedorInfoPedido{
+        width: 100%;
+    }
+    :host ::ng-deep .tabviewOrders .ui-tabview-nav{
+        width: 100% !important;
+    }
+    :host ::ng-deep .dialogPedidoMobile .ui-dialog-content{
+        padding: 0 !important;
+        height: 100%;
+    }
+    .subdivInferiorTotal{
+        display: inline-flex;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+    .divInferiorTotal{
+        text-align: right;
+    }
+    .divInfoProducto{
+        text-align: right;
+        margin-top: 5%;
+        padding: 0;
+    }
+    .divVacio{
+        min-height: 100%;
+    }
+    .spanVacio{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    :host ::ng-deep .ui-paginator-bottom{
+        margin-top: 10% !important;
+    }
+    :host ::ng-deep .tablaOrderMobile{
+        margin-top: 10% !important;
+    }
+}
+@media screen and (min-width: 480px) and (max-width: 768px){
+    .divCarritoDesktop{ 
+        display: none;
+    }
+    .contenedorCestaImagenMobile{
+        padding: 0 !important;
+    }
+    /*TABLA CUSTOM*/
+    .tdPedidos{
+        border: 0 !important;
+        padding: 0 !important;
+    }
+    .contenedorProductoCestaMobile{
+        padding: 0 !important;
+    }
+    .cabeceraProductoCestaMobile{
+        background-color: #4c4a4a;
+        color: white;
+        margin-bottom: 5%;
+    }
+    .contenedorInfoPedido{
+        width: 100%;
+    }
+    .subdivInferiorTotal{
+        display: inline-flex;
+    }
+    .divInferiorTotal{
+        text-align: right;
+    }
+    .divInfoProducto{
+        text-align: right;
+        margin-top: 5%;
+        padding: 0;
+    }
+    .divVacio{
+        min-height: 100%;
+    }
+    .spanVacio{
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    :host ::ng-deep .ui-paginator-bottom{
+        margin-top: 10% !important;
+    }
+    .tablaOrderMobile{
+        margin-top: 10% !important;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .divCarritoMobile{
+        display: none;
+    }
+    /*TABLA CUSTOM*/
+    .trHeadPedidos{
+        text-align: left;
+    }
+    .thHeadPedidos{
+        border: 0 !important;
+    }
+    .thHeadPedidosRight{
+        border: 0 !important;
+        text-align: right;
+        width: 15%;
+    }
+    .trPedidos{
+        height: 120px;
+    }
+    .tdPedidos{
+        border: 0 !important;
+    }
+    .tdPedidosRight{
+        border: 0 !important;
+        text-align: right;
+        width: 15%;
+        padding: 0 !important;
+    }
+    .nombreProductoCesta{
+        margin-left: 4%;
+    }
+    .contenedorInfoPedido{
+        width: 90%;
+        float: right;
+    }
+    .subdivInferiorTotal{
+        display: inline-flex;
+    }
+    .divInferiorTotal{
+        text-align: right;
+        margin-top: 3%;
+    }
+}
+ 
+ 
+ 
  /* Column Priorities */
  @media only all {
     th.ui-p-6,
@@ -66,35 +226,7 @@
 
 
 /*TABLA CUSTOM*/
-.trHeadPedidos{
-    text-align: left;
-}
-.thHeadPedidos{
-    border: 0 !important;
-}
-.thHeadPedidosRight{
-    border: 0 !important;
-    text-align: right;
-    width: 15%;
-}
-.trPedidos{
-    height: 120px;
-}
-.tdPedidos{
-    border: 0 !important;
-}
-.tdPedidosRight{
-    border: 0 !important;
-    text-align: right;
-    width: 15%;
-}
-.divInferiorTotal{
-    text-align: right;
-    margin-top: 10%;
-}
-.subdivInferiorTotal{
-    display: inline-flex;
-}
+
 .tituloSubTotal{
     width: 100%;
 }

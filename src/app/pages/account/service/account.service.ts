@@ -4,10 +4,12 @@ import spainCities from '../../../../assets/spainCities/spainCities.json';
 import { SpainCities } from 'src/app/models/spainCities';
 import { Observable } from 'rxjs';
 import { User, Genero, UsuarioDireccion } from '../../../models/user';
+import { Pedido } from '../../../models/pedido';
 
 
 const USER_API = 'http://localhost:8182/restfull/usuario/';
 const USER_DIR_API = 'http://localhost:8182/restfull/usuarioDireccion/';
+const ORDER_API = 'http://localhost:8182/restfull/pedido/';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +45,10 @@ export class AccountService {
 
   getGeneros(){
     return this.httpClient.get<Genero[]>(`${USER_API}obtenerGeneros`);
+  }
+
+  getOrders(idUsuario: number): Observable<Pedido[]> {
+    return this.httpClient.get<Pedido[]>(`${ORDER_API}obtenerPedidosByUsuarioId?idUsuario=${idUsuario}`);
   }
 
 }

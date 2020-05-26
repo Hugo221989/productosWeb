@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SelectItem } from 'primeng/api/selectitem';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
@@ -6,7 +6,7 @@ import { SettingsState } from 'src/app/settings/settings.model';
 import { actionSettingsBreadcrumbExist, actionSettingsNombreBreadcrumb, actionSettingsBuscador, actionSettingsCambiarProductoId } from 'src/app/settings/settings.actions';
 import { ProductsService } from '../service/products.service';
 import { Producto } from 'src/app/models/producto';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { Categoria, SubCategoria, CategoriaPadre } from 'src/app/models/categoria';
 import { TreeNode, MessageService } from 'primeng/api';
@@ -22,7 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
   ]
 })
 
-export class ProductsPageComponent implements OnInit {
+export class ProductsPageComponent implements OnInit, OnDestroy {
   language: string = "es";
 
   subCatUrl: string;
@@ -38,6 +38,7 @@ export class ProductsPageComponent implements OnInit {
   sortOrder: number;
 
   textoBuscadorOvservable$: Observable<string>;
+  private subscription: Subscription[] = [];
   textoBuscador: string = null;
   subCategoriaText: string = null;
 
@@ -92,7 +93,7 @@ export class ProductsPageComponent implements OnInit {
   manageBuscadorSuperior(){
     /*para el buscador*/
     this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
-    this.textoBuscadorOvservable$.subscribe( (texto) => {
+    this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
         this.textoBuscador = texto;
         if(this.textoBuscador != null && this.textoBuscador != ''){
           this.getProductList();
@@ -103,7 +104,7 @@ export class ProductsPageComponent implements OnInit {
         }else{
           this.getProductsByCat(this.catUrl);
         }
-    })
+    }))
   }
 
   getProductList(){
@@ -134,7 +135,10 @@ export class ProductsPageComponent implements OnInit {
     let subCat = "all";
     this.catUrl = cat;
     this.subCategoriaText = null;
-    this.router.navigate(['products', cat, subCat]);
+    if(this.catUrl != null){
+      this.router.navigate(['products', cat, subCat]);
+    }
+    
   }
   getProductListByCategoriaPadre(){
     this.productsService.getProductsListByCatPadre(1).subscribe( data => {
@@ -147,6 +151,8 @@ export class ProductsPageComponent implements OnInit {
   }
 
   selectProductDetail(event: Event, product: Producto) {
+      let categoria;
+      let subCategoria;
       this.store.dispatch(actionSettingsBreadcrumbExist({
         hayBreadcrumbFinal: true
       }))
@@ -155,7 +161,13 @@ export class ProductsPageComponent implements OnInit {
         this.subCategoriaText = 'all';
         window.sessionStorage.setItem('categoria', this.catUrl);
       }
-      this.router.navigate([`products/${this.catUrl}/${this.subCategoriaText}/detail`, product.id]);
+      this.productsService.getCatSubCatProduct(product.id).subscribe(data => {
+        categoria = data.categoriaKey;
+        subCategoria = data.subCategoriaKey;
+        /*BUSCAMOS CAT Y SUBCAT PARA COLOCAR BIEN LA URL*/
+        this.router.navigate([`products/${categoria}/${subCategoria}/detail`, product.id]);
+      })
+      
       this.store.dispatch(actionSettingsCambiarProductoId({
         productoId: product.id
       }))
@@ -164,12 +176,6 @@ export class ProductsPageComponent implements OnInit {
           buscador: null
         })) 
       }, 500);
-      
-     /*  if(this.textoBuscador != null && this.textoBuscador != ''){
-        setTimeout(() => {
-          this.reloadPage();  
-        }, 500);
-      } */
   }
 
   reloadPage() {
@@ -191,12 +197,12 @@ export class ProductsPageComponent implements OnInit {
 
   getCategoriaPadre(){
     this.categoriaService.getCategoriaPadre(1).subscribe( data => {
-      this.categoriaPadre = data;
+      this.categoriaPadre = data;console.log("CAT PADRE: ",this.categoriaPadre);
       this.getSubCatsByCat(this.catUrl);
     })
   }
 
-  getSubCatsByCat(selectedCat: string){
+  getSubCatsByCat(selectedCat: string){console.log("selectedCat: ",selectedCat);
     /*INICIALIZAMOS LOS NIVELES DE NODOS*/
     this.primerNivelTree = [];
     this.segundoNivelTree = [];
@@ -327,6 +333,10 @@ export class ProductsPageComponent implements OnInit {
         key: this.catUrl
       }
     }
+  }
+
+  ngOnDestroy(){
+    this.subscription.forEach(s => s.unsubscribe());
   }
 
 }

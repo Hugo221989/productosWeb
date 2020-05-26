@@ -1,9 +1,20 @@
-<div class="ui-g contenedorDetalleProducto">
-    <div class="ui-g-12 ui-md-12 minHeight720">
-        <p-tabMenu [model]="tabMenuItem" [activeItem]="activeItem" >
-        </p-tabMenu>
-        <div style="padding: 0.5em;">
-            <router-outlet></router-outlet>
+<ng-container
+  *ngIf="!contenedorBusquedaProducto; then noBusqueda; else busqueda">
+</ng-container>
+
+<ng-template #noBusqueda>
+    <div class="ui-g contenedorDetalleProducto">
+        <div class="ui-g-12 ui-md-12 minHeight720">
+            <p-tabMenu [model]="tabMenuItem" [activeItem]="activeItem" >
+            </p-tabMenu>
+            <div style="padding: 0.5em;">
+                <router-outlet></router-outlet>
+            </div>
         </div>
     </div>
-</div>
+</ng-template>
+
+<ng-template #busqueda>
+    <app-products-page></app-products-page>
+</ng-template>
+

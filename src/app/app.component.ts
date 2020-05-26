@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import {DialogService} from 'primeng/dynamicdialog';
 import {MenuItem, SelectItem} from 'primeng/api';
 import { LoginComponent } from './pages/login/login-component/login.component';
@@ -6,12 +6,12 @@ import { faPhoneVolume, faShoppingCart, faInfoCircle, faTruck} from '@fortawesom
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 import { filter } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { SettingsState } from './settings/settings.model';
 import { selectSettingsNombreBreadcrumb, selectSettingsCarritoEstaVacio, selectSettingsBuscador, selectSettingsNombreBreadcrumbEng } from './settings/settings.selectors';
 import { RegisterComponent } from './pages/register/register-component/register.component';
-import { actionSettingsIsAuthenticated, actionSettingsBuscador } from './settings/settings.actions';
+import { actionSettingsIsAuthenticated, actionSettingsBuscador, actionSettingsCambiarLanguage } from './settings/settings.actions';
 import { TokenStorageService } from './pages/login/logn-service/token-storage.service';
 import { OverlayPanel } from 'primeng/overlaypanel/public_api';
 import { Cesta } from './models/cesta';
@@ -24,7 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss'],
   providers: [DialogService]
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy{
   language: string = "es";
 
   constructor(public dialogService: DialogService,
@@ -58,6 +58,7 @@ export class AppComponent {
   visibleSidebar1;
 
   textoBuscadorOvservable$: Observable<string>;
+  private subscription: Subscription[] = [];
   inputSearch: string = '';
 
   countries: SelectItem[];
@@ -65,7 +66,18 @@ export class AppComponent {
   selectedLanguageMobile: SelectItem = {label: 'Español', icon: 'spain.png', value:'es'};
 
   cambiarIdioma(selectedLanguage){
-    this.translate.use(selectedLanguage);console.log("selectedLanguage: ",this.selectedLanguage)
+    this.translate.use(selectedLanguage);
+    window.sessionStorage.setItem('language', selectedLanguage);
+    setTimeout(() => {
+      window.location.reload();
+    }, 500);
+    
+  }
+
+  getSessionLanguage(){
+    if(window.sessionStorage.getItem('language')){
+      this.language = window.sessionStorage.getItem('language');
+    }
   }
 
     search(event) {
@@ -155,13 +167,13 @@ ngOnInit() {
     
     /*MEGA MENU*/
 
-    /*BREADCRUMB*/
+    /*BREADCRUMB*/ 
     this.router.events.pipe(
         filter(
             event => event instanceof NavigationEnd))
             .subscribe( ()=> {
                 this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
-                if(this.nombreString != null){
+                if(this.nombreString != null){console.log("NOMBRE NULO");
                     this.breadCrumbItems.splice(-1);
                     this.breadCrumbItems.push({label: this.nombreString});
                 }
@@ -182,17 +194,23 @@ ngOnInit() {
 
   clearSearchinput(){
     this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador)); 
-    this.textoBuscadorOvservable$.subscribe( (texto) => {
+    this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
       if(texto == null || texto == ''){
         this.inputSearch = null;
       }
-    })
+    }))
   }
 
   getNombreBreadCrumb(){
     this.nombreProductoBreadcrumb$ = this.store.pipe(select(selectSettingsNombreBreadcrumb));
+    if(this.nombreProductoBreadcrumb$ == null){
+      this.nombreString = localStorage.getItem('nombreBreadcrumb');
+    }
     if(this.language == "en"){
       this.nombreProductoBreadcrumb$ = this.store.pipe(select(selectSettingsNombreBreadcrumbEng));
+      if(this.nombreProductoBreadcrumb$ == null){
+        this.nombreString = localStorage.getItem('nombreBreadcrumbEng');
+      }
     }
     if(this.nombreProductoBreadcrumb$ != null){
         this.nombreProductoBreadcrumb$.subscribe( (nombre) => {
@@ -214,10 +232,13 @@ ngOnInit() {
       if (routeURL !== '') {
         url += `/${routeURL}`;
       }
-/*           console.log("------------------------------------")
-      console.log("RUTA: "+url)
+/*           console.log("------------------------------------")*/
+/*       console.log("RUTA: "+url) 
       console.log(" LABEL =>"+child.snapshot.data['breadcrumb']) */
-      const label = child.snapshot.data['breadcrumb'];
+      let label = child.snapshot.data['breadcrumb'];
+      if(this.language == 'en'){
+        label = child.snapshot.data['breadcrumbEng'];
+      }
       if (!isNullOrUndefined(label)) {
         if(label == 'Productos'){
           url = 'products/all';
@@ -304,12 +325,12 @@ ngOnInit() {
             items: [
                 [
                     {
-                        label: 'Barritas y Snacks',
+                        label: 'Desayuno y Snacks',
                         items: [
-                          {label: this.barritasSnacksLabel, command: (event: any) => { this.irSeccionMenu('barritas','all')}},
-                          {label: this.barritasProLabel, command: (event: any) => { this.irSeccionMenu('barritas','barritaProteica')}}, 
-                          {label: this.galletasLabel, command: (event: any) => { this.irSeccionMenu('barritas','galleta')}}, 
-                          {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('barritas','snack')}}]
+                          {label: this.desayunoSnacksLabel, command: (event: any) => { this.irSeccionMenu('desayuno','all')}},
+                          {label: this.tortitasProLabel, command: (event: any) => { this.irSeccionMenu('desayuno','tortitas')}}, 
+                          {label: this.cremaLabel, command: (event: any) => { this.irSeccionMenu('desayuno','cremas')}}, 
+                          {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('desayuno','snack')}}]
                     },
                     {
                         label: 'Bebidas',
@@ -391,12 +412,12 @@ ngOnInit() {
           label: this.alimentacionLabel, icon: 'pi pi-fw pi-users',
           items: [
                   {
-                      label: this.barritasSnacksLabel,
+                      label: this.desayunoSnacksLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('barritas','all')}},
-                        {label: this.barritasProLabel, command: (event: any) => { this.irSeccionMenu('barritas','barritaProteica')}}, 
-                        {label: this.galletasLabel, command: (event: any) => { this.irSeccionMenu('barritas','galleta')}}, 
-                        {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('barritas','snack')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('desayuno','all')}},
+                        {label: this.tortitasProLabel, command: (event: any) => { this.irSeccionMenu('desayuno','tortitas')}}, 
+                        {label: this.cremaLabel, command: (event: any) => { this.irSeccionMenu('desayuno','cremas')}}, 
+                        {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('desayuno','snack')}}]
                   },
                   {
                       label: this.bebidasLabel,
@@ -438,14 +459,21 @@ ngOnInit() {
   }
    
   getLanguageBrowser(){
+    let languageId: number = 0;
     this.language = this.productsService.getLanguageBrowser();
     if(this.language == 'es'){
       this.selectedLanguage = 'es';
       this.selectedLanguageMobile = this.countries[0];
+      languageId = 0;
     }else{
       this.selectedLanguage = 'en';
       this.selectedLanguageMobile = this.countries[1];
+      languageId = 1;
     }
+  }
+
+    ngOnDestroy(){
+      this.subscription.forEach(s => s.unsubscribe());
     }
 
 
@@ -471,9 +499,9 @@ ngOnInit() {
   private cafeinaLabel: string = "";
   private creatinaLabel: string = "";
   private alimentacionLabel: string = "";
-  private barritasSnacksLabel: string = "";
-  private barritasProLabel: string = "";
-  private galletasLabel: string = "";
+  private desayunoSnacksLabel: string = "";
+  private tortitasProLabel: string = "";
+  private cremaLabel: string = "";
   private snacksSaladosLabel: string = "";
   private bebidasLabel: string = "";
   private bebidasProLabel: string = "";
@@ -506,9 +534,9 @@ ngOnInit() {
     this.translate.stream('cafeina').subscribe(data => {this.cafeinaLabel = data});
     this.translate.stream('creatina').subscribe(data => {this.creatinaLabel = data});
     this.translate.stream('alimentacion').subscribe(data => {this.alimentacionLabel = data});
-    this.translate.stream('barritasSnacks').subscribe(data => {this.barritasSnacksLabel = data});
-    this.translate.stream('barritasPro').subscribe(data => {this.barritasProLabel = data});
-    this.translate.stream('galletas').subscribe(data => {this.galletasLabel = data});
+    this.translate.stream('barritasSnacks').subscribe(data => {this.desayunoSnacksLabel = data});
+    this.translate.stream('tortitas').subscribe(data => {this.tortitasProLabel = data});
+    this.translate.stream('cremas').subscribe(data => {this.cremaLabel = data});
     this.translate.stream('snacksSalados').subscribe(data => {this.snacksSaladosLabel = data});
     this.translate.stream('bebidas').subscribe(data => {this.bebidasLabel = data});
     this.translate.stream('bebidasPro').subscribe(data => {this.bebidasProLabel = data});

@@ -16,6 +16,9 @@
 	.headerFixed{
 		position: sticky !important;
 	}
+	.headerMask{
+		display: none !important;
+	}
 }
 
 @media screen and (min-width: 480px) and (max-width: 768px){
@@ -32,18 +35,23 @@
 	.headerFixed{
 		position: sticky !important;
 	}
+	.headerMask{
+		display: none !important;
+	}
 }
 
-
+@media screen and (min-width: 1200px){
+	.headerMask{
+		height: 40px;
+		padding: 0;
+		margin: 0;
+		margin-top: -1px;
+		background-color: gray;
+	}
+}
 
 /*Header Mask*/
-.headerMask{
-	height: 40px;
-	padding: 0;
-	margin: 0;
-	margin-top: -1px;
-	background-color: gray;
-}
+
 footer{
 	//position: fixed;
 	bottom: 0;

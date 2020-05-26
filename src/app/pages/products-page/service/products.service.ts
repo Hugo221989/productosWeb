@@ -9,9 +9,11 @@ import { Store } from '@ngrx/store';
 import { actionSettingsCarritoVacio, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng } from 'src/app/settings/settings.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateCacheService } from 'ngx-translate-cache';
+import { CategoriaPadre } from 'src/app/models/categoria';
 
 const USER_API = 'http://localhost:8182/restfull/usuario/';
 const PRODUCT_API = 'http://localhost:8182/restfull/producto/';
+const CATEGORIA_API = 'http://localhost:8182/restfull/categoria/';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +32,7 @@ export class ProductsService {
   constructor(private httpClient: HttpClient, private store: Store<{settings: SettingsState}>
               , translateCacheService: TranslateCacheService, translate: TranslateService) { 
 
-                this.browserLang = translateCacheService.getCachedLanguage() || translate.getBrowserLang();console.log("browserLang: ",this.browserLang)
+                this.browserLang = translateCacheService.getCachedLanguage() || translate.getBrowserLang();
 
               }
 
@@ -60,8 +62,12 @@ export class ProductsService {
   }
 
 
-  getProductsListRelacionados(): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${PRODUCT_API}obtenerProductosRelacionados?language=${this.browserLang}`);
+  getProductsNutritionListRelacionados(): Observable<any> {
+    return this.httpClient.get<CategoriaPadre>(`${CATEGORIA_API}obtenerCategoriaPadreByKey?idCategoriaPadre=nutricion`);
+  }
+
+  getProductsFeedingListRelacionados(): Observable<any> {
+    return this.httpClient.get<CategoriaPadre>(`${CATEGORIA_API}obtenerCategoriaPadreByKey?idCategoriaPadre=alimentacion`);
   }
 
   getProductById(idProducto: number): Observable<any> {

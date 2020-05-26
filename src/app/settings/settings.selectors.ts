@@ -37,3 +37,8 @@ export const selectSettingsProductoId = createSelector(
     selectSettingsMemorized,
     (state: SettingsState) => state.productoId
 )
+
+export const selectSettingsLanguage = createSelector(
+    selectSettingsMemorized,
+    (state: SettingsState) => state.language
+)

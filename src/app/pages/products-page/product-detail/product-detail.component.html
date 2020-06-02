@@ -7,8 +7,17 @@
         <div class="ui-g-12 ui-md-6 contenedorDescripcionIzquierda">
             <div class="ui-g-12 subContenedorDescripcionIzquierda" >
                 <div class="contenedorGaleria">
-                    <p-galleria [images]="images" panelWidth="650" panelHeight="520" [showCaption]="false" [frameWidth]="180" [frameHeight]="120" [autoPlay]="false"
-                    styleClass="galeriaDetalleProducto"></p-galleria>
+                    <p-galleria [(value)]="images" panelWidth="650" panelHeight="520" [containerStyle]="{'max-width': '100%'}" [autoPlay]="false"
+                    styleClass="galeriaDetalleProducto" *ngIf="images.length > 0">
+                    <ng-template pTemplate="item" let-item>
+                        <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
+                    </ng-template>
+                    <ng-template pTemplate="thumbnail" let-item>
+                        <div class="p-grid p-nogutter p-justify-center">
+                            <img [src]="item.thumbnailImageSrc" style="width: 100%"/>
+                        </div>
+                    </ng-template>
+                </p-galleria>
                 </div>
             </div>
         </div>
@@ -16,7 +25,7 @@
             <div>
                 <h1>{{language == 'en' ? product.nombreEng : product.nombre}}</h1>
                 <h3>{{language == 'en' ? product.descripcion?.tituloEng : product.descripcion?.titulo}}</h3>
-                <h2 style="color: #d20404;">{{product.precio | number:'1.2-2'}}</h2> 
+                <h2 style="color: #d20404;">{{product.precio | number:'1.2-2'}} €</h2> 
                 <div style="display: inline-flex;">
                     <div>
                         <p-rating [ngModel]="product.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating>
@@ -199,7 +208,7 @@
                             </div>
                             <div class="p-col-12 car-data text-center">
                                 <div class="car-title">{{language == 'en' ? product.nombreEng : product.nombre}}</div>
-                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}}</h3> </div>
+                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}} €</h3> </div>
             
                                 <div class="car-buttons">
                                     <button pButton type="button" class="ui-button-secondary" icon="pi pi-search"></button>

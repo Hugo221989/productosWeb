@@ -24,6 +24,10 @@ export class Producto {
 
 export class CatProductoDto{
     id: number;
+    categoriaPadreNombre: string;
+    categoriaPadreKey: string;
+    categoriaPadreModulo: string;
+    categoriaPadreId: number;
     categoriaNombre: string;
     categoriaKey: string;
     subCategoriaNombre: string;

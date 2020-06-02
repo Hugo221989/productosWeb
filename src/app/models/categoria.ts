@@ -5,6 +5,7 @@ export class CategoriaPadre {
     nombre: string;
     nombreEng: string;
     key: string;
+    modulo: string;
     categoria: Categoria[];
 }
 

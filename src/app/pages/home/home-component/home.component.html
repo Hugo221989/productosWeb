@@ -3,13 +3,39 @@
         <button pButton type="button" (click)="goToProduct()">Ver Productos</button>
     </div> -->
     <div class="ui-g-12 ui-md-12" *ngIf="productsNutricion.length > 0">
+        <p-galleria #galleria [value]="images" [(activeIndex)]="activeIndex" [numVisible]="5" [containerStyle]="{'max-width':'640px'}" [containerClass]="galleriaClass()" [showThumbnails]="showThumbnails"
+            [showItemNavigators]="true" [showItemNavigatorsOnHover]="true" [circular]="true" [autoPlay]="true" [transitionInterval]="3000"> 
+        <ng-template pTemplate="item" let-item>
+            <img [src]="item.previewImageSrc" [ngStyle]="{'width': !fullscreen ? '100%' : '', 'display': !fullscreen ? 'block' : ''}" />
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+            <div class="p-grid p-nogutter p-justify-center">
+                <img src="assets/images/flags/{{item}}" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="footer" let-item>
+            <div class="custom-galleria-footer">
+                <button pButton icon="pi pi-list" (click)="onThumbnailButtonClick()"></button>
+                <span *ngIf="images"  class="title-container">
+                    <span>{{activeIndex + 1}}/{{images.length}}</span>
+                    <span class="title">{{images[activeIndex].title}}</span>
+                    <span>{{images[activeIndex].alt}}</span>
+                </span>
+               
+            </div>
+        </ng-template>
+        </p-galleria>
+    </div>
+
+
+    <div class="ui-g-12 ui-md-12" *ngIf="productsNutricion.length > 0">
         <p-carousel [value]="productsNutricion" styleClass="custom-carousel" [numVisible]="4" [numScroll]="1" 
         [circular]="false" [responsiveOptions]="responsiveOptions" [page]="1">
             <p-header>
                 <a (click)="irCategoriaGeneral('nutricion', 'all')" style="cursor: pointer;"><h2 class="tituloCategoria">{{'navbar.nutricion' | translate}}</h2></a>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng)">
+                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng, '1', 'products')">
                         <div class="p-grid p-nogutter">
                             <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
                                 <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
@@ -40,7 +66,7 @@
                 <a (click)="irCategoriaGeneralFeeding('alimentacion', 'all')" style="cursor: pointer;"><h2 class="tituloCategoria">{{'navbar.alimentacion' | translate}}</h2></a>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng)">
+                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng, '1', 'feeding')">
                         <div class="p-grid p-nogutter">
                             <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
                                 <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
@@ -71,7 +97,7 @@
                 <a (click)="irCategoriaGeneral('nutricion', 'all')" style="cursor: pointer;"><h2 class="tituloCategoria">{{'navbar.promociones' | translate}}</h2></a>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng)">
+                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng, '1', 'promotions')">
                         <div class="p-grid p-nogutter">
                             <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
                                 <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>

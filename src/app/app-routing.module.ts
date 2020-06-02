@@ -11,7 +11,7 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'products/:cat/:subcat',
+    path: 'products/:catPadre/:cat/:subcat',
     data:  {
       breadcrumb: 'Nutrición',
       breadcrumbEng: 'Nutrition'
@@ -20,7 +20,7 @@ const routes: Routes = [
       import('./pages/products-page/products.module').then(m => m.ProductsModule)
   },
   {
-    path: 'feeding/:cat/:subcat',
+    path: 'feeding/:catPadre/:cat/:subcat',
     data:  {
       breadcrumb: 'Alimentacion',
       breadcrumbEng: 'Feeding'

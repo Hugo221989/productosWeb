@@ -53,6 +53,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   subCatUrl: string;
   catUrl: string;
+  catPadreUrl: string;
 
   constructor(private router:Router, private productsService: ProductsService,
               private route: ActivatedRoute,
@@ -81,7 +82,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
    ngOnInit() {
         //this.producto = history.state;
+        console.log("ENTRA");
         this.getLanguageBrowser();
+        this.getUrlParams();
         this.idProduct = this.route.snapshot.paramMap.get("id");
         this.setProductoId();
         this.cambiarProducto();
@@ -89,8 +92,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         this.cargarProductosRelacionados();
 
         /*para el buscador*/
-      this.manageBuscadorSuperior();
+        setTimeout(() => {
+          this.manageBuscadorSuperior();
+          console.log("ACABA");
+        }, 300);
+    }
 
+    getUrlParams(){
+      this.catPadreUrl = this.route.snapshot.paramMap.get("catPadre");
+      this.subCatUrl = this.route.snapshot.paramMap.get("subcat");  
+      this.catUrl = this.route.snapshot.paramMap.get("cat");
     }
 
 
@@ -151,7 +162,8 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     cargarImagenes(){
       this.images = [];
       for(let foto of this.fotos)
-        this.images.push({source:`http://127.0.0.1:8887/${foto.ruta}`, alt:'Description for Image 1', title:'Title 1'});
+        this.images.push({previewImageSrc:`http://127.0.0.1:8887/${foto.ruta}`, alt:'Description for Image 1', title:'Title 1',
+        thumbnailImageSrc:`http://127.0.0.1:8887/${foto.ruta}`});
     }
 
     cargarProductosRelacionados(){
@@ -169,11 +181,15 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     verProducto(id:number, nombre:string, nombreEng: string){
       this.productsService.getCatSubCatProduct(id).subscribe( data =>{
         if(data){
+          let categoriaPadre = data.categoriaPadreModulo;
+          let categoriaPadreId = data.categoriaPadreId;
+          let categoria = data.categoriaKey;
+          let subCategoria = data.subCategoriaKey;
           this.catUrl = data.categoriaKey;
           this.subCatUrl = data.subCategoriaKey;
 
           this.cambiarBreadcrumb(nombre, nombreEng);
-          this.router.navigate([`products`, this.catUrl, this.subCatUrl, 'detail', id]);
+          this.router.navigate([categoriaPadre, categoriaPadreId, categoria, subCategoria, 'detail', id]);
           this.cargarProducto(id);
           this.gotoTop();
         }

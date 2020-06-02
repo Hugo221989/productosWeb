@@ -3,7 +3,7 @@ import { SelectItem } from 'primeng/api/selectitem';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { SettingsState } from 'src/app/settings/settings.model';
-import { actionSettingsBreadcrumbExist, actionSettingsNombreBreadcrumb, actionSettingsBuscador, actionSettingsCambiarProductoId } from 'src/app/settings/settings.actions';
+import { actionSettingsBreadcrumbExist, actionSettingsBuscador, actionSettingsCambiarProductoId } from 'src/app/settings/settings.actions';
 import { ProductsService } from '../service/products.service';
 import { Producto } from 'src/app/models/producto';
 import { Observable, Subscription } from 'rxjs';
@@ -25,6 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class ProductsPageComponent implements OnInit, OnDestroy {
   language: string = "es";
 
+  catPadreUrl: string;
   subCatUrl: string;
   catUrl: string;
 
@@ -63,14 +64,13 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       this.getLanguageBrowser();
       this.getUrlParams();
       this.getSessionCatUrl();
-      this.getFiltroPriceSession();
       this.getCategoriaPadre();
+      this.getFiltroPriceSession();
       this.productsService.cambiarBreadcrumb(null, null);
       localStorage.setItem('nombreBreadcrumb', null);
       localStorage.setItem('nombreBreadcrumbEng', null);
-
       /*para el buscador*/
-      this.manageBuscadorSuperior();
+        this.manageBuscadorSuperior();
       this.filtrarPorPrecio();
       this.sortOptions = [
           {label: 'Valoraciones', value: 'estrellas'},
@@ -84,6 +84,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   getUrlParams(){
+    this.catPadreUrl = this.route.snapshot.paramMap.get("catPadre");
     this.subCatUrl = this.route.snapshot.paramMap.get("subcat");
     this.subCategoriaText = this.subCatUrl;
 
@@ -97,10 +98,12 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         this.textoBuscador = texto;
         if(this.textoBuscador != null && this.textoBuscador != ''){
           this.getProductList();
-        }else if('nutricion' == this.catUrl){
+        }else if('nutricion' == this.catUrl || 'alimentacion' == this.catUrl || 'promociones' == this.catUrl){
           this.getProductListByCategoriaPadre();
         }else if(this.subCategoriaText != null && this.subCategoriaText != '' && this.subCategoriaText != 'all'){
-          this.getProductListBySubCat(null);
+          setTimeout(() => {
+            this.getProductListBySubCat(this.subCategoriaText);
+          }, 300);
         }else{
           this.getProductsByCat(this.catUrl);
         }
@@ -115,14 +118,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     })
   }
   getProductListBySubCat(cat: string){
-    this.productsService.getProductsListBySubCat(this.subCategoriaText).subscribe( data =>{
+    this.productsService.getProductsListBySubCat(cat).subscribe( data =>{
       this.products = data;
       this.productsClone = this.products;
       this.filtrarPorPrecio();
     });
     this.selectLateralCurrentNode(this.catUrl, this.subCategoriaText);
-    if(cat != null){
-      this.router.navigate(['products', cat, this.subCategoriaText]);
+    if(cat != null){console.log("MODULO: ",this.categoriaPadre);
+      this.router.navigate([this.categoriaPadre.modulo, this.catPadreUrl, this.catUrl, this.subCategoriaText]);
     }
   }
   getProductsByCat(cat: string){
@@ -136,12 +139,12 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.catUrl = cat;
     this.subCategoriaText = null;
     if(this.catUrl != null){
-      this.router.navigate(['products', cat, subCat]);
+      this.router.navigate([this.categoriaPadre.modulo, this.catPadreUrl, cat, subCat]);
     }
     
   }
   getProductListByCategoriaPadre(){
-    this.productsService.getProductsListByCatPadre(1).subscribe( data => {
+    this.productsService.getProductsListByCatPadre(this.productsService.ConvertStringToNumber(this.catPadreUrl)).subscribe( data => {
       this.products = data;
       this.productsClone = this.products;
       this.filtrarPorPrecio();
@@ -151,8 +154,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   selectProductDetail(event: Event, product: Producto) {
-      let categoria;
-      let subCategoria;
+      let categoriaPadre;
+      let categoriaPadreId;
       this.store.dispatch(actionSettingsBreadcrumbExist({
         hayBreadcrumbFinal: true
       }))
@@ -162,10 +165,13 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         window.sessionStorage.setItem('categoria', this.catUrl);
       }
       this.productsService.getCatSubCatProduct(product.id).subscribe(data => {
-        categoria = data.categoriaKey;
-        subCategoria = data.subCategoriaKey;
+        categoriaPadre = data.categoriaPadreModulo;
+        categoriaPadreId = data.categoriaPadreId;
+        this.catUrl = data.categoriaKey;
+        this.subCatUrl = data.subCategoriaKey 
         /*BUSCAMOS CAT Y SUBCAT PARA COLOCAR BIEN LA URL*/
-        this.router.navigate([`products/${categoria}/${subCategoria}/detail`, product.id]);
+        console.log("BUCLE?");
+        this.router.navigate([categoriaPadre, categoriaPadreId, this.catUrl , this.subCatUrl, 'detail', product.id]);
       })
       
       this.store.dispatch(actionSettingsCambiarProductoId({
@@ -196,13 +202,13 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   getCategoriaPadre(){
-    this.categoriaService.getCategoriaPadre(1).subscribe( data => {
-      this.categoriaPadre = data;console.log("CAT PADRE: ",this.categoriaPadre);
+    this.categoriaService.getCategoriaPadre(this.productsService.ConvertStringToNumber(this.catPadreUrl)).subscribe( data => {
+      this.categoriaPadre = data;
       this.getSubCatsByCat(this.catUrl);
     })
   }
 
-  getSubCatsByCat(selectedCat: string){console.log("selectedCat: ",selectedCat);
+  getSubCatsByCat(selectedCat: string){
     /*INICIALIZAMOS LOS NIVELES DE NODOS*/
     this.primerNivelTree = [];
     this.segundoNivelTree = [];
@@ -223,7 +229,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       }else{
         labelCat = cat.nombre;
       }
-
+      
       /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
       if(cat.key == selectedCat){
         let subCatNode: TreeNode;
@@ -254,7 +260,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
         catNode = {
           label: labelCat,
-          key: cat.key
+          key: cat.key+'/all'
         }
         this.segundoNivelTree.push(catNode);
       }
@@ -276,13 +282,16 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       let subCatExtract = nodeKey.substring(nodeKey.indexOf('/')+1, nodeKey.length);
       let catExtract = nodeKey.substring(0, nodeKey.indexOf('/'));
       this.subCategoriaText = subCatExtract;
-      if(catExtract == (this.categoriaPadre.key)){
+      if(catExtract == (this.categoriaPadre.key)){console.log("1");
         this.getProductListByCategoriaPadre();
         this.getSubCatsByCat(catExtract);
         this.catUrl = catExtract;
-        this.router.navigate(['products', catExtract, subCatExtract]);
-      }else{
-        this.getProductListBySubCat(catExtract);
+        this.router.navigate([this.categoriaPadre.modulo,this.catPadreUrl, catExtract, subCatExtract]);
+      }else if(subCatExtract != null && subCatExtract != 'all'){console.log("2");
+        this.getProductListBySubCat(subCatExtract);
+      }else{console.log("3");
+        this.getProductsByCat(catExtract);
+        this.getSubCatsByCat(catExtract);
       }
     }else{
       this.getProductsByCat(nodeKey);

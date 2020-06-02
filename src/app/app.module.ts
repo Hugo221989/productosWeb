@@ -35,6 +35,7 @@ import { I18nModule } from './translate/i18n/i18n.module';
 import {DropdownModule} from 'primeng/dropdown';
 import { FeedingPageComponent } from './pages/feeding/feeding-page/feeding-page.component';
 import { FeedingDetailComponent } from './pages/feeding/feeding-detail/feeding-detail.component';
+import {GalleriaModule} from 'primeng/galleria';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { FeedingDetailComponent } from './pages/feeding/feeding-detail/feeding-d
     DialogModule,
     SelectButtonModule,
     DropdownModule,
+    GalleriaModule,
     EffectsModule.forRoot([SettingsEffect]),
     StoreModule.forRoot({
       settingsState: settingsReducer

@@ -95,6 +95,7 @@
     "pedidos":"Orders",
     "info.personal":"Personal Information",
     "foto.perfil":"Profile Photo",
+    "editar.foto.perfil":"Edit Profile Photo",
     "direccion.entrega":"Delivery Address",
     "eliminar.cuenta.button":"Delete Account",
     "nombre.obligatorio":"Name Required",
@@ -107,5 +108,9 @@
     "fecha":"Date",
     "num.pedido":"Order number",
     "lista.pedidos":"Orders list",
-    "elementos":"items"
+    "elementos":"items",
+    "subir.foto":"Upload Photo",
+    "foto.subida.correctamente":"Photo uploaded successfully",
+    "elegir":"Choose",
+    "cancelar":"Cancelar"
 }

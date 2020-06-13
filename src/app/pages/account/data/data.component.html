@@ -99,22 +99,38 @@
         <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid">
             <div class="divDataApartado" style="margin: 10px 0px;">
                 <div class="ui-g-12">
-                    <h3>{{'editar.info.pers' | translate}}</h3>
+                    <h3>{{'editar.foto.perfil' | translate}}</h3>
                 </div>
                 <div style="text-align: center;">
                     <div class="ui-grid-row">
+                        <div class="ui-grid-col-4"></div>
                         <div class="ui-grid-col-4">
-                            <p-fileUpload name="demo[]" url="./upload.php" (onUpload)="onUpload($event)" chooseLabel="Seleccionar" uploadLabel="Subir" 
-                                    cancelLabel="Cancelar" multiple="multiple" accept="image/*" maxFileSize="1000000" fileLimit="1" previewWidth ="300"
-                                    styleClass="uploadButton">
-                                    <ng-template pTemplate="content">
-                                        <ul *ngIf="uploadedFiles.length">
-                                            <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
-                                        </ul>
-                                    </ng-template>
-                            </p-fileUpload>
+                            <div class="form-group divMensajeFotoSubida">
+                                <p-messages [(value)]="msgs"></p-messages>
+                             </div>
+                            <!-- <div *ngIf="fileUploadProgress != 0">
+                                <p-progressBar [value]="fileUploadProgress"></p-progressBar>
+                            </div> -->
+                            <div class="image-preview mb-3" *ngIf="previewUrl">
+                                <img [src]="previewUrl" height="300" class="imagenPerfil"/>                 
+                            </div>
+                 
+                            <div class="mb-3" *ngIf="uploadedFilePath">
+                                {{uploadedFilePath}}
+                            </div>
+                             <!-- BOTON ELEGIR FOTO -->
+                            <div class="form-group divBotonElegirFoto" *ngIf="!fileData">
+                                <!-- <input type="file" name="image" (change)="fileProgress($event)" /> -->
+                                <p-fileUpload mode="basic" name="demo[]" customUpload="true" accept="image/*" maxFileSize="1000000" (onUpload)="fileProgress($event)"
+                                (onSelect)="onUpload($event)" chooseLabel="{{'elegir' | translate}}"></p-fileUpload>
+                            </div>
+                            <!-- BOTON SUBIR FOTO -->
+                            <div class="form-group divBotonSubirFoto" *ngIf="fileData">
+                                <button pButton label="{{'cancelar' | translate}}" [disabled]="!fileData" (click)="removeFileData()" class="botonCancelarFoto" icon="pi pi-times"></button>
+                                <button pButton label="{{'subir.foto' | translate}}" [disabled]="!fileData" (click)="onProfileImageSubmit()" icon="pi pi-upload"></button>
+                            </div>
                         </div>
-                        <div class="ui-grid-col-8"></div>
+                        <div class="ui-grid-col-4"></div>
                     </div>
                 </div>
             </div>

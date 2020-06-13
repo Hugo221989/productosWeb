@@ -40,6 +40,12 @@ const routes: Routes = [
       canActivate: [AuthGuardService]
   },
   {
+    path: 'cart',
+    loadChildren: () =>
+      import('./pages/cesta/cesta.module').then(m => m.CestaModule),
+      canActivate: [AuthGuardService]
+  },
+  {
     path: '**',
     redirectTo: 'home'
   }

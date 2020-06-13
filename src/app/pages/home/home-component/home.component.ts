@@ -6,6 +6,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { Carousel } from 'primeng/carousel';
 import { CategoriaPadre } from 'src/app/models/categoria';
 import { Galleria } from 'primeng/galleria';
+import { Subscription, Observable } from 'rxjs';
+import { actionSettingsBuscador } from 'src/app/settings/settings.actions';
+import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
+import { select, Store } from '@ngrx/store';
+import { SettingsState } from 'src/app/settings/settings.model';
 
 @Component({
   selector: 'app-home',
@@ -21,21 +26,30 @@ export class HomeComponent implements OnInit {
   language: string = "es";
   subCatUrl: string;
   catUrl: string;
+  images: any[] = [];
+  imagesLoaded: boolean = false;
+
+  blockedDocument: boolean = true;
+  productLoaded: Promise<boolean>;
+  contenedorBusquedaProducto: boolean = false;
+  textoBuscadorOvservable$: Observable<string>;
+  private subscription: Subscription[] = [];
+  textoBuscador: string = null;
 
   constructor(private router:Router, 
               private productsService: ProductsService,
-              public translate: TranslateService) { }
+              public translate: TranslateService,
+              private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit(): void {
-    this.getLanguageBrowser();
-    this.responsiveCarousel();
-
     this.getImages();
-    this.bindDocumentListeners();
-
+    this.getLanguageBrowser();
+    this.manageBuscadorSuperior();
+    this.responsiveCarousel();
     this.cargarProductosNutricion();
     this.cargarProductosAlimentacion();
     this.cargarProductosPromociones();
+    this.unblockScreen();
   }
 
 
@@ -110,6 +124,21 @@ export class HomeComponent implements OnInit {
   getLanguageBrowser(){
     this.language = this.productsService.getLanguageBrowser();
   }
+  manageBuscadorSuperior(){
+    /*para el buscador*/
+    this.store.dispatch(actionSettingsBuscador({
+      buscador: null
+    })) 
+    this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
+    this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
+        this.textoBuscador = texto;
+        if(this.textoBuscador != null && this.textoBuscador != ''){
+          this.contenedorBusquedaProducto = true;
+        }else{
+          this.contenedorBusquedaProducto = false;
+        }
+    }))
+  }
 
   responsiveCarousel(){
     Carousel.prototype.changePageOnTouch = (e,diff) => {}
@@ -132,15 +161,6 @@ export class HomeComponent implements OnInit {
   ];
   }
 
-
-
-    images: any[];
-    showThumbnails: boolean;
-    fullscreen: boolean = false;
-    activeIndex: number = 0;
-    onFullScreenListener: any;
-    @ViewChild('galleria') galleria: Galleria;
-
     responsiveOptionsGaleriaProtada:any[] = [
       {
           breakpoint: '1024px',
@@ -156,60 +176,25 @@ export class HomeComponent implements OnInit {
       }
   ];
 
-  onThumbnailButtonClick() {
-    this.showThumbnails = !this.showThumbnails;
-}
-
-onFullScreenChange() {
-    this.fullscreen = !this.fullscreen;
-}
-
-closePreviewFullScreen() {
-    if (document.exitFullscreen) {
-        document.exitFullscreen();
-    }
-    else if (document['mozCancelFullScreen']) {
-        document['mozCancelFullScreen']();
-    }
-    else if (document['webkitExitFullscreen']) {
-        document['webkitExitFullscreen']();
-    }
-    else if (document['msExitFullscreen']) {
-        document['msExitFullscreen']();
-    }
-}
-
-bindDocumentListeners() {
-    this.onFullScreenListener = this.onFullScreenChange.bind(this);
-    document.addEventListener("fullscreenchange", this.onFullScreenListener);
-    document.addEventListener("mozfullscreenchange", this.onFullScreenListener);
-    document.addEventListener("webkitfullscreenchange", this.onFullScreenListener);
-    document.addEventListener("msfullscreenchange", this.onFullScreenListener);
-}
-
-unbindDocumentListeners() {
-    document.removeEventListener("fullscreenchange", this.onFullScreenListener);
-    document.removeEventListener("mozfullscreenchange", this.onFullScreenListener);
-    document.removeEventListener("webkitfullscreenchange", this.onFullScreenListener);
-    document.removeEventListener("msfullscreenchange", this.onFullScreenListener);
-    this.onFullScreenListener = null;
-}
-
-ngOnDestroy() {
-    this.unbindDocumentListeners();
-}
-
-galleriaClass() {
-    return `custom-galleria ${this.fullscreen ? 'fullscreen' : ''}`;
-}
-
-fullScreenIcon() {
-    return `pi ${this.fullscreen ? 'pi-window-minimize' : 'pi-window-maximize'}`;
-}
-
 getImages(){
   this.images = [];
-  this.images.push("portada1.jpg", "portada2.jpg", "portada3.jpg")
+  this.images.push({previewImageSrc:'assets/images/portada/portada1.jpg', alt:'Description for Image 1', title:'Title 1',
+  thumbnailImageSrc:'assets/images/portada/portada1.jpg'});
+  this.images.push({previewImageSrc:'assets/images/portada/portada2.jpg', alt:'Description for Image 1', title:'Title 1',
+  thumbnailImageSrc:'assets/images/portada/portada2.jpg'});
+  this.images.push({previewImageSrc:'assets/images/portada/portada3.jpg', alt:'Description for Image 1', title:'Title 1',
+  thumbnailImageSrc:'assets/images/portada/portada3.jpg'});
+  this.imagesLoaded = true;
+  console.log("iamges: ",this.images);
 }
+
+unblockScreen(){
+  this.blockedDocument = true;
+  setTimeout(() => {
+    this.blockedDocument = false;
+    this.productLoaded = Promise.resolve(true); 
+  }, 1000);
+}
+
 
 }

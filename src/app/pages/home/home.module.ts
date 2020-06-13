@@ -7,6 +7,9 @@ import { CarouselModule } from 'primeng/carousel';
 import {ButtonModule} from 'primeng/button';
 import {GalleriaModule} from 'primeng/galleria';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import {BlockUIModule} from 'primeng/blockui';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import { ProductsModule } from '../products-page/products.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -18,7 +21,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     CarouselModule,
     ButtonModule,
     GalleriaModule,
-    TranslateModule
+    TranslateModule,
+    BlockUIModule,
+    ProgressSpinnerModule,
+    ProductsModule
   ]
 })
 export class HomeModule { }

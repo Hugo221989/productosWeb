@@ -13,6 +13,9 @@ import { Subscription, Observable } from 'rxjs';
 import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
+import { HttpEventType } from '@angular/common/http';
+import { imageProfile } from 'src/app/models/imageProfile';
+import {Message} from 'primeng/api';
 
 @Component({
   selector: 'app-data',
@@ -33,8 +36,12 @@ export class DataComponent implements OnInit, OnDestroy {
   generoSelected: Genero;
   direccionUpdated: UsuarioDireccion
   submitted: boolean;
-  selectedImage = null;
-  uploadedFiles: any[] = [];
+/*IMAGE*/
+fileData: File = null;
+previewUrl:any = null;
+fileUploadProgress: number = 0;
+uploadedFilePath: string = null;
+
   countryList:SpainCities[] = [];
   locality: SpainCities = {
     "city": "Madrid", 
@@ -52,6 +59,11 @@ private subscription: Subscription[] = [];
 textoBuscadorOvservable$: Observable<string>;
 textoBuscador: string = null;
 contenedorBusquedaProducto: boolean = false;
+
+retrieveResponse: imageProfile;
+retrievedImage: any;
+base64Data: any;
+msgs: Message[] = [];
   
   constructor(private fb: FormBuilder,
               private messageService: MessageService,
@@ -62,38 +74,13 @@ contenedorBusquedaProducto: boolean = false;
 
   ngOnInit(): void {
 
-        this.userform = this.fb.group({
-            'email': new FormControl('', Validators.required),
-            'name': new FormControl('', Validators.required),
-            'lastname': new FormControl('', Validators.required),
-            /* 'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])), */
-            'description': new FormControl(''),
-            'gender': new FormControl('', Validators.required),
-            'rememberLogin': new FormControl(false),
-            'date': new FormControl('', Validators.required),
-            'phone' : new FormControl('', Validators.compose([Validators.required, Validators.minLength(9)]))
-        });
-
-        this.adressform = this.fb.group({
-            'destinatari': new FormControl('', Validators.required),
-            'street': new FormControl('', Validators.required),
-            'streetNum': new FormControl('', Validators.required),
-            'aditionalData': new FormControl(''),
-            'postCode': new FormControl('', Validators.required),
-            'locality': new FormControl('', Validators.required),
-            'phone': new FormControl('', Validators.compose([Validators.required, Validators.minLength(9)]))
-        });
-
-        this.deleteAccountform = this.fb.group({
-          'razones' : new FormControl('')
-        })
-
+        this.initUserForm();
+        this.initAddressForm();
+        this.initDeleteAccountForm();
         this.manageBuscadorSuperior();
         this.getCities();
         this.obtenerGeneros();
-        this.obtenerUsuario();
-        
-
+       this.cargarLabels();
   }
 
   private obtenerUsuario(){
@@ -114,6 +101,7 @@ contenedorBusquedaProducto: boolean = false;
           this.userform.controls['gender'].patchValue(this.generoSelected);
         }
         this.obtenerDireccionUsuario(data);
+        this.getProfileImage();
       }
     })
   }
@@ -175,6 +163,7 @@ contenedorBusquedaProducto: boolean = false;
       for(let genero of this.generos){
         this.genders.push({label:genero.nombre, value:genero});
       }
+      this.obtenerUsuario();
     })
   }
 
@@ -185,12 +174,65 @@ contenedorBusquedaProducto: boolean = false;
       );
   }
 
-  onUpload(event) {
-    for(let file of event.files) {
-        this.uploadedFiles.push(file);
+  onUpload(event){
+    this.fileData = event.files[0];
+    this.preview();
+  } 
+  removeFileData(){
+    this.fileData = null;
+    this.getProfileImage();
+  }
+
+  fileProgress(fileInput: any) {
+    //this.fileData = <File>fileInput.target.files[0];
+    this.preview();
+}
+
+  preview() {
+    // Show preview 
+    var mimeType = this.fileData.type;
+    if (mimeType.match(/image\/*/) == null) {
+      return;
     }
-    
-    this.messageService.add({severity: 'info', summary: 'Success', detail: 'File Uploaded'});
+ 
+    var reader = new FileReader();      
+    reader.readAsDataURL(this.fileData); 
+    reader.onload = (_event) => { 
+      this.previewUrl = reader.result; 
+    }
+}
+ 
+onProfileImageSubmit() {
+    const uploadImageData = new FormData();
+    const fileName = this.usuario.usuario+'_foto';
+    uploadImageData.append('imageFile', this.fileData, fileName);
+      this.accountService.uploadProfilePhoto(uploadImageData).subscribe(resp =>{
+        if(resp.type === HttpEventType.UploadProgress) {
+          this.fileUploadProgress = Math.round(resp.loaded / resp.total * 100);
+        } else if(resp.type === HttpEventType.Response) {
+          this.fileUploadProgress = 0;
+          this.removeFileData();      
+          this.showSuccesUpload();
+        }
+      });
+}
+
+getProfileImage(){
+  const fileName = this.usuario.usuario+'_foto';
+  this.accountService.getProfileImage(fileName).subscribe( data =>{
+    this.retrieveResponse = data;
+    this.base64Data = this.retrieveResponse.picByte;
+    this.retrievedImage = 'data:image/jpeg;base64,' + this.base64Data;
+    this.previewUrl = this.retrievedImage;
+    //this.uploadedFiles.push(this.retrievedImage);
+  })
+}
+showSuccesUpload(){
+  this.msgs = [];
+  this.msgs.push({severity:'info', summary: this.successUploadLabel});
+  setTimeout(() => {
+    this.msgs = [];
+  }, 1500);
 }
 
   saveAdressInfo(adress:string){
@@ -210,8 +252,44 @@ contenedorBusquedaProducto: boolean = false;
   }))
 }
 
+initUserForm(){
+  this.userform = this.fb.group({
+    'email': new FormControl('', Validators.required),
+    'name': new FormControl('', Validators.required),
+    'lastname': new FormControl('', Validators.required),
+    /* 'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])), */
+    'description': new FormControl(''),
+    'gender': new FormControl('', Validators.required),
+    'rememberLogin': new FormControl(false),
+    'date': new FormControl('', Validators.required),
+    'phone' : new FormControl('', Validators.compose([Validators.required, Validators.minLength(9)]))
+  });
+}
+
+initAddressForm(){
+  this.adressform = this.fb.group({
+    'destinatari': new FormControl('', Validators.required),
+    'street': new FormControl('', Validators.required),
+    'streetNum': new FormControl('', Validators.required),
+    'aditionalData': new FormControl(''),
+    'postCode': new FormControl('', Validators.required),
+    'locality': new FormControl('', Validators.required),
+    'phone': new FormControl('', Validators.compose([Validators.required, Validators.minLength(9)]))
+  });
+}
+
+initDeleteAccountForm(){
+  this.deleteAccountform = this.fb.group({
+    'razones' : new FormControl('')
+  })
+}
+
   ngOnDestroy(){
     this.subscription.forEach(s => s.unsubscribe());
   }
 
+  private successUploadLabel: string = "";
+  cargarLabels(){
+    this.translate.stream('foto.subida.correctamente').subscribe(data => {this.successUploadLabel = data});
+  }
 }

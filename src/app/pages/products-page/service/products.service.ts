@@ -106,7 +106,7 @@ export class ProductsService {
 
   sumarProductosRepetidos(product: Producto): boolean{
     for(let i=0; i<this.cesta.productos.length; i++){
-      if(this.cesta.productos[i].id == product.id && this.cesta.productos[i].saborSeleccionado == product.saborSeleccionado){
+      if(this.cesta.productos[i].id == product.id && this.cesta.productos[i].saborSeleccionado.id == product.saborSeleccionado.id){
         let cantidadInicial = this.cesta.productos[i].cantidad;
         let cantidadFinal = product.cantidad + cantidadInicial;
         this.cesta.productos[i].cantidad = cantidadFinal;
@@ -115,6 +115,18 @@ export class ProductsService {
       }
     }
     return false;
+  }
+
+  actualizarCesta(products): Cesta{
+    this.cesta = {
+      productos: products,
+      importeTotal: 0,
+      importeSubTotal: 0,
+      envio: 0
+    }
+    this.calcularImporteTotal();
+    window.sessionStorage.setItem('cesta', JSON.stringify(this.cesta))
+    return this.cesta;
   }
 
   calcularImporteTotal(){

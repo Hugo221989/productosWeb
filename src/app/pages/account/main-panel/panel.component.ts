@@ -23,6 +23,9 @@ export class PanelComponent implements OnInit, OnDestroy {
   private subscription: Subscription[] = [];
   contenedorBusquedaProducto: boolean = false;
 
+  blockedDocument: boolean = true;
+  productLoaded: Promise<boolean>;
+
   url: string;
   
   constructor(private productsService: ProductsService,
@@ -32,6 +35,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLanguageBrowser();
     this.manageBuscadorSuperior();
+    this.unblockScreen();
   }
 
   getLanguageBrowser(){
@@ -82,6 +86,14 @@ export class PanelComponent implements OnInit, OnDestroy {
           this.getUrlParams();
         }
     }))
+  }
+
+  unblockScreen(){
+    this.blockedDocument = true;
+    setTimeout(() => {
+      this.blockedDocument = false;
+      this.productLoaded = Promise.resolve(true); 
+    }, 1000);
   }
 
   ngOnDestroy(){

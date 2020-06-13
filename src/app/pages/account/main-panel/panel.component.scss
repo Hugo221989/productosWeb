@@ -48,3 +48,18 @@ body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem.ui-state-active{
 body .ui-tabview.ui-tabview-left .ui-tabview-nav li:focus{
     box-shadow: 0 0 0 0 #ffffff !important;
 }
+
+.loadingSpinner{
+    text-align: center;
+    top: 50%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1009;
+}
+
+.ui-blockui-document.ui-blockui.ui-widget-overlay{
+    z-index: 1010;
+}

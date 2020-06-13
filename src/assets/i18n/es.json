@@ -96,6 +96,7 @@
     "pedidos":"Pedidos",
     "info.personal":"Información Personal ",
     "foto.perfil":"Foto de Perfil",
+    "editar.foto.perfil":"Editar Foto de Perfil",
     "direccion.entrega":"Dirección de Entrega",
     "eliminar.cuenta.button":"Eliminar Cuenta",
     "nombre.obligatorio":"Nombre Obligatorio",
@@ -108,5 +109,9 @@
     "fecha":"fecha",
     "num.pedido":"Número de pedido",
     "lista.pedidos":"Lista de pedidos",
-    "elementos":"elementos"
+    "elementos":"elementos",
+    "subir.foto":"Subir Foto",
+    "foto.subida.correctamente":"Foto subida correctamente",
+    "elegir":"Elegir",
+    "cancelar":"Cancelar"
 }

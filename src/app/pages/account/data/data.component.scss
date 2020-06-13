@@ -126,3 +126,34 @@ body .ui-tabmenu .ui-tabmenu-nav .ui-tabmenuitem .ui-menuitem-link:focus{
 .eliminarCuentaParrafo2{
     margin-top: 5%;
 }
+
+.divBotonElegirFoto{
+    margin-top: 1em;
+}
+.imagenPerfil{
+    max-width: 29em;
+    min-width: 29em;
+    margin-top: 5%;
+    border: 2px solid #b9b9b9;
+    border-radius: 2%;
+}
+.divBotonSubirFoto{
+    margin-top: 1em;
+}
+.divMensajeFotoSubida{
+    min-height: 5em;
+}
+.botonCancelarFoto{
+    margin-bottom: 2%;
+    background-color: #d90000;
+    border: 1px solid #d90000;
+}
+.botonCancelarFoto:hover{
+    margin-bottom: 2%;
+    background-color: #ab0404 !important;
+    border: 1px solid #ab0404 !important;
+}
+/*ICONO*/
+.ui-button-icon-left{
+    font-size: 1.5em !important;
+}

@@ -19,7 +19,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {BreadcrumbModule} from 'primeng/breadcrumb';
 import { ProductsModule } from './pages/products-page/products.module';
 import {ButtonModule} from 'primeng/button';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'; 
 import {OverlayPanelModule} from 'primeng/overlaypanel';
 import { AccountModule } from './pages/account/account.module';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
@@ -36,6 +36,8 @@ import {DropdownModule} from 'primeng/dropdown';
 import { FeedingPageComponent } from './pages/feeding/feeding-page/feeding-page.component';
 import { FeedingDetailComponent } from './pages/feeding/feeding-detail/feeding-detail.component';
 import {GalleriaModule} from 'primeng/galleria';
+import { CestaModule } from './pages/cesta/cesta.module';
+import { InterceptorService } from './interceptors/interceptor.service';
 
 
 @NgModule({
@@ -65,6 +67,7 @@ import {GalleriaModule} from 'primeng/galleria';
     HomeModule,
     HttpClientModule,
     AccountModule,
+    CestaModule,
     ScrollPanelModule,
     InputTextModule,
     SidebarModule,
@@ -80,7 +83,9 @@ import {GalleriaModule} from 'primeng/galleria';
     StoreDevtoolsModule.instrument({ maxAge: 25}),
     I18nModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

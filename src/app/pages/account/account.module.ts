@@ -14,14 +14,16 @@ import {KeyFilterModule} from 'primeng/keyfilter';
 import {DropdownModule} from 'primeng/dropdown';
 import {MessageModule} from 'primeng/message';
 import {InputMaskModule} from 'primeng/inputmask';
-import {FileUploadModule} from 'primeng/fileupload';
 import { TableModule } from 'primeng/table';
 import { ShoopingCartComponent } from './shopping-cart/shooping-cart.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from 'primeng/dialog';
 import { ProductsModule } from '../products-page/products.module';
-import { ProductsPageComponent } from '../products-page/products-page/products-page.component';
-
+import {BlockUIModule} from 'primeng/blockui';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {FileUploadModule} from 'primeng/fileupload';
+import {MessagesModule} from 'primeng/messages';
 
 
 @NgModule({
@@ -39,12 +41,16 @@ import { ProductsPageComponent } from '../products-page/products-page/products-p
     KeyFilterModule,
     DropdownModule,
     MessageModule,
+    MessagesModule,
     InputMaskModule,
-    FileUploadModule,
     TableModule,
     TranslateModule,
     DialogModule,
-    ProductsModule
+    ProductsModule,
+    BlockUIModule,
+    ProgressSpinnerModule,
+    ProgressBarModule,
+    FileUploadModule
     ],
     exports: [
       ShoopingCartComponent

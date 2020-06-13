@@ -4,7 +4,7 @@ import { Producto } from 'src/app/models/producto';
 import { ProductsService } from '../service/products.service';
 import { ValorNutricional, InfoBasica, Sabor, Comentario, InfoVitaminas, Foto } from 'src/app/models/productoOtrosDatos';
 import { SelectItem } from 'primeng/api/selectitem';
-import { actionSettingsNombreBreadcrumb, actionSettingsCambiarProductoId } from 'src/app/settings/settings.actions';
+import { actionSettingsNombreBreadcrumb, actionSettingsCambiarProductoId, actionSettingsBuscador } from 'src/app/settings/settings.actions';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
 import { selectSettingsBuscador, selectSettingsProductoId } from 'src/app/settings/settings.selectors';
@@ -107,6 +107,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     manageBuscadorSuperior(){
       /*para el buscador*/
+      this.store.dispatch(actionSettingsBuscador({
+        buscador: null
+      })) 
       this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
       this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
           this.textoBuscador = texto;

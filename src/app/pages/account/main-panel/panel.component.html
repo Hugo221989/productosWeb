@@ -3,7 +3,11 @@
 </ng-container>
 
 <ng-template #noBusqueda>
-    <div class="ui-g contenedorDetalleProducto">
+    <p-blockUI [blocked]="blockedDocument"></p-blockUI>
+    <div *ngIf="blockedDocument" class="loadingSpinner">
+        <p-progressSpinner [style]="{width: '150px', height: '150px'}" strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+    </div>
+    <div class="ui-g contenedorDetalleProducto" *ngIf="(productLoaded | async) && !contenedorBusquedaProducto">
         <div class="ui-g-12 ui-md-12 minHeight720">
             <p-tabMenu [model]="tabMenuItem" [activeItem]="activeItem" >
             </p-tabMenu>

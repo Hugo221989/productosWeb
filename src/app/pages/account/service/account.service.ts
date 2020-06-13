@@ -5,11 +5,15 @@ import { SpainCities } from 'src/app/models/spainCities';
 import { Observable } from 'rxjs';
 import { User, Genero, UsuarioDireccion } from '../../../models/user';
 import { Pedido } from '../../../models/pedido';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { imageProfile } from 'src/app/models/imageProfile';
 
 
 const USER_API = 'http://localhost:8182/restfull/usuario/';
 const USER_DIR_API = 'http://localhost:8182/restfull/usuarioDireccion/';
 const ORDER_API = 'http://localhost:8182/restfull/pedido/';
+const IMG_API = 'http://localhost:8182/restfull/image/';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +40,22 @@ export class AccountService {
     );
   }
 
+  uploadProfilePhoto(uploadImageData: any){
+    return this.httpClient.post(
+      `${IMG_API}upload`,
+      uploadImageData, {
+        reportProgress: true,
+        observe: 'events' 
+      }
+    );
+  }
+
+  getProfileImage(fileName: string){
+    return this.httpClient.get<imageProfile>(
+      `${IMG_API}getImage/${fileName}`
+    )
+  }
+
   crearDireccionUsuario(usuarioDireccion: UsuarioDireccion, email: string){
     return this.httpClient.post<User>(
       `${USER_DIR_API}crearUsuarioDireccion?email=${email}`,
@@ -49,6 +69,20 @@ export class AccountService {
 
   getOrders(idUsuario: number): Observable<Pedido[]> {
     return this.httpClient.get<Pedido[]>(`${ORDER_API}obtenerPedidosByUsuarioId?idUsuario=${idUsuario}`);
+  }
+
+  // Error handling
+  errorHandl(error) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // Get client-side error
+      errorMessage = error.error.message;
+    } else {
+      // Get server-side error
+      errorMessage = error.error.code;
+    }
+    //console.log(errorMessage);
+    return throwError(errorMessage);
   }
 
 }

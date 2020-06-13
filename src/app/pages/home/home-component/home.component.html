@@ -1,29 +1,14 @@
-<div class="ui-g">
-<!--     <div class="ui-g-12 ui-md-2">
-        <button pButton type="button" (click)="goToProduct()">Ver Productos</button>
-    </div> -->
-    <div class="ui-g-12 ui-md-12" *ngIf="productsNutricion.length > 0">
-        <p-galleria #galleria [value]="images" [(activeIndex)]="activeIndex" [numVisible]="5" [containerStyle]="{'max-width':'640px'}" [containerClass]="galleriaClass()" [showThumbnails]="showThumbnails"
-            [showItemNavigators]="true" [showItemNavigatorsOnHover]="true" [circular]="true" [autoPlay]="true" [transitionInterval]="3000"> 
-        <ng-template pTemplate="item" let-item>
-            <img [src]="item.previewImageSrc" [ngStyle]="{'width': !fullscreen ? '100%' : '', 'display': !fullscreen ? 'block' : ''}" />
-        </ng-template>
-        <ng-template pTemplate="thumbnail" let-item>
-            <div class="p-grid p-nogutter p-justify-center">
-                <img src="assets/images/flags/{{item}}" />
-            </div>
-        </ng-template>
-        <ng-template pTemplate="footer" let-item>
-            <div class="custom-galleria-footer">
-                <button pButton icon="pi pi-list" (click)="onThumbnailButtonClick()"></button>
-                <span *ngIf="images"  class="title-container">
-                    <span>{{activeIndex + 1}}/{{images.length}}</span>
-                    <span class="title">{{images[activeIndex].title}}</span>
-                    <span>{{images[activeIndex].alt}}</span>
-                </span>
-               
-            </div>
-        </ng-template>
+<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<div *ngIf="blockedDocument" class="loadingSpinner">
+    <p-progressSpinner [style]="{width: '150px', height: '150px'}" strokeWidth="4" animationDuration="1s"></p-progressSpinner>
+</div>
+<div class="ui-g contenedorDetalleProducto" *ngIf="(productLoaded | async) && !contenedorBusquedaProducto">
+    <div class="ui-g-12 ui-md-12" *ngIf="imagesLoaded" >
+        <p-galleria [(value)]="images" panelWidth="650" panelHeight="520" [containerStyle]="{'max-width': '100%'}" [autoPlay]="true" [transitionInterval] ="4000"
+            [circular] ="true" styleClass="galeriaDetalleProducto" [showThumbnails]="false" [showIndicators]="true" *ngIf="imagesLoaded">
+            <ng-template pTemplate="item" let-item *ngIf="imagesLoaded">
+                <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
+            </ng-template>
         </p-galleria>
     </div>
 
@@ -120,4 +105,8 @@
             </ng-template>
         </p-carousel>
     </div>
+</div>
+
+<div *ngIf="contenedorBusquedaProducto">
+    <app-products-page></app-products-page>
 </div>

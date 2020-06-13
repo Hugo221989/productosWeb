@@ -47,11 +47,15 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   segundoNivelTree: TreeNode[] = [];
   tercerNivelTree: TreeNode[] = [];
   selectedMenuNode: TreeNode;
+  treeMenuDisplay: boolean = true;
 
   categoriaPadre: CategoriaPadre;
   categoria: Categoria[] = [];
   subCategoria: SubCategoria[] = [];
   rangePriceValues: number[] = [0,100];
+
+  blockedDocument: boolean = true;
+  productLoaded: Promise<boolean>;
 
   constructor(private router:Router,
               private productsService: ProductsService,
@@ -72,11 +76,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       /*para el buscador*/
         this.manageBuscadorSuperior();
       this.filtrarPorPrecio();
-      this.sortOptions = [
-          {label: 'Valoraciones', value: 'estrellas'},
-          {label: 'Precio', value: 'precio'},
-          {label: 'Nombre', value: 'nombre'}
-      ];  
+      this.unblockScreen();
+      this.sortOptionsMethod();
   }
 
   getLanguageBrowser(){
@@ -181,7 +182,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         this.store.dispatch(actionSettingsBuscador({
           buscador: null
         })) 
-      }, 500);
+        this.reloadPage();
+      }, 100);
   }
 
   reloadPage() {
@@ -215,65 +217,70 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.tercerNivelTree = [];
 
     let labelCatPadre: string;
-      if(this.language == "en"){
-        labelCatPadre = this.categoriaPadre.nombreEng;
-      }else{
-        labelCatPadre = this.categoriaPadre.nombre;
-      }
+    if(this.categoriaPadre != null){
+        if(this.language == "en"){
+            labelCatPadre = this.categoriaPadre.nombreEng;
+        }else{
+            labelCatPadre = this.categoriaPadre.nombre;
+        }
 
-    for(let cat of this.categoriaPadre.categoria){ 
-      let catNode: TreeNode;
-      let labelCat: string;
-      if(this.language == "en"){
-        labelCat = cat.nombreEng;
-      }else{
-        labelCat = cat.nombre;
-      }
-      
-      /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
-      if(cat.key == selectedCat){
-        let subCatNode: TreeNode;
-        let labelSubcat: string;
-        for(let subCat of cat.subCategoria){
-          if(this.language == "en"){
-            labelSubcat = subCat.nombreEng;
-          }else{
-            labelSubcat = subCat.nombre;
+      for(let cat of this.categoriaPadre.categoria){ 
+        let catNode: TreeNode;
+        let labelCat: string;
+        if(this.language == "en"){
+          labelCat = cat.nombreEng;
+        }else{
+          labelCat = cat.nombre;
+        }
+        
+        /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
+        if(cat.key == selectedCat){
+          let subCatNode: TreeNode;
+          let labelSubcat: string;
+          for(let subCat of cat.subCategoria){
+            if(this.language == "en"){
+              labelSubcat = subCat.nombreEng;
+            }else{
+              labelSubcat = subCat.nombre;
+            }
+            subCatNode = {
+              label: labelSubcat,
+              key: cat.key+'/'+subCat.key
+            }
+            this.tercerNivelTree.push(subCatNode);
           }
-          subCatNode = {
-            label: labelSubcat,
-            key: cat.key+'/'+subCat.key
+
+          catNode = {
+            label: labelCat,
+            key: cat.key,
+            children: this.tercerNivelTree,
+            expanded: true
           }
-          this.tercerNivelTree.push(subCatNode);
-        }
+          this.segundoNivelTree.push(catNode);
 
-        catNode = {
-          label: labelCat,
-          key: cat.key,
-          children: this.tercerNivelTree,
-          expanded: true
-        }
-        this.segundoNivelTree.push(catNode);
+        }else{
 
+        /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
+          catNode = {
+            label: labelCat,
+            key: cat.key+'/all'
+          }
+          this.segundoNivelTree.push(catNode);
+        }
+      }
+    
+
+        this.primerNivelTree = [
+          {
+            label: labelCatPadre,
+            key: this.categoriaPadre.key+'/all',
+            children: this.segundoNivelTree,
+            expanded: true
+          }
+        ]
       }else{
-
-      /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
-        catNode = {
-          label: labelCat,
-          key: cat.key+'/all'
-        }
-        this.segundoNivelTree.push(catNode);
+        this.treeMenuDisplay = false;
       }
-    }
-
-    this.primerNivelTree = [
-      {
-        label: labelCatPadre,
-        key: this.categoriaPadre.key+'/all',
-        children: this.segundoNivelTree,
-        expanded: true
-      }
-    ]
   }
 
   nodeSelect(event) {
@@ -342,6 +349,22 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         key: this.catUrl
       }
     }
+  }
+
+  sortOptionsMethod(){
+    this.sortOptions = [
+      {label: 'Valoraciones', value: 'estrellas'},
+      {label: 'Precio', value: 'precio'},
+      {label: 'Nombre', value: 'nombre'}
+  ]; 
+  }
+
+  unblockScreen(){
+    this.blockedDocument = true;
+    setTimeout(() => {
+      this.blockedDocument = false;
+      this.productLoaded = Promise.resolve(true); 
+    }, 1000);
   }
 
   ngOnDestroy(){

@@ -14,7 +14,7 @@
           <button pButton type="button" (click)="visibleSidebar1 = true" icon="pi pi-bars" class="buttonBars botonMenuBarMobile"></button>
         </div>
         <div class="p-col mt-12 divNavBarCenter">
-          <input [(ngModel)]="inputSearch" class="inputSearchNavBar" type="text" pInputText (input)="search($event.target.value)" #inputSearchNavBar/>
+          <input [(ngModel)]="inputSearch" class="inputSearchNavBar" id="inputSearchNavBar" type="text" pInputText (input)="search($event.target.value)" #inputSearchNavBar/>
         </div>
         <div class="p-col divNavBarRight">
           <div class="p-grid w100 divRegistro" id="divRegistro">
@@ -41,8 +41,8 @@
             <div class="p-col top-help-container" *ngIf="logged$">
               <a (click)="cerrarSesion()" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.cerrar.sesion' | translate}}</p></a>
             </div>
-           <div class="p-col top-help-container" *ngIf="!logged$">
-              <a (click)="showLoginModal()" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a>
+           <div class="p-col top-help-container" *ngIf="!logged$" id="divLoginNormal">
+              <a (click)="showLoginModal()" class="pointer linksRegistroSimple" id="botonLogin"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a>
             </div>
             <div class="p-col top-help-container" *ngIf="!logged$">
               <a (click)="showRegisterModal()" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.crear.cuenta' | translate}}</p></a>
@@ -51,14 +51,15 @@
             <div class="p-col top-help-container" >
               <a class="linksRegistro" style="cursor: pointer;">
                
-                  <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12" (click)="openShoppingCartDialog($event, op1)" id="botonShoppingCart"></fa-icon><p> </p>
+                  <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12 iconCesta" (click)="openShoppingCartDialog($event, op1)" id="botonShoppingCart"></fa-icon>
+                  <span class="badge" *ngIf="productsService.cesta?.cantidadProductos > 0">{{productsService.cesta.cantidadProductos}}</span>
          
               </a>
               <p-overlayPanel #op1 styleClass="overlayShoppingCart">
                 <ng-template pTemplate>
                    <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
 
-                   <div *ngIf="!carritoVacio">
+                   <div *ngIf="!carritoVacio" id="overlayShoppingCart">
                     <p-scrollPanel [style]="{width: '100%', height: '400px'}">
                         <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
                      </p-scrollPanel>
@@ -71,7 +72,8 @@
           <div class="p-col top-help-container cestaIconMobile" id="cestaIconMobile">
             <a class="linksRegistro" style="cursor: pointer;">
              
-                <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12" (click)="showCartMobileDialog()" id="botonShoppingCartMobile"></fa-icon><p> </p>
+                <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12" (click)="showCartMobileDialog()" id="botonShoppingCartMobile"></fa-icon>
+                <span class="badge" *ngIf="productsService.cesta?.cantidadProductos > 0">{{productsService.cesta.cantidadProductos}}</span>
        
             </a>
 
@@ -79,7 +81,7 @@
                 [draggable]="false" [resizable]="false" styleClass="overlayShoppingCartMobile" header="{{'cesta.compra' | translate}}">
                 <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
 
-                  <div *ngIf="!carritoVacio">
+                  <div *ngIf="!carritoVacio" id="overlayShoppingCartMobile">
                     <p-scrollPanel [style]="{width: '100%', height: '400px'}">
                         <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
                     </p-scrollPanel>
@@ -114,7 +116,7 @@
   <div class="ui-g-12 divRegistroLateral"><a href="#" class="linksRegistroLateral" style="display: flex;"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">{{'navbar.ayuda' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral" *ngIf="logged$"><a (click)="miCuenta()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.mi.cuenta' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral" *ngIf="logged$"><a (click)="cerrarSesion()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.cerrar.sesion' | translate}}</p></a></div>
-  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$"><a (click)="showLoginModalMobile()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$" id="divLoginMobile"><a (click)="showLoginModalMobile()" class="pointer linksRegistroLateral" id="botonLoginMobile"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$"><a (click)="showRegisterModalMobile()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.crear.cuenta' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral">
   <p-selectButton [options]="countries" [(ngModel)]="selectedLanguageMobile" optionLabel="name" styleClass="buttonCountries" [style]="{'width': '100% !important'}" #langSelect (onChange)="cambiarIdioma(selectedLanguage)">

@@ -112,5 +112,7 @@
     "subir.foto":"Upload Photo",
     "foto.subida.correctamente":"Photo uploaded successfully",
     "elegir":"Choose",
-    "cancelar":"Cancelar"
+    "cancelar":"Cancelar",
+    "continuar":"Continue",
+    "finalizar,pago":"Finish Payment"
 }

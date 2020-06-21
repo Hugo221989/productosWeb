@@ -3,17 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Producto, CatProductoDto } from 'src/app/models/producto';
 import { Sabor } from 'src/app/models/productoOtrosDatos';
-import { Cesta } from 'src/app/models/cesta';
+import { Cesta, ProductoCesta } from 'src/app/models/cesta';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store } from '@ngrx/store';
 import { actionSettingsCarritoVacio, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng } from 'src/app/settings/settings.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateCacheService } from 'ngx-translate-cache';
 import { CategoriaPadre } from 'src/app/models/categoria';
+import { TokenStorageService } from '../../login/logn-service/token-storage.service';
+import { User } from 'src/app/models/user';
 
 const USER_API = 'http://localhost:8182/restfull/usuario/';
 const PRODUCT_API = 'http://localhost:8182/restfull/producto/';
 const CATEGORIA_API = 'http://localhost:8182/restfull/categoria/';
+const PEDIDO_API = 'http://localhost:8182/restfull/pedido/';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +24,8 @@ const CATEGORIA_API = 'http://localhost:8182/restfull/categoria/';
 export class ProductsService {
 
   cesta: Cesta;
-  productos: Producto[];
+  productosCesta: ProductoCesta[];
+  producto: Producto;
   importeTotal: number;
   importeSubTotal: number;
   envio: number;
@@ -30,7 +34,8 @@ export class ProductsService {
   browserLang: string = "es";
 
   constructor(private httpClient: HttpClient, private store: Store<{settings: SettingsState}>
-              , translateCacheService: TranslateCacheService, translate: TranslateService) { 
+              , translateCacheService: TranslateCacheService, translate: TranslateService,
+              tokenStorageService: TokenStorageService) { 
 
                 this.browserLang = translateCacheService.getCachedLanguage() || translate.getBrowserLang();
 
@@ -83,46 +88,49 @@ export class ProductsService {
   }
   
   /* SHOPPING CART */
-  addProductToCart(product: Producto){
+  addProductToCart(productoCesta: ProductoCesta){
     if(sessionStorage.getItem('cesta')){
       this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
     }else{
-      this.productos = [];
+      this.productosCesta = [];
       this.cesta = {
-        productos: this.productos,
+        productosCesta: this.productosCesta,
         importeTotal: 0,
         importeSubTotal: 0,
-        envio: 0
+        envio: 0,
+        cantidadProductos: 0
       }
     }
-    let incrementoCantidad: boolean = this.sumarProductosRepetidos(product);
+    let incrementoCantidad: boolean = this.sumarProductosRepetidos(productoCesta);
     if(!incrementoCantidad){
-      this.cesta.productos.push(product);
+      let productoCestaNuevo: ProductoCesta = productoCesta;
+      this.cesta.productosCesta.push(productoCestaNuevo);
     }
     this.calcularImporteTotal();
     window.sessionStorage.setItem('cesta', JSON.stringify(this.cesta))
     this.triggerBotonCesta();
   }
 
-  sumarProductosRepetidos(product: Producto): boolean{
-    for(let i=0; i<this.cesta.productos.length; i++){
-      if(this.cesta.productos[i].id == product.id && this.cesta.productos[i].saborSeleccionado.id == product.saborSeleccionado.id){
-        let cantidadInicial = this.cesta.productos[i].cantidad;
-        let cantidadFinal = product.cantidad + cantidadInicial;
-        this.cesta.productos[i].cantidad = cantidadFinal;
-        
+  sumarProductosRepetidos(productoCesta: ProductoCesta): boolean{
+    for(let i=0; i<this.cesta.productosCesta.length; i++){
+      if(this.cesta.productosCesta[i].producto.id == productoCesta.producto.id && 
+        this.cesta.productosCesta[i].producto.saborSeleccionado.id == productoCesta.saborSeleccionado.id){
+          let cantidadInicial = this.cesta.productosCesta[i].producto.cantidad;
+          let cantidadFinal = productoCesta.producto.cantidad + cantidadInicial;
+          this.cesta.productosCesta[i].producto.cantidad = cantidadFinal;
         return true;
       }
     }
     return false;
   }
 
-  actualizarCesta(products): Cesta{
+  actualizarCesta(productsCesta): Cesta{
     this.cesta = {
-      productos: products,
+      productosCesta: productsCesta,
       importeTotal: 0,
       importeSubTotal: 0,
-      envio: 0
+      envio: 0,
+      cantidadProductos: 0
     }
     this.calcularImporteTotal();
     window.sessionStorage.setItem('cesta', JSON.stringify(this.cesta))
@@ -132,8 +140,10 @@ export class ProductsService {
   calcularImporteTotal(){
     this.importeTotal = 0;
     this.importeSubTotal = 0;
-    for(let product of this.cesta.productos){
-      this.importeSubTotal += (product.cantidad * this.ConvertStringToNumber(product.precio));
+    this.cesta.cantidadProductos = 0;
+    for(let productCesta of this.cesta.productosCesta){
+      this.importeSubTotal += (productCesta.cantidad * this.ConvertStringToNumber(productCesta.producto.precio));
+      this.cesta.cantidadProductos += productCesta.cantidad;
     }
     this.cesta.importeSubTotal = this.importeSubTotal;
 
@@ -147,10 +157,11 @@ export class ProductsService {
     this.importeTotal = this.importeSubTotal + this.envio;
     this.cesta.importeTotal = this.importeTotal;
     this.comprobarCarritoVacio();
+    
   }
 
   comprobarCarritoVacio(){
-    if(this.cesta.productos.length > 0){
+    if(this.cesta.productosCesta.length > 0){
       this.carritoVacio = false;
     }else{
       this.carritoVacio = true;
@@ -169,24 +180,44 @@ export class ProductsService {
     if(sessionStorage.getItem('cesta')){
       this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
     }else{
-      this.productos = [];
+      this.productosCesta = [];
       this.cesta = {
-        productos: this.productos
+        productosCesta: this.productosCesta
       }
     } 
     this.calcularImporteTotal();
+    //this.saveUserCartBbdd();
     return this.cesta;
   }
 
   removeProductoCesta(index: number): Cesta{
     if(sessionStorage.getItem('cesta')){
       this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
-      let product = this.cesta.productos[index];
-      this.cesta.productos.splice(index, 1);
+      let productCesta = this.cesta.productosCesta[index];
+      this.cesta.productosCesta.splice(index, 1);
+      this.cesta.cantidadProductos--;
       this.calcularImporteTotal();
       window.sessionStorage.setItem('cesta', JSON.stringify(this.cesta))
     }
     return this.cesta;
+  }
+
+  saveUserCartBbdd(){
+    if(window.sessionStorage.getItem('authenticated') == 'true'){
+      let usuario: User = JSON.parse(window.sessionStorage.getItem('auth-user'));
+      this.cesta.usuario = usuario;
+      return this.httpClient.post<Cesta>(
+        `${PEDIDO_API}saveCesta`,
+        this.cesta
+      ).subscribe();
+    }
+  }
+
+  getUserCartBbdd(){
+    if(window.sessionStorage.getItem('authenticated') == 'true'){
+      let usuario: User = JSON.parse(window.sessionStorage.getItem('auth-user'));
+        return this.httpClient.get<Cesta>(`${PEDIDO_API}obtenerCesta?idUsuario=${usuario.id}`);
+    }
   }
 
   triggerBotonCesta(){

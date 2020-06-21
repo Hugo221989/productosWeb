@@ -1,7 +1,76 @@
+.cestaDesktopContainer{
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.divCarritoDesktop{
+    border: 1px solid #f9f5f5;
+    background: #f9f9f9;
+}
+.divButtonPagoCestaMobile{
+    display: none;
+}
 
+.tituloSubTotal{
+    width: 100%;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.tituloTotal{
+    width: 100%;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.tituloEnvio{
+    width: 100%;
+}
+.importeTotal{
+    font-size: 18px;
+}
+.totalPedido{
+    //margin-bottom: 2%;
+}
+
+.contenedorCestaImagen{
+    display: inline-flex;
+    width: 100%;
+}
+
+.divButtonPagoCesta{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
+.iconoEliminar{
+    margin-right: 10%;
+}
+
+:host ::ng-deep .iconoEliminar span.ui-button-icon-left.ui-clickable.pi.pi-trash{
+    transform: scale(1.5) !important;
+}
+.loadingSpinner{
+    text-align: center;
+    top: 50%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1009;
+}
+
+.ui-blockui-document.ui-blockui.ui-widget-overlay{
+    z-index: 1010;
+}
 @media screen and (min-width: 320px) and (max-width: 480px){
     .divCarritoDesktop{ 
         display: none;
+    }
+    .divButtonPagoCesta{
+        display: none;
+    }
+    .divButtonPagoCestaMobile{
+        display: block;
     }
     .contenedorCestaImagenMobile{
         padding: 0 !important;
@@ -47,6 +116,12 @@
 }
 @media screen and (min-width: 480px) and (max-width: 768px){
     .divCarritoDesktop{ 
+        display: none;
+    }
+    .divButtonPagoCestaMobile{
+        display: block;
+    }
+    .divButtonPagoCesta{
         display: none;
     }
     .contenedorCestaImagenMobile{
@@ -122,9 +197,9 @@
         text-align: left;
     }
     .buttonBigCesta{
-        padding-bottom: 1% !important;
-        padding-top: 1% !important;
-        width: 20%;
+        padding-bottom: 0.5% !important;
+        padding-top: 0.5% !important;
+        width: 10%;
         float: right;
     }
     .divInferiorTotal{
@@ -136,50 +211,3 @@
     }
 }
 
-.cestaDesktopContainer{
-    padding-left: 2%;
-    padding-right: 2%;
-}
-.divCarritoDesktop{
-    border: 1px solid #f9f5f5;
-    background: #f9f9f9;
-}
-
-.tituloSubTotal{
-    width: 100%;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-.tituloTotal{
-    width: 100%;
-    font-size: 1.5em;
-    font-weight: bold;
-}
-.tituloEnvio{
-    width: 100%;
-}
-.importeTotal{
-    font-size: 18px;
-}
-.totalPedido{
-    //margin-bottom: 2%;
-}
-
-.contenedorCestaImagen{
-    display: inline-flex;
-    width: 100%;
-}
-
-.divButtonPagoCesta{
-    margin-top: 5%;
-    margin-bottom: 5%;
-    width: 100%;
-}
-
-.iconoEliminar{
-    margin-right: 10%;
-}
-
-:host ::ng-deep .iconoEliminar span.ui-button-icon-left.ui-clickable.pi.pi-trash{
-    transform: scale(.7) !important;
-}

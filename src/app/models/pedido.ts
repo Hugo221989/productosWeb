@@ -24,3 +24,11 @@ export class MetodoEnvio {
     descripcion: string;
     descripcionEng: string;
 }
+
+export class MetodoPago {
+    id: number;
+    nombre: string;
+    nombreEng: string;
+    descripcion: string;
+    descripcionEng: string;
+}

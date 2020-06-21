@@ -6,27 +6,27 @@ import { CestaPaso3Component } from './cesta-paso3/cesta-paso3.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'paso1',
     data: {
-      breadcrumb: 'Paso 1',
-      breadcrumbEng: 'Step 1'
+      breadcrumb: 'Cesta > Paso 1',
+      breadcrumbEng: 'Cart > Step 1'
     },
-    component: CestaComponent
+    component: CestaComponent,
   },{
-    path: 'detail/:id',
-    data: {
-      breadcrumb: localStorage.getItem('nombreBreadcrumb'),
-      breadcrumbEng: localStorage.getItem('nombreBreadcrumbEng')
-    },
-    component: CestaPaso2Component
-  },{
-    path: 'detail/:id',
-    data: {
-      breadcrumb: localStorage.getItem('nombreBreadcrumb'),
-      breadcrumbEng: localStorage.getItem('nombreBreadcrumbEng')
-    },
-    component: CestaPaso3Component
-  }
+      path: 'paso2',
+      data: {
+        breadcrumb: 'Cesta > Paso 2',
+        breadcrumbEng: 'Cart > Step 2'
+      },
+      component: CestaPaso2Component
+    },{
+      path: 'paso3',
+      data: {
+        breadcrumb: 'Cesta > Paso 3',
+        breadcrumbEng: 'Cart > Step 3'
+      },
+      component: CestaPaso3Component
+    }
 ];
 
 @NgModule({

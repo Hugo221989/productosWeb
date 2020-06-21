@@ -42,8 +42,7 @@ const routes: Routes = [
   {
     path: 'cart',
     loadChildren: () =>
-      import('./pages/cesta/cesta.module').then(m => m.CestaModule),
-      canActivate: [AuthGuardService]
+      import('./pages/cesta/cesta.module').then(m => m.CestaModule)
   },
   {
     path: '**',

@@ -9,6 +9,7 @@ import { TokenStorageService } from '../logn-service/token-storage.service';
 import { actionSettingsIsAuthenticated } from 'src/app/settings/settings.actions';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store } from '@ngrx/store';
+import { ProductsService } from '../../products-page/service/products.service';
 
 @Component({
   selector: 'app-login',
@@ -64,11 +65,11 @@ export class LoginComponent {
 
     submitted: boolean;
 
-    genders: SelectItem[];
+ /*    genders: SelectItem[]; */
 
     description: string;
 
-    constructor(private fb: FormBuilder, private messageService: MessageService, private router:Router,
+    constructor(private fb: FormBuilder, private messageService: MessageService, private router:Router, private productosService: ProductsService,
       private authService: LoginService, private tokenStorage: TokenStorageService, private store: Store<{settings: SettingsState}>) {}
 
     ngOnInit() {
@@ -77,20 +78,27 @@ export class LoginComponent {
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getUser().roles;
       }
+      this.createUserForm();
 
-        this.userform = this.fb.group({
-            'email': new FormControl('', Validators.required),
-            'lastname': new FormControl('', Validators.required),
-            'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])),
-            'description': new FormControl(''),
-            'gender': new FormControl('', Validators.required),
-            'rememberLogin': new FormControl(false)
-        });
+        if(this.tokenStorage.isRememberLogin()){
 
-        this.genders = [];
+        }
+
+      /*   this.genders = [];
         this.genders.push({label:'Select Gender', value:''});
         this.genders.push({label:'Male', value:'Male'});
-        this.genders.push({label:'Female', value:'Female'});
+        this.genders.push({label:'Female', value:'Female'}); */
+    }
+
+    createUserForm(){
+      this.userform = this.fb.group({
+        'email': new FormControl('', Validators.required),
+        'lastname': new FormControl('', Validators.required),
+        'password': new FormControl('', Validators.compose([Validators.required, Validators.minLength(6)])),
+        'description': new FormControl(''),
+        'gender': new FormControl('', Validators.required),
+        'rememberLogin': new FormControl(false)
+    });
     }
 
     onSubmit() {
@@ -109,6 +117,8 @@ export class LoginComponent {
             this.isLoginFailed = false;
             this.isLoggedIn = true;
             this.roles = this.tokenStorage.getUser().roles;
+            this.tokenStorage.rememberLogin(data.rememberLogin);
+            this.obtenerCestaUsuario();
             this.reloadPage();
           },
           err => {
@@ -126,6 +136,11 @@ export class LoginComponent {
 
   irHome(){
     this.router.navigateByUrl('home');
+  }
+  obtenerCestaUsuario(){
+    this.productosService.getUserCartBbdd().subscribe(data => {
+      window.sessionStorage.setItem('cesta', JSON.stringify(data));
+    })
   }
 
 }

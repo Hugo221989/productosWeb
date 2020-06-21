@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { SelectItem } from 'primeng/api/selectitem';
-import { FileUpload } from 'primeng/fileupload/fileupload';
 import { MessageService } from 'primeng/api';
 import { AccountService } from '../service/account.service';
 import { SpainCities } from 'src/app/models/spainCities';
@@ -141,7 +140,6 @@ msgs: Message[] = [];
   }
 
   private llenarDireccionUsuario(){
-    let direccionUserArray: UsuarioDireccion[] = [];
     this.direccionUpdated = {
       destinatario : this.adressform.value.destinatari,
       calle : this.adressform.value.street,
@@ -151,9 +149,6 @@ msgs: Message[] = [];
       telefono : this.adressform.value.phone,
       datosAdicionales : this.adressform.value.aditionalData
     }
-
-  /*   direccionUserArray.push(direccionUpdated);
-    this.usuario.direccion = direccionUserArray; */
   }
 
   private obtenerGeneros(){

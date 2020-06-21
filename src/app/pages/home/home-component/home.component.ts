@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductsService } from '../../products-page/service/products.service';
 import { Producto } from 'src/app/models/producto';
 import { TranslateService } from '@ngx-translate/core';
 import { Carousel } from 'primeng/carousel';
 import { CategoriaPadre } from 'src/app/models/categoria';
-import { Galleria } from 'primeng/galleria';
 import { Subscription, Observable } from 'rxjs';
 import { actionSettingsBuscador } from 'src/app/settings/settings.actions';
 import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
@@ -72,8 +71,6 @@ export class HomeComponent implements OnInit {
           this.productsAlimentacion.push(prod);
         }
       }
-
-      console.log("alimentacion: ",this.productsAlimentacion.length);
     })
   }
   cargarProductosPromociones(){
@@ -185,7 +182,6 @@ getImages(){
   this.images.push({previewImageSrc:'assets/images/portada/portada3.jpg', alt:'Description for Image 1', title:'Title 1',
   thumbnailImageSrc:'assets/images/portada/portada3.jpg'});
   this.imagesLoaded = true;
-  console.log("iamges: ",this.images);
 }
 
 unblockScreen(){

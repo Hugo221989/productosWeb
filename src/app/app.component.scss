@@ -1,96 +1,3 @@
-@media screen and (min-width: 320px) and (max-width: 480px){
-    .divRegistro{
-        display: none;
-    }
-    .divCarritoDesktop{
-        display: none;
-    }
-    .cestaIconMobile{
-        text-align: right;
-        width: 60%;
-        float: right;
-        padding-bottom: 20%;
-    }
-    :host ::ng-deep .overlayShoppingCartMobile{
-        width: 98vw !important;
-        height: 140vw;
-    }
-    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
-        width: 98vw;
-        height: 100vw;
-        padding: 0;
-    }
-    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
-        height: 100%;
-    }
-    .divNavBarLeft{
-        max-width: 20%;
-    }
-    .divNavBarCenter{
-        max-width: 60%;
-    }
-    .divNavBarRight{
-        max-width: 20%;
-    }
-    :host ::ng-deep .buttonCountries.ui-selectbutton.ui-buttonset.ui-widget.ui-corner-all.ui-buttonset-2{
-        width: 100%;
-    }
-    :host ::ng-deep .buttonCountries .ui-button{
-        margin-right: 2% !important;
-    }
-    :host ::ng-deep .buttonCountries .ui-button.ui-widget.ui-state-default.ui-button-text-only.ng-star-inserted.ui-state-active{
-        background-color: #000000 !important;
-        border-color: #000000 !important;
-    }
-    :host ::ng-deep.dropdownLanguages .ui-dropdown{
-        min-width: 4em !important;
-    }
-}
-
-@media screen and (min-width: 480px) and (max-width: 768px){
-    .divRegistro{
-        display: none;
-    }
-    .divCarritoDesktop{ 
-        display: none;
-    }
-    :host ::ng-deep .panelSideMenuCustom .ng-tns-c72-2.ui-panelmenu.ui-widget{
-        width: 16em;
-    }
-    .cestaIconMobile{
-        text-align: right;
-        width: 30%;
-        float: right;
-        padding-bottom: 20%;
-    }
-    :host ::ng-deep .overlayShoppingCartMobile{
-        width: 94vw !important;
-        height: 100vw;
-    }
-    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
-        width: 94vw;
-        height: 100vw;
-        padding: 0;
-    }
-    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
-        height: 100%;
-    }
-}
-
-@media screen and (min-width: 1200px){
-    .cestaIconMobile{
-        display: none;
-    }
-    .divCarritoMobile{
-        display: none;
-    }
-    .botonMenuBarMobile{
-        display: none;
-    }
-    :host ::ng-deep.dropdownLanguages .ui-dropdown{
-        min-width: 4em !important;
-    }
-}
 :host ::ng-deep .dropdownLanguages .ui-inputtext{
     background-color: black !important;
     color: white !important;
@@ -192,6 +99,7 @@ body .ui-breadcrumb{
     padding-left: 10%;
     margin-bottom: 5%;
     margin-top: 5%;
+    display: none;
 }
 
 .divTituloLateral{
@@ -199,4 +107,173 @@ body .ui-breadcrumb{
     color: white;
     margin-bottom: 10%;
     padding-left: 8%;
+}
+
+/*BADGE NOTIFICATION*/
+.badge {
+    top: -10px;
+    right: -10px;
+    padding: 1px 6px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+  }
+@media screen and (min-width: 320px) and (max-width: 480px){
+    .divRegistro{
+        display: none;
+    }
+    .divCarritoDesktop{
+        display: none;
+    }
+    .cestaIconMobile{
+        text-align: right;
+        width: 60%;
+        float: right;
+        padding-bottom: 20%;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile{
+        width: 98vw !important;
+        height: 140vw;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
+        width: 98vw;
+        height: 100vw;
+        padding: 0;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
+        height: 100%;
+    }
+    .divNavBarLeft{
+        max-width: 20%;
+    }
+    .divNavBarCenter{
+        max-width: 60%;
+    }
+    .divNavBarRight{
+        max-width: 20%;
+    }
+    :host ::ng-deep .buttonCountries.ui-selectbutton.ui-buttonset.ui-widget.ui-corner-all.ui-buttonset-2{
+        width: 100%;
+    }
+    :host ::ng-deep .buttonCountries .ui-button{
+        margin-right: 2% !important;
+    }
+    :host ::ng-deep .buttonCountries .ui-button.ui-widget.ui-state-default.ui-button-text-only.ng-star-inserted.ui-state-active{
+        background-color: #000000 !important;
+        border-color: #000000 !important;
+    }
+    :host ::ng-deep.dropdownLanguages .ui-dropdown{
+        min-width: 4em !important;
+    }
+    .divRegistroLateral{
+        display: block;
+    }
+    .linksRegistroSimple{
+        display: none;
+    }
+}
+
+@media screen and (min-width: 480px) and (max-width: 768px){
+    .divRegistro{
+        display: none;
+    }
+    .divCarritoDesktop{ 
+        display: none;
+    }
+    :host ::ng-deep .panelSideMenuCustom .ng-tns-c72-2.ui-panelmenu.ui-widget{
+        width: 16em;
+    }
+    .cestaIconMobile{
+        text-align: right;
+        width: 30%;
+        float: right;
+        padding-bottom: 20%;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile{
+        width: 94vw !important;
+        height: 100vw;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
+        width: 94vw;
+        height: 100vw;
+        padding: 0;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
+        height: 100%;
+    }
+    .divRegistroLateral{
+        display: block;
+    }
+    .linksRegistroSimple{
+        display: none;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .divRegistro{
+        display: none;
+    }
+    .divCarritoDesktop{ 
+        display: none;
+    }
+    :host ::ng-deep .panelSideMenuCustom .ng-tns-c72-2.ui-panelmenu.ui-widget{
+        width: 16em;
+    }
+    .cestaIconMobile{
+        text-align: right;
+        width: 30%;
+        float: right;
+        padding-bottom: 20%;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile{
+        width: 94vw !important;
+        height: 100vw;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog-content{
+        width: 94vw;
+        height: 100vw;
+        padding: 0;
+    }
+    :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
+        height: 100%;
+    }
+    .divRegistroLateral{
+        display: block;
+    }
+    .linksRegistroSimple{
+        display: none;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%, -15%);
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .cestaIconMobile{
+        display: none;
+    }
+    .divCarritoMobile{
+        display: none;
+    }
+    .botonMenuBarMobile{
+        display: none;
+    }
+    :host ::ng-deep.dropdownLanguages .ui-dropdown{
+        min-width: 4em !important;
+    }
+    .divRegistroLateral{
+        display: none;
+    }
+    .linksRegistroSimple{
+        display: block;
+    }
+    .divRegistro{
+        margin-top: 0px !important;
+        text-align: right;
+        width: 100%;
+        float: unset;
+        display: inline-flex;
+      }
+      .iconCesta{
+          margin-left: 15%;
+      }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
+const REMEMBER_KEY = 'remember-login';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,10 @@ export class TokenStorageService {
 
   signOut() {
     window.sessionStorage.clear();
+    if(!this.isRememberLogin()){
+      window.sessionStorage.removeItem(TOKEN_KEY);
+      window.sessionStorage.removeItem(USER_KEY);
+    }
   }
 
   public saveToken(token: string) {
@@ -34,7 +39,19 @@ export class TokenStorageService {
 
   public getEmail(){
     let user = JSON.parse(sessionStorage.getItem(USER_KEY));
+    if(user == null)return null;
     return user['email'];
+  }
+  public rememberLogin(remember: boolean){
+    window.sessionStorage.setItem(REMEMBER_KEY, JSON.stringify(remember));
+  }
+
+  public isRememberLogin():boolean{
+    let rem = window.sessionStorage.getItem(REMEMBER_KEY);
+    if(rem != null && rem == 'true'){
+      return true;
+    }
+    return false;
   }
 
 }

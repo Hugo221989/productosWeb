@@ -33,9 +33,10 @@ export class AppComponent implements OnDestroy{
               private activatedRoute: ActivatedRoute,
               private store: Store<{settings: SettingsState}>,
               private tokenStorage: TokenStorageService,
-              private productsService: ProductsService,
+              public productsService: ProductsService,
               public translate: TranslateService) {
-                this.languages()
+                this.languages();
+                this.getProductosCesta();
               }
 
   faPhoneVolume = faPhoneVolume;
@@ -137,6 +138,7 @@ showRegisterModalMobile() {
   }
 
   cerrarSesion(){
+    this.productsService.saveUserCartBbdd();
     this.store.dispatch(actionSettingsIsAuthenticated({
         isAuthenticated: false
       }))
@@ -174,7 +176,7 @@ ngOnInit() {
             event => event instanceof NavigationEnd))
             .subscribe( ()=> {
                 this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
-                if(this.nombreString != null){console.log("NOMBRE NULO");
+                if(this.nombreString != null){
                     this.breadCrumbItems.splice(-1);
                     this.breadCrumbItems.push({label: this.nombreString});
                 }
@@ -182,9 +184,9 @@ ngOnInit() {
     /*BREADCRUMB*/
 
     this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
-    this.carritoVacioObservable$.subscribe( vacio => {
+    this.subscription.push(this.carritoVacioObservable$.subscribe( vacio => {
       this.carritoVacio = vacio
-    });
+    }));
   }
 
   checkAuthenticated(){
@@ -214,9 +216,9 @@ ngOnInit() {
       }
     }
     if(this.nombreProductoBreadcrumb$ != null){
-        this.nombreProductoBreadcrumb$.subscribe( (nombre) => {
+      this.subscription.push(this.nombreProductoBreadcrumb$.subscribe( (nombre) => {
             this.nombreString = nombre;
-        })
+        }));
     }
   }
 
@@ -252,18 +254,18 @@ ngOnInit() {
   }
 
   openShoppingCartDialog($event, overlayPanel: OverlayPanel){
-    this.getProductosCesta();
+    //this.getProductosCesta();
     overlayPanel.toggle($event);
   }
 
   showCartMobileDialog() {
-    this.getProductosCesta();
+    //this.getProductosCesta();
     this.displayCartMobile = true;
   }
 
   getProductosCesta() {
     this.cesta = this.productsService.getProductosCesta();
-    if(this.cesta.productos.length == 0){
+    if(this.cesta.productosCesta.length == 0){
       this.carritoVacio = true;
     }else{
       this.carritoVacio = false;
@@ -515,40 +517,40 @@ ngOnInit() {
   private liquidacionLabel: string = "";
   private ultimasUnidadesLabel: string = "";
   cargarLabelsMegaMenu(){
-    this.translate.stream('todos').subscribe(data => {this.allLabel = data});
-    this.translate.stream('navbar.nutricion').subscribe(data => {this.nutricionLabel = data});
-    this.translate.stream('proteina').subscribe(data => {this.proteinaLabel = data}); 
-    this.translate.stream('concentrado').subscribe(data => {this.concentradoLabel = data});
-    this.translate.stream('aislado').subscribe(data => {this.aisladoLabel = data});
-    this.translate.stream('hidrolizado').subscribe(data => {this.hidrolizadoLabel = data});
-    this.translate.stream('proVegetal').subscribe(data => {this.proVegetalLabel = data});
-    this.translate.stream('ch').subscribe(data => {this.chLabel = data});
-    this.translate.stream('ganador').subscribe(data => {this.ganadorMasaLabel = data});
-    this.translate.stream('vitargo').subscribe(data => {this.vitargoLabel = data});
-    this.translate.stream('quemadores').subscribe(data => {this.quemadoresLabel = data});
-    this.translate.stream('termogenicos').subscribe(data => {this.termogenicosLabel = data});
-    this.translate.stream('carnitina').subscribe(data => {this.carnitinaLabel = data});
-    this.translate.stream('diureticos').subscribe(data => {this.diureticosLabel = data});
-    this.translate.stream('cla').subscribe(data => {this.claLabel = data});
-    this.translate.stream('energia').subscribe(data => {this.energiaLabel = data});
-    this.translate.stream('preOxido').subscribe(data => {this.preOxidoLabel = data});
-    this.translate.stream('cafeina').subscribe(data => {this.cafeinaLabel = data});
-    this.translate.stream('creatina').subscribe(data => {this.creatinaLabel = data});
-    this.translate.stream('alimentacion').subscribe(data => {this.alimentacionLabel = data});
-    this.translate.stream('barritasSnacks').subscribe(data => {this.desayunoSnacksLabel = data});
-    this.translate.stream('tortitas').subscribe(data => {this.tortitasProLabel = data});
-    this.translate.stream('cremas').subscribe(data => {this.cremaLabel = data});
-    this.translate.stream('snacksSalados').subscribe(data => {this.snacksSaladosLabel = data});
-    this.translate.stream('bebidas').subscribe(data => {this.bebidasLabel = data});
-    this.translate.stream('bebidasPro').subscribe(data => {this.bebidasProLabel = data});
-    this.translate.stream('bebidasVegetakes').subscribe(data => {this.bebidasVegetalesLabel = data});
-    this.translate.stream('infusiones').subscribe(data => {this.infusionesLabel = data});
-    this.translate.stream('promociones').subscribe(data => {this.promocionesLabel = data});
-    this.translate.stream('outlet').subscribe(data => {this.outletLabel = data});
-    this.translate.stream('outletRopa').subscribe(data => {this.outletRopaLabel = data});
-    this.translate.stream('outletNutricion').subscribe(data => {this.outletNutricionLabel = data});
-    this.translate.stream('liquidacion').subscribe(data => {this.liquidacionLabel = data});
-    this.translate.stream('ultUnidades').subscribe(data => {this.ultimasUnidadesLabel = data});
+    this.subscription.push(this.translate.stream('todos').subscribe(data => {this.allLabel = data}));
+    this.subscription.push(this.translate.stream('navbar.nutricion').subscribe(data => {this.nutricionLabel = data}));
+    this.subscription.push(this.translate.stream('proteina').subscribe(data => {this.proteinaLabel = data}));
+    this.subscription.push(this.translate.stream('concentrado').subscribe(data => {this.concentradoLabel = data}));
+    this.subscription.push(this.translate.stream('aislado').subscribe(data => {this.aisladoLabel = data}));
+    this.subscription.push(this.translate.stream('hidrolizado').subscribe(data => {this.hidrolizadoLabel = data}));
+    this.subscription.push(this.translate.stream('proVegetal').subscribe(data => {this.proVegetalLabel = data}));
+    this.subscription.push(this.translate.stream('ch').subscribe(data => {this.chLabel = data}));
+    this.subscription.push(this.translate.stream('ganador').subscribe(data => {this.ganadorMasaLabel = data}));
+    this.subscription.push(this.translate.stream('vitargo').subscribe(data => {this.vitargoLabel = data}));
+    this.subscription.push(this.translate.stream('quemadores').subscribe(data => {this.quemadoresLabel = data}));
+    this.subscription.push(this.translate.stream('termogenicos').subscribe(data => {this.termogenicosLabel = data}));
+    this.subscription.push(this.translate.stream('carnitina').subscribe(data => {this.carnitinaLabel = data}));
+    this.subscription.push(this.translate.stream('diureticos').subscribe(data => {this.diureticosLabel = data}));
+    this.subscription.push(this.translate.stream('cla').subscribe(data => {this.claLabel = data}));
+    this.subscription.push(this.translate.stream('energia').subscribe(data => {this.energiaLabel = data}));
+    this.subscription.push(this.translate.stream('preOxido').subscribe(data => {this.preOxidoLabel = data}));
+    this.subscription.push(this.translate.stream('cafeina').subscribe(data => {this.cafeinaLabel = data}));
+    this.subscription.push(this.translate.stream('creatina').subscribe(data => {this.creatinaLabel = data}));
+    this.subscription.push(this.translate.stream('alimentacion').subscribe(data => {this.alimentacionLabel = data}));
+    this.subscription.push(this.translate.stream('barritasSnacks').subscribe(data => {this.desayunoSnacksLabel = data}));
+    this.subscription.push(this.translate.stream('tortitas').subscribe(data => {this.tortitasProLabel = data}));
+    this.subscription.push(this.translate.stream('cremas').subscribe(data => {this.cremaLabel = data}));
+    this.subscription.push(this.translate.stream('snacksSalados').subscribe(data => {this.snacksSaladosLabel = data}));
+    this.subscription.push(this.translate.stream('bebidas').subscribe(data => {this.bebidasLabel = data}));
+    this.subscription.push(this.translate.stream('bebidasPro').subscribe(data => {this.bebidasProLabel = data}));
+    this.subscription.push(this.translate.stream('bebidasVegetakes').subscribe(data => {this.bebidasVegetalesLabel = data}));
+    this.subscription.push(this.translate.stream('infusiones').subscribe(data => {this.infusionesLabel = data}));
+    this.subscription.push(this.translate.stream('promociones').subscribe(data => {this.promocionesLabel = data}));
+    this.subscription.push(this.translate.stream('outlet').subscribe(data => {this.outletLabel = data}));
+    this.subscription.push(this.translate.stream('outletRopa').subscribe(data => {this.outletRopaLabel = data}));
+    this.subscription.push(this.translate.stream('outletNutricion').subscribe(data => {this.outletNutricionLabel = data}));
+    this.subscription.push(this.translate.stream('liquidacion').subscribe(data => {this.liquidacionLabel = data}));
+    this.subscription.push(this.translate.stream('ultUnidades').subscribe(data => {this.ultimasUnidadesLabel = data}));
   }
 
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Producto } from 'src/app/models/producto';
 import { ProductsService } from '../../products-page/service/products.service';
-import { Cesta } from 'src/app/models/cesta';
+import { Cesta, ProductoCesta } from 'src/app/models/cesta';
 import { TranslateService } from '@ngx-translate/core';
 import { Router } from '@angular/router';
 
@@ -16,7 +16,7 @@ export class ShoopingCartComponent implements OnInit {
 
   @Input()
   cesta: Cesta;
-  products: Producto[];
+  productsCesta: ProductoCesta[];
   subtotal: string;
   total: string;
   envio: string;
@@ -26,18 +26,18 @@ export class ShoopingCartComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLanguageBrowser();
-    this.products = [];
+    this.productsCesta = [];
     this.cesta = this.productsService.getProductosCesta();
-    this.products = this.cesta.productos;
+    this.productsCesta = this.cesta.productosCesta;
   }
 
   eliminarProducto(index: number){
     this.cesta = this.productsService.removeProductoCesta(index);
-    this.products = this.cesta.productos;
+    this.productsCesta = this.cesta.productosCesta;
   }
 
   irCesta(){
-    this.router.navigate(['cart']);
+    this.router.navigate(['/cart/paso1/']);
   }
 
   getLanguageBrowser(){

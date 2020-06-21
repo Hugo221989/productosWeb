@@ -125,7 +125,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       this.filtrarPorPrecio();
     });
     this.selectLateralCurrentNode(this.catUrl, this.subCategoriaText);
-    if(cat != null){console.log("MODULO: ",this.categoriaPadre);
+    if(cat != null){
       this.router.navigate([this.categoriaPadre.modulo, this.catPadreUrl, this.catUrl, this.subCategoriaText]);
     }
   }
@@ -171,19 +171,20 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         this.catUrl = data.categoriaKey;
         this.subCatUrl = data.subCategoriaKey 
         /*BUSCAMOS CAT Y SUBCAT PARA COLOCAR BIEN LA URL*/
-        console.log("BUCLE?");
         this.router.navigate([categoriaPadre, categoriaPadreId, this.catUrl , this.subCatUrl, 'detail', product.id]);
       })
       
       this.store.dispatch(actionSettingsCambiarProductoId({
         productoId: product.id
       }))
-      setTimeout(() => {
+      let inputSearchNavBar: HTMLElement = document.getElementById('inputSearchNavBar') as HTMLElement;
+      inputSearchNavBar.innerText = "";
+     /*  setTimeout(() => {
         this.store.dispatch(actionSettingsBuscador({
           buscador: null
         })) 
-        this.reloadPage();
-      }, 100);
+        //this.reloadPage();
+      }, 100); */
   }
 
   reloadPage() {
@@ -289,14 +290,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       let subCatExtract = nodeKey.substring(nodeKey.indexOf('/')+1, nodeKey.length);
       let catExtract = nodeKey.substring(0, nodeKey.indexOf('/'));
       this.subCategoriaText = subCatExtract;
-      if(catExtract == (this.categoriaPadre.key)){console.log("1");
+      if(catExtract == (this.categoriaPadre.key)){
         this.getProductListByCategoriaPadre();
         this.getSubCatsByCat(catExtract);
         this.catUrl = catExtract;
         this.router.navigate([this.categoriaPadre.modulo,this.catPadreUrl, catExtract, subCatExtract]);
-      }else if(subCatExtract != null && subCatExtract != 'all'){console.log("2");
+      }else if(subCatExtract != null && subCatExtract != 'all'){
         this.getProductListBySubCat(subCatExtract);
-      }else{console.log("3");
+      }else{
         this.getProductsByCat(catExtract);
         this.getSubCatsByCat(catExtract);
       }

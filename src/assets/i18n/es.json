@@ -71,7 +71,7 @@
     "subtotal":"Sub-total",
     "producto":"Producto",
     "cantidad":"Cantidad",
-    "infoEnvioGratuito":"Envío gratuito en pedidos superiores a",
+    "infoEnvioGratuito":"Envío gratuito en pedidos superiores a 29",
     "infoEntregasCovid":"Las entregas en España siguen llevándose a cabo normalmente",
     "proceder.pago":"Proceder con el pago",
     "editar.info.pers":"Editar información personal",
@@ -113,5 +113,7 @@
     "subir.foto":"Subir Foto",
     "foto.subida.correctamente":"Foto subida correctamente",
     "elegir":"Elegir",
-    "cancelar":"Cancelar"
+    "cancelar":"Cancelar",
+    "continuar":"Continuar",
+    "finalizar,pago":"Finalizar Pago"
 }

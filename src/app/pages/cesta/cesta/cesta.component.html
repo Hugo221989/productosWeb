@@ -6,7 +6,7 @@
     <div class="cestaDesktopContainer">
         <h2>Carrito de la compra</h2>
     <div class="ui-g-12 divCarritoDesktop" style="text-align: center;">
-        <p-table [value]="products" [responsive]="true">
+        <p-table [value]="productsCesta" [responsive]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr class="trHeadPedidos">
                     <th class="thHeadPedidos">{{'producto' | translate}}</th>
@@ -20,20 +20,20 @@
                 <tr class="trPedidos">
                     <td class="tdPedidos">
                         <div class="contenedorCestaImagen">
-                            <div><img [alt]="product.nombre" src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" width="64" /></div>
+                            <div><img [alt]="product.producto.nombre" src="http://127.0.0.1:8887/{{product.producto?.fotos[0].ruta}}" width="64" /></div>
                             <div class="nombreProductoCesta">
-                                <span><b>{{product.nombre}}</b></span>
+                                <span><b>{{product.producto.nombre}}</b></span>
                                 <p>{{language == 'en' ? product.saborSeleccionado.saborEng : product.saborSeleccionado.sabor}}</p>
                             </div>
                         </div>
                     </td>
-                    <td class="tdPedidosRight">{{product.precio | number:'1.2-2'}} €</td>
+                    <td class="tdPedidosRight">{{product.producto.precio | number:'1.2-2'}} €</td>
                     <td class="tdPedidosRight">
                         <select [(ngModel)]="product.cantidad" (change)="changeProductAmount()">
                             <option *ngFor="let cantidad of cantidades" [ngValue]="cantidad">{{cantidad}}</option>
                         </select>
                     </td>
-                    <td class="tdPedidosRight">{{product.precio*product.cantidad | number:'1.2-2'}} €</td>
+                    <td class="tdPedidosRight">{{product.producto.precio*product.cantidad | number:'1.2-2'}} €</td>
                     <td class="tdPedidosRight">
                         <button pButton type="button" class="ui-button-secondary iconoEliminar" icon="pi pi-trash" (click)="eliminarProducto(i)"></button>
                     </td>
@@ -67,14 +67,14 @@
     </div>
     <div>
         <div class="ui-grid-col-8 divButtonPagoCesta">
-            <button pButton type="button" label="{{'proceder.pago' | translate}}" class="buttonBigCesta" icon="pi pi-id-card"
+            <button pButton type="button" label="{{'continuar' | translate}}" class="buttonBigCesta" icon="pi pi-chevron-right"
             (click)="paso2()"></button>
         </div>
     </div>
 </div>
 
 <div class="ui-g-12 divCarritoMobile" style="text-align: center;">
-        <p-table [value]="products" [responsive]="true">
+        <p-table [value]="productsCesta" [responsive]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr class="trHeadPedidos">
                     <th class="thHeadPedidos">{{'producto' | translate}}</th>
@@ -85,7 +85,7 @@
                     <td class="tdPedidos">
                         <div class="ui-g-12 cabeceraProductoCestaMobile">
                             <div class="ui-g-12 nombreProductoCesta">
-                                <span><b>{{product.nombre}}</b></span>
+                                <span><b>{{product.producto.nombre}}</b></span>
                                 - <span>{{language == 'en' ? product.saborSeleccionado.saborEng : product.saborSeleccionado.sabor}}</span>
                             </div>
                         </div>
@@ -95,17 +95,17 @@
                                     <button pButton type="button" class="ui-button-secondary iconoEliminar" icon="pi pi-trash" (click)="eliminarProducto(i)"></button>
                                 </div>
                                 <div class="ui-g-9">
-                                    <img [alt]="product.nombre" src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" width="64" />
+                                    <img [alt]="product.nombre" src="http://127.0.0.1:8887/{{product.producto?.fotos[0].ruta}}" width="64" />
                                 </div>
                             </div>
                             <div class="ui-g-2 divInfoProducto">
-                                {{product.precio | number:'1.2-2'}} €
+                                {{product.producto.precio | number:'1.2-2'}} €
                             </div>
                             <div class="ui-g-2 divInfoProducto">
                                 X {{product.cantidad}}
                             </div>
                             <div class="ui-g-3 divInfoProducto">
-                                = {{product.precio*product.cantidad | number:'1.2-2'}} €
+                                = {{product.producto.precio*product.cantidad | number:'1.2-2'}} €
                             </div>
                          <!--    <div class="ui-g-3">
                                 <button pButton type="button" class="ui-button-secondary iconoEliminar" icon="pi pi-trash" (click)="eliminarProducto(i)"></button>
@@ -140,9 +140,9 @@
             </div>
         </div>
         <div>
-            <div class="ui-grid-col-8 divButtonPagoCesta">
-                <button pButton type="button" label="{{'proceder.pago' | translate}}" class="buttonBigCesta" 
-                (click)="paso2()" icon="pi pi-id-card"></button>
+            <div class="ui-grid-col-8 divButtonPagoCestaMobile">
+                <button pButton type="button" label="{{'continuar' | translate}}" class="buttonBigCesta" 
+                (click)="paso2()" icon="pi pi-chevron-right"></button>
             </div>
         </div>
     </div>

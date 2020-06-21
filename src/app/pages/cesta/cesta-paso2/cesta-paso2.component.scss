@@ -1,0 +1,129 @@
+.divApartado{
+    border: 1px solid #d2d2d2;
+    margin-bottom: 1em;
+}
+.divCabeceraApartado{
+    background: #f1f1f3;
+    padding-bottom: 1em;
+    padding-top: 1em;
+    border: 1px solid c3c3c3;
+    text-align: left;
+    padding-left: 2%;
+    font-size: 18px;
+}
+.divContenidoApartado{
+    padding-bottom: 1em;
+    padding-top: 1em;
+    text-align: left;
+    padding-left: 2%;
+    background: white;
+}
+.infoDireccionPedido{
+    padding: .5%;
+}
+.divButtonPagoCesta{
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 100%;
+}
+.cestaDesktopContainer{
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.divCarritoDesktop{
+    border: 1px solid #f9f5f5;
+    background: #f9f9f9;
+}
+.divMetodoEnvio{
+    border: 2px solid #dcdcdc;
+    background: whitesmoke;
+    padding: 2em;
+    margin: 1em;
+    display: inline-flex;
+}
+.loadingSpinner{
+    text-align: center;
+    top: 50%;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1009;
+}
+
+.ui-blockui-document.ui-blockui.ui-widget-overlay{
+    z-index: 1010;
+}
+:host ::ng-deep .radioButton.ui-radiobutton.ui-widget{
+    margin: 0;
+    position: relative;
+    top: -25%;
+    left: 0%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-39%, -50%);
+}
+@media screen and (min-width: 320px) and (max-width: 480px){
+    .buttonBigCesta{
+        padding-bottom: 0.5% !important;
+        padding-top: 0.5% !important;
+        width: 75%;
+    }
+    .divButtonPagoCesta{
+        margin-top: 5%;
+        margin-bottom: 5%;
+        width: 100%;
+        text-align: center;
+    }
+    .divMetodoEnvio{
+        border: 2px solid #dcdcdc;
+        background: whitesmoke;
+        padding: 2em;
+        margin: 1em;
+        display: block;
+        text-align: center;
+    }
+    .subdivMetodoPago, .subdivMetodoEnvio{
+        width: 100%;
+    }
+}
+@media screen and (min-width: 480px) and (max-width: 768px){
+    .buttonBigCesta{
+        padding-bottom: 0.5% !important;
+        padding-top: 0.5% !important;
+        width: 75%;
+    }
+    .divButtonPagoCesta{
+        margin-top: 5%;
+        margin-bottom: 5%;
+        width: 100%;
+        text-align: center;
+    }
+    .divMetodoEnvio{
+        border: 2px solid #dcdcdc;
+        background: whitesmoke;
+        padding: 2em;
+        margin: 1em;
+        display: block;
+        text-align: center;
+    }
+    .subdivMetodoPago, .subdivMetodoEnvio{
+        width: 100%;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .buttonBigCesta{
+        padding-bottom: 0.5% !important;
+        padding-top: 0.5% !important;
+        width: 20%;
+        float: right;
+    }
+}
+@media screen and (min-width: 1200px) {
+    .buttonBigCesta{
+        padding-bottom: 0.5% !important;
+        padding-top: 0.5% !important;
+        width: 10%;
+        float: right;
+    }
+}

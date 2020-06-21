@@ -36,23 +36,23 @@
                 </div>
             </div>
             <div class="ui-g-12 padding0mobile">
-                <div class="ui-g-12 ui-md-4 contenedorPDropdown">
+                <div class="ui-g-12 ui-md-12 contenedorPDropdown">
                     <p-dropdown [options]="saboresItems" [(ngModel)]="saborSelected" styleClass="comboSabores"></p-dropdown>
                 </div>
-                <div class="ui-g-12 ui-md-4">
+                <div class="ui-g-12 ui-md-12 contenedorProductAmount">
                     <p-spinner size="30" [(ngModel)]="cantidadSeleccionadaProducto" [min]="0" [max]="100" styleClass="spinnerCantidad"></p-spinner> 
                 </div>
-                <div class="ui-g-12 ui-md-4"></div>
+                <div class="ui-g-12 ui-md-12"></div>
             </div>
             <div class="ui-g-12">
-                <div class="ui-g-12 ui-md-4 contenedorBotonFavoritos">
+                <div class="ui-g-12 ui-md-12 contenedorBotonFavoritos">
                     <button pButton type="button" label="{{'favoritos' | translate}}" class="ui-button-raised ui-button-danger botonFavoritos" icon="pi pi-heart"></button>
                 </div>
-                <div class="ui-g-12 ui-md-4 contenedorBotonAnadir">
+                <div class="ui-g-12 ui-md-12 contenedorBotonAnadir">
                     <button pButton type="button" label="{{'add.cesta' | translate}}" class="ui-button-raised ui-button-success botonCesta" 
                     icon="pi pi-shopping-cart" (click)="addProduct(product)"></button>
                 </div>
-                <div class="ui-g-12 ui-md-4"></div>
+                <div class="ui-g-12 ui-md-12"></div>
             </div>
         </div>
     </div>
@@ -84,18 +84,18 @@
                 
                 <p-tabPanel header="{{'opiniones' | translate}}">
                     <div class="contenedorOpiniones">
-                        <div class="ui-g-12 ui-md-12 ui-g-nopad">
+                        <!-- <div class="ui-g-12 ui-md-12 ui-g-nopad"> -->
                             <p-dataView #dv [value]="comentarios" [paginator]="true" [rows]="5" paginatorPosition="bottom" filterBy="autor"
-                                [sortField]="sortField" [sortOrder]="sortOrder" layout="list">
+                                [sortField]="sortField" [sortOrder]="sortOrder" layout="list" styleClass="dataViewComentarios">
                                 <ng-template let-comentario pTemplate="listItem">
-                                    <div class="ui-g-6 padding0mobile" style="border: 1px solid #ece9e9; margin: 5px;">
+                                    <div class="ui-g-12 padding0mobile" style="border: 1px solid #ece9e9; margin: 5px;">
                                         <div class="car-details">
                                             <div class="ui-g-12 padding0mobile">
-                                                <div class="ui-g-4 ui-md-4" style="min-width: 138px;">
+                                                <div class="ui-g-12 ui-md-12" style="min-width: 138px;">
                                                     <div class="ui-g-12"><p-rating [ngModel]="comentario.puntuacion" readonly="true" stars="5" [cancel]="false"></p-rating></div>
                                                     <div class="ui-g-12"><b>{{comentario.fecha | date : 'dd/MM/yyyy'}}</b></div>
                                                 </div>
-                                                <div class="ui-g-8 ui-md-8">
+                                                <div class="ui-g-8 ui-md-12">
                                                     <div class="ui-g">
                                                         <div class="ui-g-12"><b>{{comentario.autor}}</b></div>
                                                         <div class="ui-g-12" style="margin-top: 2%;"><span>{{comentario.opinion}}</span></div>
@@ -106,7 +106,7 @@
                                     </div>
                                 </ng-template>
                             </p-dataView>
-                        </div>
+                        <!-- </div> -->
                     </div>
                 </p-tabPanel>
             </p-tabView>

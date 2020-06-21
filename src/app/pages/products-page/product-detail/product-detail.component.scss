@@ -1,4 +1,4 @@
-@media screen and (min-width: 320px) and (max-width: 480px){
+@media screen and (min-width: 300px) and (max-width: 480px){
     :host ::ng-deep .galeriaDetalleProducto.ui-galleria.ui-widget.ui-widget-content.ui-corner-all{
         width: 100% !important;
     }
@@ -115,8 +115,11 @@
     body .ui-dataview .ui-dataview-content{
         padding: 0 !important;
     }
+    .p-grid{
+        width: 100% !important;
+    }
 }
-@media screen and (min-width: 480px) and (max-width: 768px){
+@media screen and (min-width: 480px) and (max-width: 641px){
     :host ::ng-deep .galeriaDetalleProducto.ui-galleria.ui-widget.ui-widget-content.ui-corner-all{
         width: 100% !important;
     }
@@ -165,7 +168,7 @@
     }
     .contenedorImagenesGaleria{
         min-height: 60em;
-        height: 60em;
+        height: 100%;
     }
     .contenerdorDescripcionDerecha{
         height: auto;
@@ -198,11 +201,28 @@
     }
    
 }
-
-@media screen and (min-width: 1200px){
-    .contenedorDetalleProducto{
-        margin-top: 80px;
+@media screen and (min-width: 641px) and (max-width: 768px){
+    .dataViewComentarios .ui-dataview-content{
+        padding: 0% !important;
+        border: 0 !important;
     }
+    .padding0mobile{
+        padding: 0 !important;
+    }
+    .contenedorImagenCarousel{
+        min-width: 100%;
+    }
+    .imagenCarouselInferior{
+        max-width: 100%;
+        max-height: 100%;
+    }
+    
+}
+
+@media screen and (min-width: 768px){
+    .contenedorDetalleProducto{
+        margin-top: 2em;
+    } 
     .contenedorImagenesGaleria{
         min-height: 40em;
     }
@@ -247,6 +267,10 @@
     }
     input.ui-spinner-input.ui-inputtext.ui-widget.ui-state-default.ui-corner-all{
         padding: 10px !important;
+        width: 100%;
+    }
+    .contenedorPDropdown, .contenedorProductAmount, .contenedorBotonFavoritos, .contenedorBotonAnadir{
+        width: 49%;
     }
 }
 

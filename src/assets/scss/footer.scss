@@ -39,6 +39,11 @@
 		display: none !important;
 	}
 }
+@media screen and (min-width: 768px) and (max-width: 1200px){
+	.megaMenuCustom {
+		display: none;
+	}
+}
 
 @media screen and (min-width: 1200px){
 	.headerMask{
@@ -232,5 +237,6 @@ footer{
     margin-right: -0.5em;
 }
 .headerPrincipal{
-    height: 60px;
+	height: 60px;
+	background: black;
 }

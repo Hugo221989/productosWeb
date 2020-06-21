@@ -11,6 +11,7 @@ import { selectSettingsBuscador, selectSettingsProductoId } from 'src/app/settin
 import { Observable, Subscription } from 'rxjs';
 import { Carousel } from 'primeng/carousel';
 import { CategoriaPadre, Categoria } from 'src/app/models/categoria';
+import { ProductoCesta } from 'src/app/models/cesta';
 
 @Component({
   selector: 'app-product-detail',
@@ -31,7 +32,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   comentarios: Comentario[] = [];
   fotos: Foto[] = [];
   saboresItems: SelectItem[];
-  saborSelected: any;
+  saborSelected: Sabor;
   cantidadSeleccionadaProducto: number = 1;
 
   productsNutrition: Producto[] = [];
@@ -82,7 +83,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
    ngOnInit() {
         //this.producto = history.state;
-        console.log("ENTRA");
         this.getLanguageBrowser();
         this.getUrlParams();
         this.idProduct = this.route.snapshot.paramMap.get("id");
@@ -94,7 +94,6 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
         /*para el buscador*/
         setTimeout(() => {
           this.manageBuscadorSuperior();
-          console.log("ACABA");
         }, 300);
     }
 
@@ -212,14 +211,21 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     }
 
     addProduct(product: Producto){
-      product.saborSeleccionado = this.saborSelected;
-      product.cantidad = this.cantidadSeleccionadaProducto;  
-
+      let sabor:Sabor = {
+        id: this.saborSelected.id,
+        sabor: this.saborSelected.sabor,
+        saborEng: this.saborSelected.saborEng
+      }
+      let productoCesta: ProductoCesta = {
+        cantidad: this.cantidadSeleccionadaProducto,
+        saborSeleccionado: sabor,
+        producto: product
+      }
       this.blockedDocument = true;
       setTimeout(() => {
         this.blockedDocument = false;
       }, 1000);
-      this.productsService.addProductToCart(product);
+      this.productsService.addProductToCart(productoCesta);
     }
 
     cambiarProducto(){

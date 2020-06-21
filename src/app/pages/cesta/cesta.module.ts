@@ -10,19 +10,22 @@ import { CestaRoutingModule } from './cesta-routing.module';
 import { TableModule } from 'primeng/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {RadioButtonModule} from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [CestaComponent, CestaPaso2Component, CestaPaso3Component],
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     CestaRoutingModule,
     ProductsModule,
     BlockUIModule,
     ProgressSpinnerModule,
     TableModule,
     ButtonModule,
+    RadioButtonModule,
     TranslateModule
   ]
 })

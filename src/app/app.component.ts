@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {DialogService} from 'primeng/dynamicdialog';
 import { MenuItem, SelectItem} from 'primeng/api';
 import {MegaMenuItem} from 'primeng/api/megamenuitem';
@@ -12,7 +12,7 @@ import { Store, select } from '@ngrx/store';
 import { SettingsState } from './settings/settings.model';
 import { selectSettingsNombreBreadcrumb, selectSettingsCarritoEstaVacio, selectSettingsBuscador, selectSettingsNombreBreadcrumbEng } from './settings/settings.selectors';
 import { RegisterComponent } from './pages/register/register-component/register.component';
-import { actionSettingsIsAuthenticated, actionSettingsBuscador, actionSettingsCambiarLanguage } from './settings/settings.actions';
+import { actionSettingsIsAuthenticated, actionSettingsBuscador, actionSettingsCambiarLanguage, actionSettingsCarritoVacio } from './settings/settings.actions';
 import { TokenStorageService } from './pages/login/logn-service/token-storage.service';
 import { OverlayPanel } from 'primeng/overlaypanel/public_api';
 import { Cesta } from './models/cesta';
@@ -25,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./app.component.scss'],
   providers: [DialogService]
 })
-export class AppComponent implements OnDestroy{
+export class AppComponent implements OnInit, OnDestroy{
   language: string = "es";
 
   constructor(public dialogService: DialogService,
@@ -66,6 +66,27 @@ export class AppComponent implements OnDestroy{
   countries: SelectItem[];
   selectedLanguage: string = 'es';
   selectedLanguageMobile: SelectItem = {label: 'Español', icon: 'spain.png', value:'es'};
+
+  ngOnInit() {
+    this.getLanguageBrowser()
+
+    this.cargarLabelsMegaMenu();
+
+    this.checkAuthenticated();
+
+    this.getNombreBreadCrumb();
+
+    this.clearSearchinput();
+
+    /*MEGA MENU*/
+   /*  setTimeout(() => {
+      this.createMegaMenu();
+    }, 500); */
+    /*BREADCRUMB*/ 
+    this.manageBreadcrumb();
+
+    this.checkCarritoVacio();
+  }
 
   cambiarIdioma(selectedLanguage){
     this.translate.use(selectedLanguage);
@@ -151,44 +172,6 @@ showRegisterModalMobile() {
     window.location.reload();
   }
 
-
-ngOnInit() {
-    this.getLanguageBrowser()
-
-    this.cargarLabelsMegaMenu();
-
-    this.checkAuthenticated();
-
-    this.getNombreBreadCrumb();
-
-    this.clearSearchinput();
-
-    /*MEGA MENU*/
-    setTimeout(() => {
-      this.createMegaMenu();
-    }, 500);
-    
-    /*MEGA MENU*/
-
-    /*BREADCRUMB*/ 
-    this.router.events.pipe(
-        filter(
-            event => event instanceof NavigationEnd))
-            .subscribe( ()=> {
-                this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
-                if(this.nombreString != null){
-                    this.breadCrumbItems.splice(-1);
-                    this.breadCrumbItems.push({label: this.nombreString});
-                }
-            });
-    /*BREADCRUMB*/
-
-    this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
-    this.subscription.push(this.carritoVacioObservable$.subscribe( vacio => {
-      this.carritoVacio = vacio
-    }));
-  }
-
   checkAuthenticated(){
     if(window.sessionStorage.getItem('authenticated') == 'true'){
       this.logged$ = true;
@@ -202,6 +185,19 @@ ngOnInit() {
         this.inputSearch = null;
       }
     }))
+  }
+
+  manageBreadcrumb(){
+    this.router.events.pipe(
+      filter(
+          event => event instanceof NavigationEnd))
+          .subscribe( ()=> {
+              this.breadCrumbItems = this.createBreadCrumbs(this.activatedRoute.root);
+              if(this.nombreString != null){
+                  this.breadCrumbItems.splice(-1);
+                  this.breadCrumbItems.push({label: this.nombreString});
+              }
+          });
   }
 
   getNombreBreadCrumb(){
@@ -253,6 +249,13 @@ ngOnInit() {
 
   }
 
+  checkCarritoVacio(){
+
+    this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
+    this.subscription.push(this.carritoVacioObservable$.subscribe());
+
+  }
+
   openShoppingCartDialog($event, overlayPanel: OverlayPanel){
     //this.getProductosCesta();
     overlayPanel.toggle($event);
@@ -266,9 +269,13 @@ ngOnInit() {
   getProductosCesta() {
     this.cesta = this.productsService.getProductosCesta();
     if(this.cesta.productosCesta.length == 0){
-      this.carritoVacio = true;
+      this.store.dispatch(actionSettingsCarritoVacio({
+        carritoEstaVacio: true
+      }))
     }else{
-      this.carritoVacio = false;
+      this.store.dispatch(actionSettingsCarritoVacio({
+        carritoEstaVacio: false
+      }))
     }
   }
 
@@ -517,40 +524,43 @@ ngOnInit() {
   private liquidacionLabel: string = "";
   private ultimasUnidadesLabel: string = "";
   cargarLabelsMegaMenu(){
-    this.subscription.push(this.translate.stream('todos').subscribe(data => {this.allLabel = data}));
-    this.subscription.push(this.translate.stream('navbar.nutricion').subscribe(data => {this.nutricionLabel = data}));
-    this.subscription.push(this.translate.stream('proteina').subscribe(data => {this.proteinaLabel = data}));
-    this.subscription.push(this.translate.stream('concentrado').subscribe(data => {this.concentradoLabel = data}));
-    this.subscription.push(this.translate.stream('aislado').subscribe(data => {this.aisladoLabel = data}));
-    this.subscription.push(this.translate.stream('hidrolizado').subscribe(data => {this.hidrolizadoLabel = data}));
-    this.subscription.push(this.translate.stream('proVegetal').subscribe(data => {this.proVegetalLabel = data}));
-    this.subscription.push(this.translate.stream('ch').subscribe(data => {this.chLabel = data}));
-    this.subscription.push(this.translate.stream('ganador').subscribe(data => {this.ganadorMasaLabel = data}));
-    this.subscription.push(this.translate.stream('vitargo').subscribe(data => {this.vitargoLabel = data}));
-    this.subscription.push(this.translate.stream('quemadores').subscribe(data => {this.quemadoresLabel = data}));
-    this.subscription.push(this.translate.stream('termogenicos').subscribe(data => {this.termogenicosLabel = data}));
-    this.subscription.push(this.translate.stream('carnitina').subscribe(data => {this.carnitinaLabel = data}));
-    this.subscription.push(this.translate.stream('diureticos').subscribe(data => {this.diureticosLabel = data}));
-    this.subscription.push(this.translate.stream('cla').subscribe(data => {this.claLabel = data}));
-    this.subscription.push(this.translate.stream('energia').subscribe(data => {this.energiaLabel = data}));
-    this.subscription.push(this.translate.stream('preOxido').subscribe(data => {this.preOxidoLabel = data}));
-    this.subscription.push(this.translate.stream('cafeina').subscribe(data => {this.cafeinaLabel = data}));
-    this.subscription.push(this.translate.stream('creatina').subscribe(data => {this.creatinaLabel = data}));
-    this.subscription.push(this.translate.stream('alimentacion').subscribe(data => {this.alimentacionLabel = data}));
-    this.subscription.push(this.translate.stream('barritasSnacks').subscribe(data => {this.desayunoSnacksLabel = data}));
-    this.subscription.push(this.translate.stream('tortitas').subscribe(data => {this.tortitasProLabel = data}));
-    this.subscription.push(this.translate.stream('cremas').subscribe(data => {this.cremaLabel = data}));
-    this.subscription.push(this.translate.stream('snacksSalados').subscribe(data => {this.snacksSaladosLabel = data}));
-    this.subscription.push(this.translate.stream('bebidas').subscribe(data => {this.bebidasLabel = data}));
-    this.subscription.push(this.translate.stream('bebidasPro').subscribe(data => {this.bebidasProLabel = data}));
-    this.subscription.push(this.translate.stream('bebidasVegetakes').subscribe(data => {this.bebidasVegetalesLabel = data}));
-    this.subscription.push(this.translate.stream('infusiones').subscribe(data => {this.infusionesLabel = data}));
-    this.subscription.push(this.translate.stream('promociones').subscribe(data => {this.promocionesLabel = data}));
-    this.subscription.push(this.translate.stream('outlet').subscribe(data => {this.outletLabel = data}));
-    this.subscription.push(this.translate.stream('outletRopa').subscribe(data => {this.outletRopaLabel = data}));
-    this.subscription.push(this.translate.stream('outletNutricion').subscribe(data => {this.outletNutricionLabel = data}));
-    this.subscription.push(this.translate.stream('liquidacion').subscribe(data => {this.liquidacionLabel = data}));
-    this.subscription.push(this.translate.stream('ultUnidades').subscribe(data => {this.ultimasUnidadesLabel = data}));
+    this.subscription.push(this.translate.getTranslation(this.selectedLanguage).subscribe(data=>{
+      this.allLabel = data.todos;
+      this.nutricionLabel = data['navbar.nutricion'];
+      this.proteinaLabel = data.proteina;
+      this.concentradoLabel = data.concentrado;
+      this.aisladoLabel = data.aislado;
+      this.hidrolizadoLabel = data.hidrolizado;
+      this.proVegetalLabel = data.proVegetal;
+      this.chLabel = data.ch;
+      this.ganadorMasaLabel = data.ganador;
+      this.vitargoLabel = data.vitargo;
+      this.quemadoresLabel = data.quemadores;
+      this.termogenicosLabel = data.termogenicos;
+      this.carnitinaLabel = data.carnitina;
+      this.diureticosLabel = data.diureticos;
+      this.claLabel = data.cla;
+      this.energiaLabel = data.energia;
+      this.preOxidoLabel = data.preOxido;
+      this.cafeinaLabel = data.cafeina;
+      this.creatinaLabel = data.creatina;
+      this.alimentacionLabel = data.alimentacion;
+      this.desayunoSnacksLabel = data.barritasSnacks;
+      this.tortitasProLabel = data.tortitas;
+      this.cremaLabel = data.cremas;
+      this.snacksSaladosLabel = data.snacksSalados;
+      this.bebidasLabel = data.bebidas;
+      this.bebidasProLabel = data.bebidasPro;
+      this.bebidasVegetalesLabel = data.bebidasVegetakes;
+      this.infusionesLabel = data.infusiones;
+      this.promocionesLabel = data.promociones;
+      this.outletLabel = data.outlet;
+      this.outletRopaLabel = data.outletRopa;
+      this.outletNutricionLabel = data.outletNutricion;
+      this.liquidacionLabel = data.liquidacion;
+      this.ultimasUnidadesLabel = data.ultUnidades;
+      this.createMegaMenu();
+    }))
   }
 
 

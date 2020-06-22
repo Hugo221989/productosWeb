@@ -14,6 +14,7 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class PanelComponent implements OnInit, OnDestroy {
   language: string = "es";
+  selectedLanguage: string = 'es';
 
   tabMenuItem: MenuItem[] = [];
   activeItem: MenuItem;
@@ -39,12 +40,19 @@ export class PanelComponent implements OnInit, OnDestroy {
   }
 
   getLanguageBrowser(){
-      this.language = this.productsService.getLanguageBrowser();  
-      this.subscription.push(this.translate.stream('datos.cuenta').subscribe(data => {this.datosCuenta = data}));
-      this.subscription.push(this.translate.stream('pedidos').subscribe(data => {this.pedidos = data}));
-      setTimeout(() => {
-        this.setTabMenuItems();
-      }, 500);
+    this.language = this.productsService.getLanguageBrowser();
+    if(this.language == 'es'){
+      this.selectedLanguage = 'es';
+    }else{
+      this.selectedLanguage = 'en';
+    }
+
+    this.language = this.productsService.getLanguageBrowser();  
+    this.subscription.push(this.translate.getTranslation(this.selectedLanguage).subscribe(data=>{
+      this.datosCuenta = data['datos.cuenta'];
+      this.pedidos = data.pedidos;
+      this.setTabMenuItems();
+    }));
   }
 
   getUrlParams(){
@@ -60,16 +68,14 @@ export class PanelComponent implements OnInit, OnDestroy {
 
 
   setTabMenuItems(){
-    setTimeout(() => {
-      this.tabMenuItem = [
-        {label: this.datosCuenta, icon: 'pi pi-user-edit', routerLink:'data'},
-        {label: this.pedidos, icon: 'pi pi-sign-out', routerLink:'orders'}
-      ];
-      this.getUrlParams();
-      if(this.datosCuenta == null){
-        this.setTabMenuItems();
-      }
-    }, 500);
+    this.tabMenuItem = [
+      {label: this.datosCuenta, icon: 'pi pi-user-edit', routerLink:'data'},
+      {label: this.pedidos, icon: 'pi pi-sign-out', routerLink:'orders'}
+    ];
+    this.getUrlParams();
+    if(this.datosCuenta == null){
+      this.setTabMenuItems();
+    }
   }
   datosCuenta: string;
   pedidos: string;

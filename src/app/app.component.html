@@ -57,9 +57,9 @@
               </a>
               <p-overlayPanel #op1 styleClass="overlayShoppingCart">
                 <ng-template pTemplate>
-                   <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
+                   <div *ngIf="carritoVacioObservable$ | async"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
 
-                   <div *ngIf="!carritoVacio" id="overlayShoppingCart">
+                   <div *ngIf="!(carritoVacioObservable$ | async)" id="overlayShoppingCart">
                     <p-scrollPanel [style]="{width: '100%', height: '400px'}">
                         <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
                      </p-scrollPanel>
@@ -79,27 +79,14 @@
 
             <p-dialog [(visible)]="displayCartMobile" position="top" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
                 [draggable]="false" [resizable]="false" styleClass="overlayShoppingCartMobile" header="{{'cesta.compra' | translate}}">
-                <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
+                <div *ngIf="carritoVacioObservable$ | async"><p class="paragrafCarritoVacio">{{'carrito.vacio' | translate}}</p></div>
 
-                  <div *ngIf="!carritoVacio" id="overlayShoppingCartMobile">
+                  <div *ngIf="!(carritoVacioObservable$ | async)" id="overlayShoppingCartMobile">
                     <p-scrollPanel [style]="{width: '100%', height: '400px'}">
                         <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
                     </p-scrollPanel>
                   </div>
               </p-dialog>
-
-
-          <!--   <p-overlayPanel #op2 styleClass="overlayShoppingCartMobile">
-              <ng-template pTemplate>
-                 <div *ngIf="carritoVacio"><p class="paragrafCarritoVacio">Tu carrito está vacío</p></div>
-
-                 <div *ngIf="!carritoVacio">
-                  <p-scrollPanel [style]="{width: '100%', height: '400px'}">
-                      <app-shooping-cart [cesta]="cesta"></app-shooping-cart>
-                   </p-scrollPanel>
-                 </div>
-              </ng-template>
-          </p-overlayPanel> -->
           </div>
         </div>
     </div>

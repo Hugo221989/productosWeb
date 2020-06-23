@@ -26,9 +26,6 @@
 .importeTotal{
     font-size: 18px;
 }
-.totalPedido{
-    //margin-bottom: 2%;
-}
 
 .contenedorCestaImagen{
     display: inline-flex;
@@ -62,6 +59,19 @@
 .ui-blockui-document.ui-blockui.ui-widget-overlay{
     z-index: 1010;
 }
+
+.paragrafCarritoVacio{
+    font-size: 1.3em;
+}
+
+.contenedorCarritoVacio{
+    margin: 0;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 @media screen and (min-width: 320px) and (max-width: 480px){
     .divCarritoDesktop{ 
         display: none;
@@ -71,6 +81,8 @@
     }
     .divButtonPagoCestaMobile{
         display: block;
+        width: 100%;
+        margin-top: 20%;
     }
     .contenedorCestaImagenMobile{
         padding: 0 !important;
@@ -120,6 +132,7 @@
     }
     .divButtonPagoCestaMobile{
         display: block;
+        margin-top: 10%;
     }
     .divButtonPagoCesta{
         display: none;
@@ -162,6 +175,55 @@
     }
     .subdivInferiorTotal{
         display: inline-flex;
+    }
+}
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .cabeceraProductoCestaMobile{
+        background-color: #4c4a4a;
+        color: white;
+        margin-bottom: 5%;
+    }
+    .divCarritoDesktop{ 
+        display: none;
+    }
+    .divButtonPagoCesta{
+        display: none;
+    }
+    .divButtonPagoCestaMobile{
+        display: block;
+        width: 100%;
+        margin-top: 5%;
+    }
+    .buttonBigCesta{
+        padding-bottom: 0.5% !important;
+        padding-top: 0.5% !important;
+        width: 20%;
+        float: right;
+    }
+    .totalPedido{
+        text-align: right;
+        margin-right: 4%;
+    }
+    .importeTotalCesta{
+        font-size: 20px;
+    }
+    .subdivInferiorTotal{
+        width: 30%;
+        display: inline-flex;
+    }
+    .divInferiorTotal{
+        text-align: right;
+        margin-top: 5%;
+    }
+    .divInfoProducto{
+        transform: translate(0%, 50%);
+    } 
+    .divIconoEliminar{
+        transform: translate(0%, 25%);
+    }
+    .tdPedidos{
+        border: 0 !important;
+        padding: 0 !important;
     }
 }
 @media screen and (min-width: 1200px){

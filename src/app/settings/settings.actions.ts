@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { Cesta } from '../models/cesta';
 
 export const actionSettingsIsAuthenticated = createAction(
     '[Auth] Is Authenticated',
@@ -19,6 +20,10 @@ export const actionSettingsNombreBreadcrumbEng = createAction(
 export const actionSettingsCarritoVacio = createAction(
     '[Settings] Carrito Vacio',
     props<{carritoEstaVacio: boolean}>()
+);
+export const actionSettingsCesta = createAction(
+    'Shopping Cart',
+    props<{cesta: Cesta}>()
 );
 export const actionSettingsBuscador = createAction(
     '[Settings] Buscador Nav',

@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { Producto, CatProductoDto } from 'src/app/models/producto';
 import { Sabor } from 'src/app/models/productoOtrosDatos';
 import { Cesta, ProductoCesta } from 'src/app/models/cesta';
 import { SettingsState } from 'src/app/settings/settings.model';
-import { Store } from '@ngrx/store';
-import { actionSettingsCarritoVacio, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng } from 'src/app/settings/settings.actions';
+import { Store, select } from '@ngrx/store';
+import { actionSettingsCarritoVacio, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng, actionSettingsCesta } from 'src/app/settings/settings.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateCacheService } from 'ngx-translate-cache';
 import { CategoriaPadre } from 'src/app/models/categoria';
 import { TokenStorageService } from '../../login/logn-service/token-storage.service';
 import { User } from 'src/app/models/user';
+import { selectSettingsCesta } from 'src/app/settings/settings.selectors';
 
 const USER_API = 'http://localhost:8182/restfull/usuario/';
 const PRODUCT_API = 'http://localhost:8182/restfull/producto/';
@@ -25,6 +26,7 @@ export class ProductsService {
 
   cesta: Cesta;
   productosCesta: ProductoCesta[];
+  cestaObservable: Observable<Cesta>; 
   producto: Producto;
   importeTotal: number;
   importeSubTotal: number;
@@ -114,7 +116,7 @@ export class ProductsService {
   sumarProductosRepetidos(productoCesta: ProductoCesta): boolean{
     for(let i=0; i<this.cesta.productosCesta.length; i++){
       if(this.cesta.productosCesta[i].producto.id == productoCesta.producto.id && 
-        this.cesta.productosCesta[i].producto.saborSeleccionado.id == productoCesta.saborSeleccionado.id){
+        this.cesta.productosCesta[i].saborSeleccionado.id == productoCesta.saborSeleccionado.id){
           let cantidadInicial = this.cesta.productosCesta[i].producto.cantidad;
           let cantidadFinal = productoCesta.producto.cantidad + cantidadInicial;
           this.cesta.productosCesta[i].producto.cantidad = cantidadFinal;
@@ -157,7 +159,7 @@ export class ProductsService {
     this.importeTotal = this.importeSubTotal + this.envio;
     this.cesta.importeTotal = this.importeTotal;
     this.comprobarCarritoVacio();
-    
+    this.dispatchCesta();
   }
 
   comprobarCarritoVacio(){
@@ -176,7 +178,18 @@ export class ProductsService {
     return numeric;
   }
 
-  getProductosCesta(): Cesta{
+  getProductosCesta(): Observable<Cesta> {
+    this.cestaObservable = this.store.pipe(select(selectSettingsCesta))
+    return this.cestaObservable;
+  }
+
+  dispatchCesta(){
+    this.store.dispatch(actionSettingsCesta({
+      cesta: this.cesta
+    }))
+  }
+  
+/*   getProductosCesta(): Observable<Cesta>{
     if(sessionStorage.getItem('cesta')){
       this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
     }else{
@@ -187,8 +200,10 @@ export class ProductsService {
     } 
     this.calcularImporteTotal();
     //this.saveUserCartBbdd();
-    return this.cesta;
-  }
+    //let cestaObservable: Subject<Cesta>; 
+    
+    return this.cestaObservable.asObservable();
+  } */
 
   removeProductoCesta(index: number): Cesta{
     if(sessionStorage.getItem('cesta')){

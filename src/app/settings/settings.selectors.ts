@@ -28,6 +28,11 @@ export const selectSettingsCarritoEstaVacio = createSelector(
     (state: SettingsState) => state.carritoEstaVacio
 )
 
+export const selectSettingsCesta = createSelector(
+    selectSettingsMemorized,
+    (state: SettingsState) => state.cesta
+)
+
 export const selectSettingsBuscador = createSelector(
     selectSettingsMemorized,
     (state: SettingsState) => state.buscador

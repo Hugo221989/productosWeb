@@ -1,6 +1,7 @@
 import * as SettingsActions from '../settings/settings.actions';
 import { createReducer, on, Action } from '@ngrx/store';
 import { SettingsState } from '../settings/settings.model';
+import { Cesta } from '../models/cesta';
 
 
 export const initialState: SettingsState = {
@@ -9,6 +10,7 @@ export const initialState: SettingsState = {
     nombreBreadcrumbFinal: null,
     nombreBreadcrumbFinalEng: null,
     carritoEstaVacio: true,
+    cesta: null,
     buscador: null,
     productoId: 0,
     language: 0
@@ -26,6 +28,8 @@ const reducer = createReducer(
             (state, {isAuthenticated}) => ({...state, isAuthenticated}) ),
     on(SettingsActions.actionSettingsCarritoVacio,
         (state, {carritoEstaVacio}) => ({...state, carritoEstaVacio}) ),
+    on(SettingsActions.actionSettingsCesta,
+        (state, {cesta} ) => ({cesta: cesta})),
     on(SettingsActions.actionSettingsBuscador,
         (state, action) => ({...state, ...action}) ),
     on(SettingsActions.actionSettingsCambiarProductoId,

@@ -5,9 +5,8 @@ import { Router } from '@angular/router';
 import { ProductsService } from '../../products-page/service/products.service';
 import { Store, select } from '@ngrx/store';
 import { actionSettingsBuscador } from 'src/app/settings/settings.actions';
-import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
+import { selectSettingsBuscador, selectSettingsCarritoEstaVacio, selectSettingsCesta } from 'src/app/settings/settings.selectors';
 import { Subscription, Observable } from 'rxjs';
-import { Producto } from 'src/app/models/producto';
 import { Cesta, ProductoCesta } from 'src/app/models/cesta';
 
 
@@ -31,6 +30,7 @@ export class CestaComponent implements OnInit, OnDestroy {
   cantidades: number[] = [1,2,3,4,5,6,7,8,9,10];
   cantidadProducto: number = 1;
   isAuthenticatedBoolean: boolean = false;
+  carritoVacioObservable$: Observable<boolean>;
 
   constructor(private router:Router,
     private productsService: ProductsService,
@@ -39,6 +39,7 @@ export class CestaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getLanguageBrowser();
+    this.checkCarritoVacio();
     this.manageBuscadorSuperior();
     this.getProductsCart();
     this.unblockScreen();
@@ -49,6 +50,13 @@ export class CestaComponent implements OnInit, OnDestroy {
   getLanguageBrowser(){
     this.language = this.productsService.getLanguageBrowser();
     }
+
+  checkCarritoVacio(){
+
+    this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
+    this.subscription.push(this.carritoVacioObservable$.subscribe());
+
+  }
 
   manageBuscadorSuperior(){
     /*para el buscador*/
@@ -65,11 +73,20 @@ export class CestaComponent implements OnInit, OnDestroy {
         }
     }))
   }
-
+  cestaCopy:Cesta;
   getProductsCart(){
     this.productsCesta = [];
-    this.cesta = this.productsService.getProductosCesta();
-    this.productsCesta = this.cesta.productosCesta;
+    this.cesta = {
+      productosCesta: this.productsCesta
+    }
+    this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
+      this.cesta = data;
+      this.productsCesta = this.cesta.productosCesta;
+      this.cestaCopy = JSON.parse(JSON.stringify(this.cesta));
+    })
+  }
+  changeProductAmount(){
+    this.cesta = this.productsService.actualizarCesta(this.cestaCopy.productosCesta);
   }
 
   eliminarProducto(index: number){
@@ -88,6 +105,9 @@ export class CestaComponent implements OnInit, OnDestroy {
     }else{
       this.router.navigate(['cart','paso2']);
     }
+  }
+  buscarProductos(){
+    this.router.navigate(['home']);
   }
 
   triggerBotonCesta(){
@@ -149,9 +169,6 @@ export class CestaComponent implements OnInit, OnDestroy {
       this.blockedDocument = false;
       this.productLoaded = Promise.resolve(true); 
     }, 1000);
-  }
-  changeProductAmount(){
-    this.cesta = this.productsService.actualizarCesta(this.productsCesta);
   }
 
   ngOnDestroy(){

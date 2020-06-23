@@ -52,7 +52,7 @@
               <a class="linksRegistro" style="cursor: pointer;">
                
                   <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12 iconCesta" (click)="openShoppingCartDialog($event, op1)" id="botonShoppingCart"></fa-icon>
-                  <span class="badge" *ngIf="productsService.cesta?.cantidadProductos > 0">{{productsService.cesta.cantidadProductos}}</span>
+                  <span class="badge" *ngIf="cesta?.cantidadProductos > 0">{{cesta.cantidadProductos}}</span>
          
               </a>
               <p-overlayPanel #op1 styleClass="overlayShoppingCart">
@@ -73,7 +73,7 @@
             <a class="linksRegistro" style="cursor: pointer;">
              
                 <fa-icon [icon]="faShoppingCart" class="iconCustom mt-12" (click)="showCartMobileDialog()" id="botonShoppingCartMobile"></fa-icon>
-                <span class="badge" *ngIf="productsService.cesta?.cantidadProductos > 0">{{productsService.cesta.cantidadProductos}}</span>
+                <span class="badge" *ngIf="cesta?.cantidadProductos > 0">{{cesta.cantidadProductos}}</span>
        
             </a>
 

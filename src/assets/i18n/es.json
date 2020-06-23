@@ -5,7 +5,7 @@
     "navbar.ayuda":"Ayuda",
     "navbar.iniciar.sesion":"Iniciar Sesión",
     "navbar.crear.cuenta":"Crear Cuenta",
-    "navbar.cerrar.sesion":"Cerrar Sesión",
+    "navbar.cerrar.sesion":"Salir",
     "navbar.mi.cuenta":"Mi Cuenta",
     "carrito.vacio":"Tu carrito está vacío",
     "precio":"Precio",
@@ -115,5 +115,6 @@
     "elegir":"Elegir",
     "cancelar":"Cancelar",
     "continuar":"Continuar",
-    "finalizar,pago":"Finalizar Pago"
+    "finalizar,pago":"Finalizar Pago",
+    "buscar.productos":"Buscar productos"
 }

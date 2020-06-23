@@ -114,5 +114,6 @@
     "elegir":"Choose",
     "cancelar":"Cancelar",
     "continuar":"Continue",
-    "finalizar,pago":"Finish Payment"
+    "finalizar,pago":"Finish Payment",
+    "buscar.productos":"Search Products"
 }

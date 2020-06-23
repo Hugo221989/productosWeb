@@ -10,12 +10,12 @@ import { filter } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { SettingsState } from './settings/settings.model';
-import { selectSettingsNombreBreadcrumb, selectSettingsCarritoEstaVacio, selectSettingsBuscador, selectSettingsNombreBreadcrumbEng } from './settings/settings.selectors';
+import { selectSettingsNombreBreadcrumb, selectSettingsCarritoEstaVacio, selectSettingsBuscador, selectSettingsNombreBreadcrumbEng, selectSettingsCesta } from './settings/settings.selectors';
 import { RegisterComponent } from './pages/register/register-component/register.component';
-import { actionSettingsIsAuthenticated, actionSettingsBuscador, actionSettingsCambiarLanguage, actionSettingsCarritoVacio } from './settings/settings.actions';
+import { actionSettingsIsAuthenticated, actionSettingsBuscador, actionSettingsCarritoVacio, actionSettingsCesta } from './settings/settings.actions';
 import { TokenStorageService } from './pages/login/logn-service/token-storage.service';
 import { OverlayPanel } from 'primeng/overlaypanel/public_api';
-import { Cesta } from './models/cesta';
+import { Cesta, ProductoCesta } from './models/cesta';
 import { ProductsService } from './pages/products-page/service/products.service';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -35,8 +35,7 @@ export class AppComponent implements OnInit, OnDestroy{
               private tokenStorage: TokenStorageService,
               public productsService: ProductsService,
               public translate: TranslateService) {
-                this.languages();
-                this.getProductosCesta();
+                
               }
 
   faPhoneVolume = faPhoneVolume;
@@ -48,7 +47,6 @@ export class AppComponent implements OnInit, OnDestroy{
   panelMenuItems: MenuItem[];
   breadCrumbItems: MenuItem[];
   displayCartMobile: boolean;
-  carritoVacio: boolean = false;
   carritoVacioObservable$: Observable<boolean>;
   refDialog;
   isAuthenticated$: Observable<boolean>;
@@ -68,6 +66,10 @@ export class AppComponent implements OnInit, OnDestroy{
   selectedLanguageMobile: SelectItem = {label: 'Español', icon: 'spain.png', value:'es'};
 
   ngOnInit() {
+    this.languages();
+
+    this.getProductosCesta();
+
     this.getLanguageBrowser()
 
     this.cargarLabelsMegaMenu();
@@ -267,16 +269,49 @@ showRegisterModalMobile() {
   }
 
   getProductosCesta() {
-    this.cesta = this.productsService.getProductosCesta();
-    if(this.cesta.productosCesta.length == 0){
-      this.store.dispatch(actionSettingsCarritoVacio({
-        carritoEstaVacio: true
-      }))
-    }else{
-      this.store.dispatch(actionSettingsCarritoVacio({
-        carritoEstaVacio: false
-      }))
-    }
+    let productsCesta = [];
+      this.cesta = {
+        productosCesta: productsCesta
+      }
+      this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
+        if(data){
+          this.cesta = data;
+          if(this.cesta.productosCesta.length == 0){
+            this.store.dispatch(actionSettingsCarritoVacio({
+              carritoEstaVacio: true
+            }))
+          }else{
+            this.store.dispatch(actionSettingsCarritoVacio({
+              carritoEstaVacio: false
+            }))
+          }
+        }else{
+          if(sessionStorage.getItem('cesta')){
+            this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
+          }else{
+            let proCesta: ProductoCesta[] = [];
+            this.cesta = {
+              productosCesta: proCesta
+            }
+          } 
+          this.store.dispatch(actionSettingsCesta({
+            cesta: this.cesta
+          }))
+        }
+      })
+  /*   this.productsService.getProductosCesta().subscribe(data=>{
+      this.cesta = data;
+      if(this.cesta.productosCesta.length == 0){
+        this.store.dispatch(actionSettingsCarritoVacio({
+          carritoEstaVacio: true
+        }))
+      }else{
+        this.store.dispatch(actionSettingsCarritoVacio({
+          carritoEstaVacio: false
+        }))
+      } 
+    })*/
+    //this.cesta = this.productsService.getProductosCesta();
   }
 
   languages(){

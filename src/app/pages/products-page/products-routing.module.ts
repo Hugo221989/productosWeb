@@ -15,7 +15,8 @@ const routes: Routes = [
     path: 'detail/:id',
     data: {
       breadcrumb: localStorage.getItem('nombreBreadcrumb'),
-      breadcrumbEng: localStorage.getItem('nombreBreadcrumbEng')
+      breadcrumbEng: localStorage.getItem('nombreBreadcrumbEng'),
+      animation: 'productDetail'
     },
     component: ProductDetailComponent
   }

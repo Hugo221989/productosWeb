@@ -7,7 +7,8 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      breadcrumb: 'Inicio'
+      breadcrumb: 'Inicio',
+      animation: 'home'
     },
     component: HomeComponent
   }

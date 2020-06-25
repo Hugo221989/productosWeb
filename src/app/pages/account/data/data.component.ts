@@ -15,12 +15,14 @@ import { Store, select } from '@ngrx/store';
 import { HttpEventType } from '@angular/common/http';
 import { imageProfile } from 'src/app/models/imageProfile';
 import {Message} from 'primeng/api';
+import { myAnimation } from 'src/app/animations/animation';
 
 @Component({
   selector: 'app-data',
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.scss'],
-  providers: [MessageService, DatePipe]
+  providers: [MessageService, DatePipe],
+  animations: [myAnimation]
 })
 export class DataComponent implements OnInit, OnDestroy {
 

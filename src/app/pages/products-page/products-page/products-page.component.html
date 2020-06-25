@@ -2,7 +2,7 @@
 <div *ngIf="blockedDocument" class="loadingSpinner">
     <p-progressSpinner [style]="{width: '150px', height: '150px'}" strokeWidth="4" animationDuration="1s"></p-progressSpinner>
 </div>
-<div class="ui-g" class="contenedorPrincipalProductos" *ngIf="(productLoaded | async)">
+<div class="ui-g" class="contenedorPrincipalProductos" *ngIf="(productLoaded | async)" >
     <div class="ui-g-12 ui-md-2 contenedorFiltrosLateral">
 
        <!--  <p-tree [value]="filtrosTree"></p-tree> -->

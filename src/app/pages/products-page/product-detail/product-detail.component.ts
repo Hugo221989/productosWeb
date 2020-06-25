@@ -4,20 +4,25 @@ import { Producto } from 'src/app/models/producto';
 import { ProductsService } from '../service/products.service';
 import { ValorNutricional, InfoBasica, Sabor, Comentario, InfoVitaminas, Foto } from 'src/app/models/productoOtrosDatos';
 import { SelectItem } from 'primeng/api/selectitem';
-import { actionSettingsNombreBreadcrumb, actionSettingsCambiarProductoId, actionSettingsBuscador } from 'src/app/settings/settings.actions';
+import { actionSettingsCambiarProductoId, actionSettingsBuscador } from 'src/app/settings/settings.actions';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
 import { selectSettingsBuscador, selectSettingsProductoId } from 'src/app/settings/settings.selectors';
 import { Observable, Subscription } from 'rxjs';
 import { Carousel } from 'primeng/carousel';
-import { CategoriaPadre, Categoria } from 'src/app/models/categoria';
+import { CategoriaPadre } from 'src/app/models/categoria';
 import { ProductoCesta } from 'src/app/models/cesta';
+import { myAnimation } from 'src/app/animations/animation';
+
+const SERVER_IMAGES = 'http://127.0.0.1:8887/';
 
 @Component({
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.scss']
+  styleUrls: ['./product-detail.component.scss'],
+  animations: [myAnimation]
 })
+
 export class ProductDetailComponent implements OnInit, OnDestroy {
   language: string = "es";
 
@@ -160,12 +165,12 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
     cargarComentarios(){
       this.comentarios = this.product.comentarios;
     }
-
+    
     cargarImagenes(){
       this.images = [];
       for(let foto of this.fotos)
-        this.images.push({previewImageSrc:`http://127.0.0.1:8887/${foto.ruta}`, alt:'Description for Image 1', title:'Title 1',
-        thumbnailImageSrc:`http://127.0.0.1:8887/${foto.ruta}`});
+        this.images.push({previewImageSrc:`${SERVER_IMAGES}${foto.ruta}`, alt:'Description for Image 1', title:'Title 1',
+        thumbnailImageSrc:`${SERVER_IMAGES}${foto.ruta}`});
     }
 
     cargarProductosRelacionados(){

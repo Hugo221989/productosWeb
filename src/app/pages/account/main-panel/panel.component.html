@@ -12,13 +12,15 @@
             <p-tabMenu [model]="tabMenuItem" [activeItem]="activeItem" >
             </p-tabMenu>
             <div style="padding: 0.5em;">
-                <router-outlet></router-outlet>
+                <div [@routeAnimations]="prepareRoute(outlet)">
+                    <router-outlet #outlet="outlet"></router-outlet>
+                </div>
             </div>
         </div>
     </div>
 </ng-template>
 
 <ng-template #busqueda>
-    <app-products-page></app-products-page>
+        <app-products-page></app-products-page>
 </ng-template>
 

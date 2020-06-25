@@ -10,11 +10,13 @@ import { actionSettingsBuscador } from 'src/app/settings/settings.actions';
 import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { select, Store } from '@ngrx/store';
 import { SettingsState } from 'src/app/settings/settings.model';
+import { myAnimation } from 'src/app/animations/animation';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
+  animations: [myAnimation]
 })
 export class HomeComponent implements OnInit {
 

@@ -14,7 +14,9 @@ const routes: Routes = [
     path: 'products/:catPadre/:cat/:subcat',
     data:  {
       breadcrumb: 'Nutrición',
-      breadcrumbEng: 'Nutrition'
+      breadcrumbEng: 'Nutrition',
+      modulo: 'products',
+      animation: 'HomePage'
     },
     loadChildren: () =>
       import('./pages/products-page/products.module').then(m => m.ProductsModule)
@@ -23,24 +25,35 @@ const routes: Routes = [
     path: 'feeding/:catPadre/:cat/:subcat',
     data:  {
       breadcrumb: 'Alimentacion',
-      breadcrumbEng: 'Feeding'
+      breadcrumbEng: 'Feeding',
+      modulo: 'feeding',
+      animation: 'HomePage'
     },
     loadChildren: () =>
       import('./pages/products-page/products.module').then(m => m.ProductsModule)
   },
   {
     path: 'home',
+    data: {
+      animation: 'HomePage'
+    },
     loadChildren: () =>
       import('./pages/home/home.module').then(m => m.HomeModule)
   },
   {
     path: 'account',
+    data: {
+      animation: 'HomePage'
+    },
     loadChildren: () =>
       import('./pages/account/account.module').then(m => m.AccountModule),
       canActivate: [AuthGuardService]
   },
   {
     path: 'cart',
+    data: {
+      animation: 'HomePage'
+    },
     loadChildren: () =>
       import('./pages/cesta/cesta.module').then(m => m.CestaModule)
   },

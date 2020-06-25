@@ -9,7 +9,8 @@ const routes: Routes = [
     path: '',
     data: {
       breadcrumb: 'Mi cuenta',
-      breadcrumbEng: 'My account'
+      breadcrumbEng: 'My account',
+      animation: 'account'
     },
     component: PanelComponent,
     children: [
@@ -21,14 +22,16 @@ const routes: Routes = [
         path: 'data',
         data: {
           breadcrumb: 'Datos personales',
-          breadcrumbEng: 'Personal data'
+          breadcrumbEng: 'Personal data',
+          animation: 'data'
         },
         component: DataComponent
       },{
         path: 'orders',
         data: {
           breadcrumb: 'Pedidos',
-          breadcrumbEng: 'Orders'
+          breadcrumbEng: 'Orders',
+          animation: 'order'
         },
         component: OrdersComponent
       }

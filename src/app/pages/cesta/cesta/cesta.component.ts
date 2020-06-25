@@ -8,15 +8,16 @@ import { actionSettingsBuscador } from 'src/app/settings/settings.actions';
 import { selectSettingsBuscador, selectSettingsCarritoEstaVacio, selectSettingsCesta } from 'src/app/settings/settings.selectors';
 import { Subscription, Observable } from 'rxjs';
 import { Cesta, ProductoCesta } from 'src/app/models/cesta';
+import { myAnimation } from 'src/app/animations/animation';
 
 
 @Component({
   selector: 'app-cesta',
   templateUrl: './cesta.component.html',
-  styleUrls: ['./cesta.component.scss']
+  styleUrls: ['./cesta.component.scss'],
+  animations: [myAnimation]
 })
 export class CestaComponent implements OnInit, OnDestroy {
-
   language: string = "es";
   textoBuscador: string = null;
   contenedorBusquedaProducto: boolean = false;
@@ -79,11 +80,12 @@ export class CestaComponent implements OnInit, OnDestroy {
     this.cesta = {
       productosCesta: this.productsCesta
     }
-    this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
+    this.subscription.push(this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
       this.cesta = data;
       this.productsCesta = this.cesta.productosCesta;
       this.cestaCopy = JSON.parse(JSON.stringify(this.cesta));
     })
+    )
   }
   changeProductAmount(){
     this.cesta = this.productsService.actualizarCesta(this.cestaCopy.productosCesta);

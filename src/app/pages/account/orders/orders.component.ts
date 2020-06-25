@@ -9,11 +9,13 @@ import { Observable, Subscription } from 'rxjs';
 import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
+import { myAnimation } from 'src/app/animations/animation';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.scss']
+  styleUrls: ['./orders.component.scss'],
+  animations: [myAnimation]
 })
 export class OrdersComponent implements OnInit, OnDestroy {
   language: string = "es";

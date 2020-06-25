@@ -9,21 +9,24 @@ const routes: Routes = [
     path: 'paso1',
     data: {
       breadcrumb: 'Cesta > Paso 1',
-      breadcrumbEng: 'Cart > Step 1'
+      breadcrumbEng: 'Cart > Step 1',
+      animation: 'cesta1'
     },
     component: CestaComponent,
   },{
       path: 'paso2',
       data: {
         breadcrumb: 'Cesta > Paso 2',
-        breadcrumbEng: 'Cart > Step 2'
+        breadcrumbEng: 'Cart > Step 2',
+        animation: 'cesta2'
       },
       component: CestaPaso2Component
     },{
       path: 'paso3',
       data: {
         breadcrumb: 'Cesta > Paso 3',
-        breadcrumbEng: 'Cart > Step 3'
+        breadcrumbEng: 'Cart > Step 3',
+        animation: 'cesta3'
       },
       component: CestaPaso3Component
     }

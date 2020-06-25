@@ -63,7 +63,7 @@ body .ui-breadcrumb{
 
 /*OVERLAY SHOPPING CART*/
 :host ::ng-deep .overlayShoppingCart{
-    width: 28%;
+    width: 38%;
     min-height: 200%;
     max-height: 500%;
     top: 71px !important;
@@ -224,7 +224,14 @@ body .ui-breadcrumb{
         float: right;
         padding-bottom: 20%;
     }
-    :host ::ng-deep .overlayShoppingCartMobile{
+    /*OVERLAY SHOPPING CART*/
+    :host ::ng-deep .overlayShoppingCart{
+        width: 40%;
+        min-height: 200%;
+        max-height: 500%;
+        top: 71px !important;
+    }
+/*     :host ::ng-deep .overlayShoppingCartMobile{
         width: 94vw !important;
         height: 100vw;
     }
@@ -235,7 +242,7 @@ body .ui-breadcrumb{
     }
     :host ::ng-deep .overlayShoppingCartMobile .ui-dialog .ui-dialog-content{
         height: 100%;
-    }
+    } */
     .divRegistroLateral{
         display: block;
     }

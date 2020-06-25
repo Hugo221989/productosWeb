@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Producto } from 'src/app/models/producto';
 import { ProductsService } from '../../products-page/service/products.service';
 import { Cesta, ProductoCesta } from 'src/app/models/cesta';
@@ -7,13 +7,14 @@ import { Router } from '@angular/router';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
 import { selectSettingsCesta } from 'src/app/settings/settings.selectors';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shooping-cart',
   templateUrl: './shooping-cart.component.html',
   styleUrls: ['./shooping-cart.component.scss']
 })
-export class ShoopingCartComponent implements OnInit {
+export class ShoopingCartComponent implements OnDestroy, OnInit {
 
   language: string = "es";
 
@@ -23,6 +24,7 @@ export class ShoopingCartComponent implements OnInit {
   subtotal: string;
   total: string;
   envio: string;
+  private subscription: Subscription[] = [];
   constructor(private productsService: ProductsService, 
     private router:Router,
     public translate: TranslateService,
@@ -38,16 +40,11 @@ export class ShoopingCartComponent implements OnInit {
       this.cesta = {
         productosCesta: this.productsCesta
       }
-    this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
+    this.subscription.push(this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
       this.cesta = data;
       this.productsCesta = this.cesta.productosCesta;
     })
-/*     this.productsService.getProductosCesta().subscribe(data =>{
-      this.cesta = data;
-      this.productsCesta = this.cesta.productosCesta;
-    }) */
-    //this.cesta = this.productsService.getProductosCesta();
-    //this.productsCesta = this.cesta.productosCesta;
+    )
   }
 
   eliminarProducto(index: number){
@@ -61,6 +58,10 @@ export class ShoopingCartComponent implements OnInit {
 
   getLanguageBrowser(){
     this.language = this.productsService.getLanguageBrowser();
-    }
+  }
+
+  ngOnDestroy(){
+    this.subscription.forEach(s => s.unsubscribe());
+  }
 
 }

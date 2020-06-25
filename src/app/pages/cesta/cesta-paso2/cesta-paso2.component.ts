@@ -13,11 +13,13 @@ import { AccountService } from '../../account/service/account.service';
 import { CestaService } from '../service/cesta.service';
 import { MetodoEnvio, MetodoPago } from 'src/app/models/cesta';
 import { FormGroup } from '@angular/forms';
+import { myAnimation } from 'src/app/animations/animation';
 
 @Component({
   selector: 'app-cesta-paso2',
   templateUrl: './cesta-paso2.component.html',
-  styleUrls: ['./cesta-paso2.component.scss']
+  styleUrls: ['./cesta-paso2.component.scss'],
+  animations: [myAnimation]
 })
 export class CestaPaso2Component implements OnInit, OnDestroy{
 

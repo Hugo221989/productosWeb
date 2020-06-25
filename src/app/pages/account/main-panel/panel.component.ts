@@ -6,11 +6,14 @@ import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store, select } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { myAnimation } from 'src/app/animations/animation';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-panel',
   templateUrl: './panel.component.html',
-  styleUrls: ['./panel.component.scss']
+  styleUrls: ['./panel.component.scss'],
+  animations: [myAnimation]
 })
 export class PanelComponent implements OnInit, OnDestroy {
   language: string = "es";
@@ -100,6 +103,10 @@ export class PanelComponent implements OnInit, OnDestroy {
       this.blockedDocument = false;
       this.productLoaded = Promise.resolve(true); 
     }, 1000);
+  }
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 
   ngOnDestroy(){

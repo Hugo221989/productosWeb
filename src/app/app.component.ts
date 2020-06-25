@@ -4,7 +4,7 @@ import { MenuItem, SelectItem} from 'primeng/api';
 import {MegaMenuItem} from 'primeng/api/megamenuitem';
 import { LoginComponent } from './pages/login/login-component/login.component';
 import { faPhoneVolume, faShoppingCart, faInfoCircle, faTruck} from '@fortawesome/free-solid-svg-icons';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute, RouterOutlet } from '@angular/router';
 import { isNullOrUndefined } from 'util';
 import { filter } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
@@ -18,12 +18,14 @@ import { OverlayPanel } from 'primeng/overlaypanel/public_api';
 import { Cesta, ProductoCesta } from './models/cesta';
 import { ProductsService } from './pages/products-page/service/products.service';
 import { TranslateService } from '@ngx-translate/core';
+import { myAnimation } from './animations/animation';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  providers: [DialogService]
+  providers: [DialogService],
+  animations: [myAnimation]
 })
 export class AppComponent implements OnInit, OnDestroy{
   language: string = "es";
@@ -159,6 +161,9 @@ showRegisterModalMobile() {
   miCuenta(){
     this.router.navigate(['/account/']);
   }
+  ayuda(){
+    this.router.navigate(['/home/']);
+  }
 
   cerrarSesion(){
     this.productsService.saveUserCartBbdd();
@@ -273,7 +278,7 @@ showRegisterModalMobile() {
       this.cesta = {
         productosCesta: productsCesta
       }
-      this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
+      this.subscription.push(this.store.pipe(select(selectSettingsCesta)).subscribe(data =>{
         if(data){
           this.cesta = data;
           if(this.cesta.productosCesta.length == 0){
@@ -299,19 +304,7 @@ showRegisterModalMobile() {
           }))
         }
       })
-  /*   this.productsService.getProductosCesta().subscribe(data=>{
-      this.cesta = data;
-      if(this.cesta.productosCesta.length == 0){
-        this.store.dispatch(actionSettingsCarritoVacio({
-          carritoEstaVacio: true
-        }))
-      }else{
-        this.store.dispatch(actionSettingsCarritoVacio({
-          carritoEstaVacio: false
-        }))
-      } 
-    })*/
-    //this.cesta = this.productsService.getProductosCesta();
+      )
   }
 
   languages(){
@@ -319,6 +312,9 @@ showRegisterModalMobile() {
       {label: 'Español', icon: 'spain.png', value:'es'},
       {label: 'English', icon: 'uk.png', value:'en'}
     ];
+  }
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 
   createMegaMenu(){
@@ -497,9 +493,9 @@ showRegisterModalMobile() {
 
   irSeccionMenu(moduloPadre: string, catPadreUrl:string, cat: string, subCat: string){
     this.router.navigate([moduloPadre, catPadreUrl, cat, subCat]);
-    setTimeout(() => {
+   /*  setTimeout(() => {
       this.reloadPage();  
-    }, 500);
+    }, 500); */
     
   }
    

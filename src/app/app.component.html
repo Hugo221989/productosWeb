@@ -33,7 +33,7 @@
             </p-dropdown>
             </div>
             <div class="p-col top-help-container">
-              <a href="#" class="linksRegistro"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">{{'navbar.ayuda' | translate}}</p></a>
+              <a (click)="ayuda()" class="pointer linksRegistro"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">{{'navbar.ayuda' | translate}}</p></a>
             </div>
             <div class="p-col top-help-container" *ngIf="logged$">
               <a (click)="miCuenta()" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.mi.cuenta' | translate}}</p></a>
@@ -118,8 +118,8 @@
 </p-sidebar>
 
 
-<div class="contenedorBody">
-  <router-outlet></router-outlet>
+<div class="contenedorBody" [@routeAnimations]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
 </div>
 
 </div>

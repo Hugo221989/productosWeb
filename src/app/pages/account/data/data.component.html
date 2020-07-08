@@ -1,6 +1,7 @@
 <p-tabView orientation="left" styleClass="tabViewCustom" *ngIf="!contenedorBusquedaProducto">
+    <p-toast position="center" [baseZIndex]="5000" [style]="{marginTop: '80px', bacground: '#3D6CFF'}"></p-toast>
     <p-tabPanel header="{{'info.personal' | translate}}">
-        <form [formGroup]="userform" (ngSubmit)="guardarUsuario()">
+        <form [formGroup]="userform" (ngSubmit)="saveUserInDatabase()">
             <div class="ui-fluid divDataApartado">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -70,7 +71,7 @@
                                 {{'genero' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
-                                <p-dropdown [options]="genders" formControlName="gender" name="generoSelected"></p-dropdown>
+                                <p-dropdown [options]="gendersComboBox" formControlName="gender" name="selectedGender"></p-dropdown>
                             </div>
                             <div class="ui-grid-col-4">
                                 <p-message severity="error" text="Género Obligatorio" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty"></p-message>
@@ -105,9 +106,9 @@
                     <div class="ui-grid-row">
                         <div class="ui-grid-col-3"></div>
                         <div class="ui-grid-col-6">
-                            <div class="form-group divMensajeFotoSubida">
+                            <!-- <div class="form-group divMensajeFotoSubida">
                                 <p-messages [(value)]="msgs"></p-messages>
-                             </div>
+                             </div> -->
                             <!-- <div *ngIf="fileUploadProgress != 0">
                                 <p-progressBar [value]="fileUploadProgress"></p-progressBar>
                             </div> -->
@@ -122,10 +123,10 @@
                             <div class="form-group divBotonElegirFoto" *ngIf="!fileData">
                                 <!-- <input type="file" name="image" (change)="fileProgress($event)" /> -->
                                 <p-fileUpload mode="basic" name="demo[]" customUpload="true" accept="image/*" maxFileSize="1000000" (onUpload)="fileProgress($event)"
-                                (onSelect)="onUpload($event)" chooseLabel="{{'elegir' | translate}}"></p-fileUpload>
+                                (onSelect)="onUploadUserPhoto($event)" chooseLabel="{{'elegir' | translate}}"></p-fileUpload>
                             </div>
                             <!-- BOTON SUBIR FOTO -->
-                            <div class="form-group divBotonSubirFoto" *ngIf="fileData">
+                            <div class="form-group divBotonSubirFoto" *ngIf="fileData"> 
                                 <button pButton label="{{'cancelar' | translate}}" [disabled]="!fileData" (click)="removeFileData()" class="botonCancelarFoto" icon="pi pi-times"></button>
                                 <button pButton label="{{'subir.foto' | translate}}" [disabled]="!fileData" (click)="onProfileImageSubmit()" icon="pi pi-upload"></button>
                             </div>
@@ -140,7 +141,8 @@
 
 
     <p-tabPanel header="{{'direccion.entrega' | translate}}">
-        <form [formGroup]="adressform" (ngSubmit)="guardarDireccion()">
+       
+        <form [formGroup]="adressform" (ngSubmit)="saveAddressInDatabase()">
             <div class="ui-fluid divDataApartado">
                 <div class="">
                     <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
@@ -207,8 +209,9 @@
                                 {{'localidad' | translate}} *:
                             </div>
                             <div class="ui-grid-col-6">
-                                <p-dropdown [options]="countryList" optionLabel="city" formControlName="locality" [filter]="true"></p-dropdown>
+                                <p-dropdown [options]="spainCitiesComboBox" formControlName="locality" name="spainCitySelected" [filter]="true"></p-dropdown>
                             </div>
+
                             <div class="ui-grid-col-4">
                                 <p-message severity="error" text="Localidad Obligatoria" *ngIf="!adressform.controls['locality'].valid&&adressform.controls['locality'].dirty"></p-message>
                             </div>

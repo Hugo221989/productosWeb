@@ -11,6 +11,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {ButtonModule} from 'primeng/button';
 import {CheckboxModule} from 'primeng/checkbox';
 import {InputTextModule} from 'primeng/inputtext';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
@@ -28,7 +29,8 @@ import {InputTextModule} from 'primeng/inputtext';
     ScrollingModule,
     ButtonModule,
     CheckboxModule,
-    InputTextModule
+    InputTextModule,
+    TranslateModule
   ]
 })
 export class LoginModule { }

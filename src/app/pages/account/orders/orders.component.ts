@@ -42,6 +42,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.getLanguageBrowser();
     this.manageBuscadorSuperior();
     this.getOrders();
+    this.gotoTopPage();
   }
 
   getOrders(){
@@ -78,6 +79,14 @@ export class OrdersComponent implements OnInit, OnDestroy {
           this.contenedorBusquedaProducto = false;
         }
     }))
+  }
+
+  gotoTopPage() {
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth' 
+    });
   }
 
   ngOnDestroy(){

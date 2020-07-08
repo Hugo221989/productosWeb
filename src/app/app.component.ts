@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import {DialogService} from 'primeng/dynamicdialog';
+import { Component, OnDestroy, OnInit, AfterViewChecked } from '@angular/core';
+import {DialogService, DynamicDialogRef, DynamicDialogConfig} from 'primeng/dynamicdialog';
 import { MenuItem, SelectItem} from 'primeng/api';
 import {MegaMenuItem} from 'primeng/api/megamenuitem';
 import { LoginComponent } from './pages/login/login-component/login.component';
@@ -19,6 +19,7 @@ import { Cesta, ProductoCesta } from './models/cesta';
 import { ProductsService } from './pages/products-page/service/products.service';
 import { TranslateService } from '@ngx-translate/core';
 import { myAnimation } from './animations/animation';
+import { LoginService } from './pages/login/logn-service/login.service';
 
 @Component({
   selector: 'app-root',
@@ -27,8 +28,9 @@ import { myAnimation } from './animations/animation';
   providers: [DialogService],
   animations: [myAnimation]
 })
-export class AppComponent implements OnInit, OnDestroy{
+export class AppComponent implements OnInit, OnDestroy, AfterViewChecked{
   language: string = "es";
+  mostrarFooter: boolean = false;
 
   constructor(public dialogService: DialogService,
               private router:Router,
@@ -36,8 +38,10 @@ export class AppComponent implements OnInit, OnDestroy{
               private store: Store<{settings: SettingsState}>,
               private tokenStorage: TokenStorageService,
               public productsService: ProductsService,
-              public translate: TranslateService) {
-                
+              public translate: TranslateService,
+              private loginService: LoginService,
+              public ref: DynamicDialogRef) {
+                this.mostrarFooter = false;
               }
 
   faPhoneVolume = faPhoneVolume;
@@ -50,7 +54,6 @@ export class AppComponent implements OnInit, OnDestroy{
   breadCrumbItems: MenuItem[];
   displayCartMobile: boolean;
   carritoVacioObservable$: Observable<boolean>;
-  refDialog;
   isAuthenticated$: Observable<boolean>;
   logged$:boolean = false;
   nombreProductoBreadcrumb$: Observable<string>;
@@ -66,30 +69,27 @@ export class AppComponent implements OnInit, OnDestroy{
   countries: SelectItem[];
   selectedLanguage: string = 'es';
   selectedLanguageMobile: SelectItem = {label: 'Español', icon: 'spain.png', value:'es'};
+  public displayModalRegistrationEmailSended: boolean = false;
+  private isMobile = false;
 
   ngOnInit() {
     this.languages();
-
     this.getProductosCesta();
-
     this.getLanguageBrowser()
-
     this.cargarLabelsMegaMenu();
-
     this.checkAuthenticated();
-
     this.getNombreBreadCrumb();
-
     this.clearSearchinput();
-
-    /*MEGA MENU*/
-   /*  setTimeout(() => {
-      this.createMegaMenu();
-    }, 500); */
-    /*BREADCRUMB*/ 
     this.manageBreadcrumb();
-
     this.checkCarritoVacio();
+    this.isRegistrationEmailSended();
+    this.isLoginModalSwitched();
+  }
+
+  ngAfterViewChecked(){
+    setTimeout(() => {
+      this.mostrarFooter = true;  
+    }, 4000);
   }
 
   cambiarIdioma(selectedLanguage){
@@ -98,7 +98,6 @@ export class AppComponent implements OnInit, OnDestroy{
     setTimeout(() => {
       window.location.reload();
     }, 500);
-    
   }
 
   getSessionLanguage(){
@@ -107,56 +106,85 @@ export class AppComponent implements OnInit, OnDestroy{
     }
   }
 
-    search(event) {
-      let textoBuscador: string = event;
-        this.store.dispatch(actionSettingsBuscador({
-          buscador: textoBuscador
-        }))
-    }
-
-    showLoginModal() {
-        const ref = this.dialogService.open(LoginComponent, {
-          header: 'Iniciar Sesión',
-          width: '40%',
-          dismissableMask: true,
-          closeOnEscape: true,
-          baseZIndex: 1010
-      });
+  search(event) {
+    let textoBuscador: string = event;
+      this.store.dispatch(actionSettingsBuscador({
+        buscador: textoBuscador
+      }))
   }
-  showLoginModalMobile() {
-    this.visibleSidebar1 = false;
-    const ref = this.dialogService.open(LoginComponent, {
-      header: 'Iniciar Sesión',
-      width: '90%',
-      dismissableMask: true,
-      closeOnEscape: true,
-      baseZIndex: 1010
-  });
-}
 
-  showRegisterModal() {
-    const ref = this.dialogService.open(RegisterComponent, {
+  showLoginModal(device: string) {
+    let width:string = "40%";
+    if(device == "mobile"){
+      width = "90%";
+      this.isMobile = true;
+    }
+      this.ref = this.dialogService.open(LoginComponent, {
+        header: 'Iniciar Sesión',
+        width: width,
+        dismissableMask: true,
+        closeOnEscape: true,
+        baseZIndex: 1010
+    });
+  }
+
+  showRegisterModal(device: string) {
+    let width:string = "40%";
+    if(device == "mobile"){
+      width = "90%";
+      this.isMobile = true;
+    }
+    this.ref = this.dialogService.open(RegisterComponent, {
         header: 'Registrarse',
-        width: '40%',
+        width: width,
         dismissableMask: true,
         autoZIndex: true,
         closeOnEscape: true,
         baseZIndex: 1010
     });
+  }
 
-}
-showRegisterModalMobile() {
-  this.visibleSidebar1 = false;
-  const ref = this.dialogService.open(RegisterComponent, { 
-      header: 'Registrarse',
-      width: '90%',
-      dismissableMask: true,
-      autoZIndex: true,
-      closeOnEscape: true,
-      baseZIndex: 1010
-  });
+  isRegistrationEmailSended(){
+    this.subscription.push( this.loginService.isRegistrationEmailSended().subscribe(data => {
+      if(data == true){
+        this.closeRegisterModal();
+        setTimeout(() => {
+          this.showRegistrationEmailSendedModal();
+        }, 500);
+        
+      }
+    }))
+  }
 
-}
+  isLoginModalSwitched(){
+    this.subscription.push( this.loginService.isLoginSwitchedToRegistrationModal().subscribe(data => {
+      if(data == true){
+        this.closeLoginModal();
+        setTimeout(() => {
+          this.showRegisterModalFromLoginModal();  
+        }, 500);
+        
+      }
+    }))
+  }
+
+  closeRegisterModal(){
+    this.ref.close();
+  }
+  showRegistrationEmailSendedModal(){
+    this.displayModalRegistrationEmailSended = true;console.log("displayModalRegistrationEmailSended: ",this.displayModalRegistrationEmailSended);
+  }
+
+  showRegisterModalFromLoginModal(){
+    if(this.isMobile){
+      this.showRegisterModal('mobile');
+    }else{
+      this.showRegisterModal('desktop');
+    }
+  }
+  closeLoginModal(){
+    this.ref.close();
+  }
 
   miCuenta(){
     this.router.navigate(['/account/']);
@@ -257,19 +285,15 @@ showRegisterModalMobile() {
   }
 
   checkCarritoVacio(){
-
     this.carritoVacioObservable$ = this.store.pipe(select(selectSettingsCarritoEstaVacio));
     this.subscription.push(this.carritoVacioObservable$.subscribe());
-
   }
 
   openShoppingCartDialog($event, overlayPanel: OverlayPanel){
-    //this.getProductosCesta();
     overlayPanel.toggle($event);
   }
 
   showCartMobileDialog() {
-    //this.getProductosCesta();
     this.displayCartMobile = true;
   }
 
@@ -326,37 +350,37 @@ showRegisterModalMobile() {
                     {
                         label: this.proteinaLabel, 
                         items: [
-                          {label: this.proteinaLabel, command: (event: any) => { this.irSeccionMenu('products','1','proteina','all')} }, 
-                          {label: this.concentradoLabel, command: (event: any) => { this.irSeccionMenu('products','1','proteina','concentrado')} }, 
-                          {label: this.aisladoLabel, command: (event: any) => { this.irSeccionMenu('products','1','proteina','aislado')}},
-                          {label: this.hidrolizadoLabel, command: (event: any) => { this.irSeccionMenu('products','1','proteina','hidrolizado')}}, 
-                          {label: this.proVegetalLabel, command: (event: any) => { this.irSeccionMenu('products','1','proteina','vegetal')}}]
+                          {label: this.proteinaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','all')} }, 
+                          {label: this.concentradoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','concentrado')} }, 
+                          {label: this.aisladoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','aislado')}},
+                          {label: this.hidrolizadoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','hidrolizado')}}, 
+                          {label: this.proVegetalLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','vegetal')}}]
                     },
                     {
                         label: 'Hidratos de Carbono',
                         items: [
-                          {label: this.chLabel, command: (event: any) => { this.irSeccionMenu('products','1','hidratos','all')}},
-                          {label: this.ganadorMasaLabel, command: (event: any) => { this.irSeccionMenu('products','1','hidratos','ganador')}}, 
-                          {label: this.vitargoLabel, command: (event: any) => { this.irSeccionMenu('products','1','hidratos','vitargo')}}]
+                          {label: this.chLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','hidratos','all')}},
+                          {label: this.ganadorMasaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','hidratos','ganador')}}, 
+                          {label: this.vitargoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','hidratos','vitargo')}}]
                     }
                 ],
                 [
                     {
                         label: 'Quemadores',
                         items: [
-                          {label: this.quemadoresLabel, command: (event: any) => { this.irSeccionMenu('products','1','quemadores','all')}},
-                          {label: this.termogenicosLabel, command: (event: any) => { this.irSeccionMenu('products','1','quemadores','termogenico')}}, 
-                          {label: this.carnitinaLabel, command: (event: any) => { this.irSeccionMenu('products','1','quemadores','carnitina')}},
-                          {label: this.diureticosLabel, command: (event: any) => { this.irSeccionMenu('products','1','quemadores','diuretico')}}, 
-                          {label: this.claLabel, command: (event: any) => { this.irSeccionMenu('products','1','quemadores','cla')}}]
+                          {label: this.quemadoresLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','all')}},
+                          {label: this.termogenicosLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','termogenico')}}, 
+                          {label: this.carnitinaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','carnitina')}},
+                          {label: this.diureticosLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','diuretico')}}, 
+                          {label: this.claLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','cla')}}]
                     },
                     {
                         label: 'Energía',
                         items: [
-                          {label: this.energiaLabel, command: (event: any) => { this.irSeccionMenu('products','1','energia','all')}},
-                          {label: this.preOxidoLabel, command: (event: any) => { this.irSeccionMenu('products','1','energia','preentreno')}}, 
-                          {label: this.cafeinaLabel, command: (event: any) => { this.irSeccionMenu('products','1','energia','cafeina')}}, 
-                          {label: this.creatinaLabel, command: (event: any) => { this.irSeccionMenu('product','1','energia','creatina')}}]
+                          {label: this.energiaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','all')}},
+                          {label: this.preOxidoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','preentreno')}}, 
+                          {label: this.cafeinaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','cafeina')}}, 
+                          {label: this.creatinaLabel, command: (event: any) => { this.irSeccionMenu('product','nutricion','energia','creatina')}}]
                     }
                 ]
             ]
@@ -368,18 +392,18 @@ showRegisterModalMobile() {
                     {
                         label: 'Desayuno y Snacks',
                         items: [
-                          {label: this.desayunoSnacksLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','all')}},
-                          {label: this.tortitasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','tortitas')}}, 
-                          {label: this.cremaLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','cremas')}}, 
-                          {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','snack')}}]
+                          {label: this.desayunoSnacksLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','all')}},
+                          {label: this.tortitasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','tortitas')}}, 
+                          {label: this.cremaLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','cremas')}}, 
+                          {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','snack')}}]
                     },
                     {
                         label: 'Bebidas',
                         items: [
-                          {label: this.bebidasLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','all')}},
-                          {label: this.bebidasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','bebidaProteica')}}, 
-                          {label: this.bebidasVegetalesLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','bebidaVegetal')}}, 
-                          {label: this.infusionesLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','infusion')}}]
+                          {label: this.bebidasLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','all')}},
+                          {label: this.bebidasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','bebidaProteica')}}, 
+                          {label: this.bebidasVegetalesLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','bebidaVegetal')}}, 
+                          {label: this.infusionesLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','infusion')}}]
                     },
                 ]
             ]
@@ -391,17 +415,17 @@ showRegisterModalMobile() {
                     {
                         label: 'Outlet',
                         items: [
-                          {label: this.outletLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','outlet','all')}},
-                          {label: this.outletRopaLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','outlet','outletRopa')}}, 
-                          {label: this.outletNutricionLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','outlet','outletNutricion')}}]
+                          {label: this.outletLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','outlet','all')}},
+                          {label: this.outletRopaLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','outlet','outletRopa')}}, 
+                          {label: this.outletNutricionLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','outlet','outletNutricion')}}]
                     }
                 ],
                 [
                     {
                         label: 'Liquidación',
                         items: [
-                          {label: this.liquidacionLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','liquidacion','all')}},
-                          {label: this.ultimasUnidadesLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','liquidacion','ultimasUnidades')}}]
+                          {label: this.liquidacionLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','liquidacion','all')}},
+                          {label: this.ultimasUnidadesLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','liquidacion','ultimasUnidades')}}]
                     }
                 ]
             ]
@@ -417,35 +441,35 @@ showRegisterModalMobile() {
                   {
                       label: this.proteinaLabel, 
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('product','1','proteina','all')} }, 
-                        {label: this.concentradoLabel, command: (event: any) => { this.irSeccionMenu('product','1','proteina','concentrado')} }, 
-                        {label: this.aisladoLabel, command: (event: any) => { this.irSeccionMenu('product','1','proteina','aislado')}},
-                        {label: this.hidrolizadoLabel, command: (event: any) => { this.irSeccionMenu('product','1','proteina','hidrolizado')}}, 
-                        {label: this.proVegetalLabel, command: (event: any) => { this.irSeccionMenu('product','1','proteina','vegetal')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','all')} }, 
+                        {label: this.concentradoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','concentrado')} }, 
+                        {label: this.aisladoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','aislado')}},
+                        {label: this.hidrolizadoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','hidrolizado')}}, 
+                        {label: this.proVegetalLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','proteina','vegetal')}}]
                   },
                   {
                       label: this.chLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('product','1','hidratos','all')}},
-                        {label: this.ganadorMasaLabel, command: (event: any) => { this.irSeccionMenu('product','1','hidratos','ganador')}}, 
-                        {label: this.vitargoLabel, command: (event: any) => { this.irSeccionMenu('product','1','hidratos','vitargo')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','hidratos','all')}},
+                        {label: this.ganadorMasaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','hidratos','ganador')}}, 
+                        {label: this.vitargoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','hidratos','vitargo')}}]
                   },
                   {
                       label: this.quemadoresLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('product','1','quemadores','all')}},
-                        {label: this.termogenicosLabel, command: (event: any) => { this.irSeccionMenu('product','1','quemadores','termogenico')}}, 
-                        {label: this.carnitinaLabel, command: (event: any) => { this.irSeccionMenu('product','1','quemadores','carnitina')}},
-                        {label: this.diureticosLabel, command: (event: any) => { this.irSeccionMenu('product','1','quemadores','diuretico')}}, 
-                        {label: this.claLabel, command: (event: any) => { this.irSeccionMenu('product','1','quemadores','cla')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','all')}},
+                        {label: this.termogenicosLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','termogenico')}}, 
+                        {label: this.carnitinaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','carnitina')}},
+                        {label: this.diureticosLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','diuretico')}}, 
+                        {label: this.claLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','quemadores','cla')}}]
                   },
                   {
                       label: this.energiaLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('product','1','energia','all')}},
-                        {label: this.preOxidoLabel, command: (event: any) => { this.irSeccionMenu('product','1','energia','preentreno')}}, 
-                        {label: this.cafeinaLabel, command: (event: any) => { this.irSeccionMenu('product','1','energia','cafeina')}}, 
-                        {label: this.creatinaLabel, command: (event: any) => { this.irSeccionMenu('product','1','energia','creatina')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','all')}},
+                        {label: this.preOxidoLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','preentreno')}}, 
+                        {label: this.cafeinaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','cafeina')}}, 
+                        {label: this.creatinaLabel, command: (event: any) => { this.irSeccionMenu('products','nutricion','energia','creatina')}}]
                   }
               ]
       },
@@ -455,18 +479,18 @@ showRegisterModalMobile() {
                   {
                       label: this.desayunoSnacksLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','all')}},
-                        {label: this.tortitasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','tortitas')}}, 
-                        {label: this.cremaLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','cremas')}}, 
-                        {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','desayuno','snack')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','all')}},
+                        {label: this.tortitasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','tortitas')}}, 
+                        {label: this.cremaLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','cremas')}}, 
+                        {label: this.snacksSaladosLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','desayuno','snack')}}]
                   },
                   {
                       label: this.bebidasLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','all')}},
-                        {label: this.bebidasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','bebidaProteica')}}, 
-                        {label: this.bebidasVegetalesLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','bebidaVegetal')}}, 
-                        {label: this.infusionesLabel, command: (event: any) => { this.irSeccionMenu('feeding','2','bebidas','infusion')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','all')}},
+                        {label: this.bebidasProLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','bebidaProteica')}}, 
+                        {label: this.bebidasVegetalesLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','bebidaVegetal')}}, 
+                        {label: this.infusionesLabel, command: (event: any) => { this.irSeccionMenu('feeding','alimentacion','bebidas','infusion')}}]
                   },
               ]
       },
@@ -476,15 +500,15 @@ showRegisterModalMobile() {
                   {
                       label: this.outletLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','outlet','all')}},
-                        {label: this.outletRopaLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','outlet','outletRopa')}}, 
-                        {label: this.outletNutricionLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','outlet','outletNutricion')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','outlet','all')}},
+                        {label: this.outletRopaLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','outlet','outletRopa')}}, 
+                        {label: this.outletNutricionLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','outlet','outletNutricion')}}]
                   },
                   {
                       label: this.liquidacionLabel,
                       items: [
-                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','liquidacion','all')}},
-                        {label: this.ultimasUnidadesLabel, command: (event: any) => { this.irSeccionMenu('promotions','3','liquidacion','ultimasUnidades')}}]
+                        {label: this.allLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','liquidacion','all')}},
+                        {label: this.ultimasUnidadesLabel, command: (event: any) => { this.irSeccionMenu('promotions','promociones','liquidacion','ultimasUnidades')}}]
                   }
               ]
       }
@@ -493,23 +517,17 @@ showRegisterModalMobile() {
 
   irSeccionMenu(moduloPadre: string, catPadreUrl:string, cat: string, subCat: string){
     this.router.navigate([moduloPadre, catPadreUrl, cat, subCat]);
-   /*  setTimeout(() => {
-      this.reloadPage();  
-    }, 500); */
-    
+    this.visibleSidebar1 = false;
   }
    
   getLanguageBrowser(){
-    let languageId: number = 0;
     this.language = this.productsService.getLanguageBrowser();
     if(this.language == 'es'){
       this.selectedLanguage = 'es';
       this.selectedLanguageMobile = this.countries[0];
-      languageId = 0;
     }else{
       this.selectedLanguage = 'en';
       this.selectedLanguageMobile = this.countries[1];
-      languageId = 1;
     }
   }
 

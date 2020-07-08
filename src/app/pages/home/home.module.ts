@@ -10,6 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {BlockUIModule} from 'primeng/blockui';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import { ProductsModule } from '../products-page/products.module';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -24,7 +25,8 @@ import { ProductsModule } from '../products-page/products.module';
     TranslateModule,
     BlockUIModule,
     ProgressSpinnerModule,
-    ProductsModule
+    ProductsModule,
+    DialogModule
   ]
 })
 export class HomeModule { }

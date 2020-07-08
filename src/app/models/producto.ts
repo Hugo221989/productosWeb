@@ -33,3 +33,20 @@ export class CatProductoDto{
     subCategoriaNombre: string;
     subCategoriaKey: string;
 }
+
+export class ProductoDto {
+    id: number;
+    categoriaPadre: string;
+    categoria: string;
+    subCategoria: string;
+    nombre: string;
+    nombreEng: string;
+    precio: number;
+    tamano: number;
+    puntuacion: number;
+    disponible: boolean;
+    descuento: number;
+    precioFinal: number;
+    descripcion: string;
+    foto: string;
+}

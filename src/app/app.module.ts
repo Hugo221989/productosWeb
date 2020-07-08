@@ -11,7 +11,7 @@ import { LoginModule } from './pages/login/login.module';
 import { RegisterComponent } from './pages/register/register-component/register.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DynamicDialogModule} from 'primeng/dynamicdialog';
+import {DynamicDialogModule, DynamicDialogRef} from 'primeng/dynamicdialog';
 import {ToolbarModule} from 'primeng/toolbar';
 import {SplitButtonModule} from 'primeng/splitbutton';
 import {MegaMenuModule} from 'primeng/megamenu';
@@ -38,6 +38,7 @@ import { FeedingDetailComponent } from './pages/feeding/feeding-detail/feeding-d
 import {GalleriaModule} from 'primeng/galleria';
 import { CestaModule } from './pages/cesta/cesta.module';
 import { InterceptorService } from './interceptors/interceptor.service';
+import { FooterComponent } from './pages/footer/footer.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { InterceptorService } from './interceptors/interceptor.service';
     AppComponent,
     RegisterComponent,
     FeedingPageComponent,
-    FeedingDetailComponent
+    FeedingDetailComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -84,7 +86,8 @@ import { InterceptorService } from './interceptors/interceptor.service';
     I18nModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
+    DynamicDialogRef
   ],
   bootstrap: [AppComponent]
 })

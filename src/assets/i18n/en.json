@@ -111,9 +111,19 @@
     "elementos":"items",
     "subir.foto":"Upload Photo",
     "foto.subida.correctamente":"Photo uploaded successfully",
+    "usuario.guardado.correctamente":"User saved successfully",
+    "direccion.guardada.correctamente":"Address saved successfully",
     "elegir":"Choose",
     "cancelar":"Cancelar",
     "continuar":"Continue",
+    "aceptar":"Accept",
     "finalizar,pago":"Finish Payment",
-    "buscar.productos":"Search Products"
+    "buscar.productos":"Search Products",
+    "email.registro.enviado": "Activation email sended",
+    "email.registro.enviado.descripcion": "The activation email has been sended to the indicated email account. Please, click on the link that appears in the body of the email to activate your user.",
+    "login.usuario":"User",
+    "login.contrasena":"Password",
+    "login.recordarme":"Remember me",
+    "login.link.registro":"Or Create Account",
+    "login.registrarse":"Sign In"
 }

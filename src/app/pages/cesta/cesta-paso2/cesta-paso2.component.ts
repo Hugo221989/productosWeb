@@ -51,6 +51,7 @@ export class CestaPaso2Component implements OnInit, OnDestroy{
     this.obtenerUsuario();
     this.obtenerMetodoEnvio();
     this.obtenerMetodoPago();
+    this.gotoTop();
     this.unblockScreen();
   }
 
@@ -109,6 +110,15 @@ export class CestaPaso2Component implements OnInit, OnDestroy{
       this.productLoaded = Promise.resolve(true); 
     }, 1000);
   }
+
+  gotoTop() {
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth' 
+    });
+  }
+
   ngOnDestroy(){
     this.subscription.forEach(s => s.unsubscribe());
   }

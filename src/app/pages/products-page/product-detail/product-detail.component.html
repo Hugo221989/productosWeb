@@ -1,14 +1,14 @@
-<p-blockUI [blocked]="blockedDocument"></p-blockUI>
+<!-- <p-blockUI [blocked]="blockedDocument"></p-blockUI>
 <div *ngIf="blockedDocument" class="loadingSpinner">
     <p-progressSpinner [style]="{width: '150px', height: '150px'}" strokeWidth="4" animationDuration="1s"></p-progressSpinner>
-</div>
+</div> -->
 <div class="ui-g contenedorDetalleProducto" *ngIf="(productLoaded | async) && !contenedorBusquedaProducto">
     <div class="ui-g-12 ui-md-12 contenedorImagenesGaleria">
         <div class="ui-g-12 ui-md-6 contenedorDescripcionIzquierda">
             <div class="ui-g-12 subContenedorDescripcionIzquierda" >
                 <div class="contenedorGaleria">
-                    <p-galleria [(value)]="images" panelWidth="650" panelHeight="520" [containerStyle]="{'max-width': '100%'}" [autoPlay]="false"
-                    styleClass="galeriaDetalleProducto" *ngIf="images.length > 0">
+                    <p-galleria [(value)]="productImages" panelWidth="650" panelHeight="520" [containerStyle]="{'max-width': '100%'}" [autoPlay]="false"
+                    styleClass="galeriaDetalleProducto" *ngIf="productImages.length > 0">
                     <ng-template pTemplate="item" let-item>
                         <img [src]="item.previewImageSrc" style="width: 100%; display: block;" />
                     </ng-template>
@@ -50,7 +50,7 @@
                 </div>
                 <div class="ui-g-12 ui-md-12 contenedorBotonAnadir">
                     <button pButton type="button" label="{{'add.cesta' | translate}}" class="ui-button-raised ui-button-success botonCesta" 
-                    icon="pi pi-shopping-cart" (click)="addProduct(product)"></button>
+                    icon="pi pi-shopping-cart" (click)="addProductToCart(product)"></button>
                 </div>
                 <div class="ui-g-12 ui-md-12"></div>
             </div>
@@ -85,8 +85,7 @@
                 <p-tabPanel header="{{'opiniones' | translate}}">
                     <div class="contenedorOpiniones">
                         <!-- <div class="ui-g-12 ui-md-12 ui-g-nopad"> -->
-                            <p-dataView #dv [value]="comentarios" [paginator]="true" [rows]="5" paginatorPosition="bottom" filterBy="autor"
-                                [sortField]="sortField" [sortOrder]="sortOrder" layout="list" styleClass="dataViewComentarios">
+                            <p-dataView #dv [value]="productoComentarios" [paginator]="true" [rows]="5" paginatorPosition="bottom" layout="list" styleClass="dataViewComentarios">
                                 <ng-template let-comentario pTemplate="listItem">
                                     <div class="ui-g-12 padding0mobile" style="border: 1px solid #ece9e9; margin: 5px;">
                                         <div class="car-details">
@@ -192,18 +191,18 @@
     </div>
 
     <div class="ui-g-12 ui-md-12">
-        <p-carousel [value]="productsNutrition" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" 
-        [circular]="true" [autoplayInterval]="6000" [responsiveOptions]="responsiveOptions">
+        <p-carousel [value]="relatedProductsNutritionCarousel" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" 
+        [circular]="true" [autoplayInterval]="6000" [responsiveOptions]="responsiveCarouselOptions">
             <p-header>
                 <h3>{{'podria.interesar' | translate}}</h3>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng)">
+                    <div class="containerItemCarouselBotom" (click)="seeCarouselProduct(product)">
                         <div class="p-grid p-nogutter">
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
-                                <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto !== null">
+                                <img src="http://127.0.0.1:8887/{{product?.foto.ruta}}" class="imagenCarouselInferior"/>
                             </div>
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length === 0">
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto === null">
                                 <img src="http://127.0.0.1:8887/not-found.png" class="imagenCarouselInferior"/>
                             </div>
                             <div class="p-col-12 car-data text-center">

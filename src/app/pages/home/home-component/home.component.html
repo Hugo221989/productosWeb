@@ -20,23 +20,17 @@
                 <a (click)="irCategoriaGeneral('nutricion', 'all')" style="cursor: pointer;"><h2 class="tituloCategoria">{{'navbar.nutricion' | translate}}</h2></a>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng, '1', 'products')">
+                    <div class="containerItemCarouselBotom" (click)="seeCarouselProduct('products', product)">
                         <div class="p-grid p-nogutter">
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
-                                <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto !== null">
+                                <img src="http://127.0.0.1:8887/{{product?.foto.ruta}}" class="imagenCarouselInferior"/>
                             </div>
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length === 0">
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto === null">
                                 <img src="http://127.0.0.1:8887/not-found.png" class="imagenCarouselInferior"/>
                             </div>
                             <div class="p-col-12 car-data text-center">
                                 <div class="car-title">{{language == 'en' ? product.nombreEng : product.nombre}}</div>
-                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}}</h3> </div>
-            
-                                <div class="car-buttons">
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-search"></button>
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-star"></button>
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-cog"></button>
-                                </div>
+                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}} €</h3> </div>
                             </div>
                         </div>
                     </div>
@@ -51,23 +45,17 @@
                 <a (click)="irCategoriaGeneralFeeding('alimentacion', 'all')" style="cursor: pointer;"><h2 class="tituloCategoria">{{'navbar.alimentacion' | translate}}</h2></a>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng, '1', 'feeding')">
+                    <div class="containerItemCarouselBotom" (click)="seeCarouselProduct('feeding', product)">
                         <div class="p-grid p-nogutter">
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
-                                <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto !== null">
+                                <img src="http://127.0.0.1:8887/{{product?.foto.ruta}}" class="imagenCarouselInferior"/>
                             </div>
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length === 0">
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto === null">
                                 <img src="http://127.0.0.1:8887/not-found.png" class="imagenCarouselInferior"/>
                             </div>
                             <div class="p-col-12 car-data text-center">
                                 <div class="car-title">{{language == 'en' ? product.nombreEng : product.nombre}}</div>
-                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}}</h3> </div>
-            
-                                <div class="car-buttons">
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-search"></button>
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-star"></button>
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-cog"></button>
-                                </div>
+                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}} €</h3> </div>
                             </div>
                         </div>
                     </div>
@@ -82,29 +70,31 @@
                 <a (click)="irCategoriaGeneral('nutricion', 'all')" style="cursor: pointer;"><h2 class="tituloCategoria">{{'navbar.promociones' | translate}}</h2></a>
             </p-header>
             <ng-template let-product pTemplate="item">
-                    <div class="containerItemCarouselBotom" (click)="verProducto(product.id, product.nombre, product.nombreEng, '1', 'promotions')">
+                    <div class="containerItemCarouselBotom" (click)="seeCarouselProduct('promotions', product)">
                         <div class="p-grid p-nogutter">
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length > 0">
-                                <img src="http://127.0.0.1:8887/{{product?.fotos[0].ruta}}" class="imagenCarouselInferior"/>
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto !== null">
+                                <img src="http://127.0.0.1:8887/{{product?.foto.ruta}}" class="imagenCarouselInferior"/>
                             </div>
-                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.fotos.length === 0">
+                            <div class="p-col-12 text-center contenedorImagenCarousel" *ngIf="product.foto === null">
                                 <img src="http://127.0.0.1:8887/not-found.png" class="imagenCarouselInferior"/>
                             </div>
                             <div class="p-col-12 car-data text-center">
                                 <div class="car-title">{{language == 'en' ? product.nombreEng : product.nombre}}</div>
-                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}}</h3> </div>
-            
-                                <div class="car-buttons">
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-search"></button>
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-star"></button>
-                                    <button pButton type="button" class="ui-button-secondary" icon="pi pi-cog"></button>
-                                </div>
+                                <div class="car-subtitle"><h3 style="color: #d20404;">{{product.precio}} €</h3> </div>
                             </div>
                         </div>
                     </div>
             </ng-template>
         </p-carousel>
     </div>
+
+    <p-dialog header="{{'email.registro.enviado' | translate}}" [(visible)]="displayModalUserActivationOk" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+        [draggable]="false" [resizable]="false">
+        <p>{{'email.registro.enviado.descripcion' | translate}}</p>
+            <p-footer>
+                <button type="button" pButton icon="pi pi-check" (click)="displayModalUserActivationOk=false" label="{{'aceptar' | translate}}"></button>
+            </p-footer>
+    </p-dialog>
 </div>
 
 <div *ngIf="contenedorBusquedaProducto">

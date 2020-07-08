@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Producto } from 'src/app/models/producto';
+import { Producto, ProductoDto } from 'src/app/models/producto';
 import { ProductsService } from '../service/products.service';
 import { ValorNutricional, InfoBasica, Sabor, Comentario, InfoVitaminas, Foto } from 'src/app/models/productoOtrosDatos';
 import { SelectItem } from 'primeng/api/selectitem';
@@ -26,7 +26,7 @@ const SERVER_IMAGES = 'http://127.0.0.1:8887/';
 export class ProductDetailComponent implements OnInit, OnDestroy {
   language: string = "es";
 
-  images: any[];
+  productImages: any[];
   product: Producto;
   valorNutricional: ValorNutricional;
   infoBasica: InfoBasica;
@@ -34,20 +34,16 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
   idProduct;
   productLoaded: Promise<boolean>;
   sabores: Sabor[];
-  comentarios: Comentario[] = [];
+  productoComentarios: Comentario[] = [];
   fotos: Foto[] = [];
   saboresItems: SelectItem[];
   saborSelected: Sabor;
   cantidadSeleccionadaProducto: number = 1;
 
-  productsNutrition: Producto[] = [];
-  productsFeeding: Producto[] = [];
-  productsPromotions: Producto[] = [];
-  responsiveOptions;
-
-  sortField: string = "fecha";
-
-  sortOrder: number;
+  relatedProductsNutritionCarousel: ProductoDto[] = [];
+  relatedProductsFeedingCarousel: ProductoDto[] = [];
+  relatedProductsPromotionsCarousel: ProductoDto[] = [];
+  responsiveCarouselOptions;
   blockedDocument: boolean = false
 
   textoBuscadorOvservable$: Observable<string>;
@@ -57,60 +53,46 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   productoIdOvservable$: Observable<number>;
 
-  subCatUrl: string;
-  catUrl: string;
-  catPadreUrl: string;
+  subCategoriaUrl: string;
+  categoriaUrl: string;
+  categoriaPadreUrl: string;
+  modulo: string;
 
   constructor(private router:Router, private productsService: ProductsService,
               private route: ActivatedRoute,
               private store: Store<{settings: SettingsState}>) {
-    Carousel.prototype.changePageOnTouch = (e,diff) => {}
-    this.responsiveOptions = [
-      {
-          breakpoint: '1024px',
-          numVisible: 3,
-          numScroll: 3
-      },
-      {
-          breakpoint: '768px',
-          numVisible: 2,
-          numScroll: 2
-      },
-      {
-          breakpoint: '560px',
-          numVisible: 1,
-          numScroll: 1
-      }
-  ];
+
+      this.adaptCarouselTouchToMobile();
+      this.setResponsiveCarouselOptions();
+    
    }
 
    producto: Producto;
 
    ngOnInit() {
-        //this.producto = history.state;
         this.getLanguageBrowser();
         this.getUrlParams();
-        this.idProduct = this.route.snapshot.paramMap.get("id");
-        this.setProductoId();
-        this.cambiarProducto();
-        this.cargarProducto(this.idProduct);
-        this.cargarProductosRelacionados();
-
-        /*para el buscador*/
+        this.setProductoIdInStore();
+        this.changeProductIdFromStore();
+        this.loadRelatedCarouselProducts();
         setTimeout(() => {
-          this.manageBuscadorSuperior();
+          this.manageBuscadorTextoSuperior();
         }, 300);
+        this.gotoTopPage();
     }
 
     getUrlParams(){
-      this.catPadreUrl = this.route.snapshot.paramMap.get("catPadre");
-      this.subCatUrl = this.route.snapshot.paramMap.get("subcat");  
-      this.catUrl = this.route.snapshot.paramMap.get("cat");
+      this.categoriaPadreUrl = this.route.snapshot.paramMap.get("catPadre");
+      this.subCategoriaUrl = this.route.snapshot.paramMap.get("subcat");  
+      this.categoriaUrl = this.route.snapshot.paramMap.get("cat");
+      this.idProduct = this.route.snapshot.paramMap.get("id");
+
+      const children: ActivatedRoute[] = this.route.root.children;
+      let modulo = children[0].snapshot.data['modulo'];
+      this.modulo = modulo;
     }
 
-
-    manageBuscadorSuperior(){
-      /*para el buscador*/
+    manageBuscadorTextoSuperior(){
       this.store.dispatch(actionSettingsBuscador({
         buscador: null
       })) 
@@ -125,7 +107,7 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       }))
     }
 
-    cargarProducto(id: number){
+    loadProductById(id: number){
       this.productsService.getProductById(id).subscribe( data =>{
         this.product = data;
         if(this.product.valorNutricional){
@@ -141,13 +123,13 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
           this.fotos = this.product.fotos;
         }
         this.productLoaded = Promise.resolve(true); 
-        this.cargarSabores();
-        this.cargarComentarios();
-        this.cargarImagenes();
+        this.loadFlavours();
+        this.loadProductReviews();
+        this.loadProductImages();
       })
     }
 
-    cargarSabores(){
+    loadFlavours(){
       this.sabores = this.product.sabores;
       this.saborSelected = this.sabores[0];
       this.saboresItems = [];
@@ -162,48 +144,31 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       }
     }
 
-    cargarComentarios(){
-      this.comentarios = this.product.comentarios;
+    loadProductReviews(){
+      this.productoComentarios = this.product.comentarios;
     }
     
-    cargarImagenes(){
-      this.images = [];
+    loadProductImages(){
+      this.productImages = [];
       for(let foto of this.fotos)
-        this.images.push({previewImageSrc:`${SERVER_IMAGES}${foto.ruta}`, alt:'Description for Image 1', title:'Title 1',
+        this.productImages.push({previewImageSrc:`${SERVER_IMAGES}${foto.ruta}`, alt:'Description for Image 1', title:'Title 1',
         thumbnailImageSrc:`${SERVER_IMAGES}${foto.ruta}`});
     }
 
-    cargarProductosRelacionados(){
+    loadRelatedCarouselProducts(){
       this.productsService.getProductsNutritionListRelacionados().subscribe( data =>{
-        let categoriaPadre: CategoriaPadre = data;
-        this.productsNutrition = [];
-        for(let cats of categoriaPadre.categoria){
-          for(let prod of cats.productos){
-            this.productsNutrition.push(prod);
-          }
-        }
+        this.relatedProductsNutritionCarousel = data;
       })
     }
 
-    verProducto(id:number, nombre:string, nombreEng: string){
-      this.productsService.getCatSubCatProduct(id).subscribe( data =>{
-        if(data){
-          let categoriaPadre = data.categoriaPadreModulo;
-          let categoriaPadreId = data.categoriaPadreId;
-          let categoria = data.categoriaKey;
-          let subCategoria = data.subCategoriaKey;
-          this.catUrl = data.categoriaKey;
-          this.subCatUrl = data.subCategoriaKey;
-
-          this.cambiarBreadcrumb(nombre, nombreEng);
-          this.router.navigate([categoriaPadre, categoriaPadreId, categoria, subCategoria, 'detail', id]);
-          this.cargarProducto(id);
-          this.gotoTop();
-        }
-      })
+    seeCarouselProduct(product: ProductoDto){
+      this.router.navigate([this.modulo, product.categoriaPadre, product.categoria , product.subCategoria, 'detail', product.id]);
+      this.changeBreadcrumb(product.nombre, product.nombreEng);
+      this.loadProductById(product.id);
+      this.gotoTopPage();
     }
 
-    gotoTop() {
+    gotoTopPage() {
       window.scroll({ 
         top: 0, 
         left: 0, 
@@ -211,11 +176,11 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       });
     }
 
-    cambiarBreadcrumb(nombre: string, nombreEng: string){
+    changeBreadcrumb(nombre: string, nombreEng: string){
       this.productsService.cambiarBreadcrumb(nombre, nombreEng);
     }
 
-    addProduct(product: Producto){
+    addProductToCart(product: Producto){
       let sabor:Sabor = {
         id: this.saborSelected.id,
         sabor: this.saborSelected.sabor,
@@ -233,14 +198,14 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
       this.productsService.addProductToCart(productoCesta);
     }
 
-    cambiarProducto(){
+    changeProductIdFromStore(){
       this.productoIdOvservable$ = this.store.pipe(select(selectSettingsProductoId));
       this.productoIdOvservable$.subscribe( (id) => {
-        this.cargarProducto(id);
+        this.loadProductById(id);
       })
     }
 
-    setProductoId(){
+    setProductoIdInStore(){
       this.store.dispatch(actionSettingsCambiarProductoId({
         productoId: this.idProduct
       }))
@@ -248,9 +213,31 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     getLanguageBrowser(){
       this.language = this.productsService.getLanguageBrowser();
-      }
+    }
+    adaptCarouselTouchToMobile(){
+      Carousel.prototype.changePageOnTouch = (e,diff) => {}
+    }
+    setResponsiveCarouselOptions(){
+      this.responsiveCarouselOptions = [
+        {
+            breakpoint: '1024px',
+            numVisible: 3,
+            numScroll: 3
+        },
+        {
+            breakpoint: '768px',
+            numVisible: 2,
+            numScroll: 2
+        },
+        {
+            breakpoint: '560px',
+            numVisible: 1,
+            numScroll: 1
+        }
+      ];
+    }
 
-      ngOnDestroy(){
-        this.subscription.forEach(s => s.unsubscribe());
-      }
+    ngOnDestroy(){
+      this.subscription.forEach(s => s.unsubscribe());
+    }
 }

@@ -24,6 +24,7 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {ProgressBarModule} from 'primeng/progressbar';
 import {FileUploadModule} from 'primeng/fileupload';
 import {MessagesModule} from 'primeng/messages';
+import {ToastModule} from 'primeng/toast';
 
 
 @NgModule({
@@ -50,7 +51,8 @@ import {MessagesModule} from 'primeng/messages';
     BlockUIModule,
     ProgressSpinnerModule,
     ProgressBarModule,
-    FileUploadModule
+    FileUploadModule,
+    ToastModule
     ],
     exports: [
       ShoopingCartComponent

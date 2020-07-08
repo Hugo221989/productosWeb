@@ -42,10 +42,10 @@
               <a (click)="cerrarSesion()" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.cerrar.sesion' | translate}}</p></a>
             </div>
            <div class="p-col top-help-container" *ngIf="!logged$" id="divLoginNormal">
-              <a (click)="showLoginModal()" class="pointer linksRegistroSimple" id="botonLogin"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a>
+              <a (click)="showLoginModal('desktop')" class="pointer linksRegistroSimple" id="botonLogin"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a>
             </div>
             <div class="p-col top-help-container" *ngIf="!logged$">
-              <a (click)="showRegisterModal()" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.crear.cuenta' | translate}}</p></a>
+              <a (click)="showRegisterModal('desktop')" class="pointer linksRegistroSimple"><p class="textoNormal">{{'navbar.crear.cuenta' | translate}}</p></a>
             </div>
             
             <div class="p-col top-help-container" >
@@ -103,8 +103,8 @@
   <div class="ui-g-12 divRegistroLateral"><a href="#" class="linksRegistroLateral" style="display: flex;"><fa-icon [icon]="faPhoneVolume" class="iconCustomBig"></fa-icon><p class="textoNormal">{{'navbar.ayuda' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral" *ngIf="logged$"><a (click)="miCuenta()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.mi.cuenta' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral" *ngIf="logged$"><a (click)="cerrarSesion()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.cerrar.sesion' | translate}}</p></a></div>
-  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$" id="divLoginMobile"><a (click)="showLoginModalMobile()" class="pointer linksRegistroLateral" id="botonLoginMobile"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a></div>
-  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$"><a (click)="showRegisterModalMobile()" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.crear.cuenta' | translate}}</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$" id="divLoginMobile"><a (click)="showLoginModal('mobile')" class="pointer linksRegistroLateral" id="botonLoginMobile"><p class="textoNormal">{{'navbar.iniciar.sesion' | translate}}</p></a></div>
+  <div class="ui-g-12 divRegistroLateral" *ngIf="!logged$"><a (click)="showRegisterModal('mobile')" class="pointer linksRegistroLateral"><p class="textoNormal">{{'navbar.crear.cuenta' | translate}}</p></a></div>
   <div class="ui-g-12 divRegistroLateral">
   <p-selectButton [options]="countries" [(ngModel)]="selectedLanguageMobile" optionLabel="name" styleClass="buttonCountries" [style]="{'width': '100% !important'}" #langSelect (onChange)="cambiarIdioma(selectedLanguage)">
         <ng-template let-item pTemplate="selectedItem">
@@ -117,9 +117,21 @@
   </div>
 </p-sidebar>
 
+<p-dialog header="{{'email.registro.enviado' | translate}}" [(visible)]="displayModalRegistrationEmailSended" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false">
+    <p>{{'email.registro.enviado.descripcion' | translate}}</p>
+        <p-footer>
+            <button type="button" pButton icon="pi pi-check" (click)="displayModalRegistrationEmailSended=false" label="{{'aceptar' | translate}}"></button>
+        </p-footer>
+</p-dialog>
+
 
 <div class="contenedorBody" [@routeAnimations]="prepareRoute(outlet)">
   <router-outlet #outlet="outlet"></router-outlet>
 </div>
-
+<!-- FOOTER -->
+<div *ngIf="mostrarFooter">
+  <app-footer></app-footer>
+</div>
+<!-- FOOTER -->
 </div>

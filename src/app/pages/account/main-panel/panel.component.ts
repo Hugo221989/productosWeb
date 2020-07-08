@@ -38,7 +38,8 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getLanguageBrowser();
-    this.manageBuscadorSuperior();
+    this.manageBuscadorTextoSuperior();
+    this.gotoTopPage();
     this.unblockScreen();
   }
 
@@ -83,7 +84,7 @@ export class PanelComponent implements OnInit, OnDestroy {
   datosCuenta: string;
   pedidos: string;
 
-  manageBuscadorSuperior(){
+  manageBuscadorTextoSuperior(){
     /*para el buscador*/
     this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
     this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
@@ -107,6 +108,14 @@ export class PanelComponent implements OnInit, OnDestroy {
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
+  }
+
+  gotoTopPage() {
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth' 
+    });
   }
 
   ngOnDestroy(){

@@ -16,6 +16,9 @@ import { HttpEventType } from '@angular/common/http';
 import { imageProfile } from 'src/app/models/imageProfile';
 import {Message} from 'primeng/api';
 import { myAnimation } from 'src/app/animations/animation';
+import { ProductsService } from '../../products-page/service/products.service';
+
+const TOAST_MILISECONDS_REMAINING = 4000;
 
 @Component({
   selector: 'app-data',
@@ -26,16 +29,16 @@ import { myAnimation } from 'src/app/animations/animation';
 })
 export class DataComponent implements OnInit, OnDestroy {
 
-  email: string = null;
+  language: string = "es";
+  emailTokenStorage: string = null;
   usuario: User;
-  date: string;
   userform: FormGroup;
   adressform: FormGroup;
   deleteAccountform: FormGroup;
-  genders: SelectItem[];
-  generos: Genero[];
-  generoSelected: Genero;
-  direccionUpdated: UsuarioDireccion
+  gendersComboBox: SelectItem[];
+  genders: Genero[];
+  selectedGender: Genero;
+  userAdress: UsuarioDireccion
   submitted: boolean;
 /*IMAGE*/
 fileData: File = null;
@@ -43,18 +46,9 @@ previewUrl:any = null;
 fileUploadProgress: number = 0;
 uploadedFilePath: string = null;
 
-  countryList:SpainCities[] = [];
-  locality: SpainCities = {
-    "city": "Madrid", 
-    "admin": "Madrid", 
-    "country": "Spain", 
-    "population_proper": "50437", 
-    "iso2": "ES", 
-    "capital": "primary", 
-    "lat": "40.412752", 
-    "lng": "-3.707721", 
-    "population": "5567000"
-};
+spainCitiesComboBox: SelectItem[] = [];
+spainCitiesList:SpainCities[] = [];
+spainCitySelected: SpainCities;
 
 private subscription: Subscription[] = [];
 textoBuscadorOvservable$: Observable<string>;
@@ -67,26 +61,28 @@ base64Data: any;
 msgs: Message[] = [];
   
   constructor(private fb: FormBuilder,
-              private messageService: MessageService,
               private accountService: AccountService,
               private tokenStorageService: TokenStorageService,
               public translate: TranslateService,
+              private messageService: MessageService,
+              private productsService: ProductsService,
               private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit(): void {
-
+        this.getLanguageBrowser();
         this.initUserForm();
         this.initAddressForm();
         this.initDeleteAccountForm();
-        this.manageBuscadorSuperior();
+        this.manageBuscadorTextoSuperior();
         this.getCities();
-        this.obtenerGeneros();
-       this.cargarLabels();
+        this.getGenders();
+        this.loadTranslatedLabels();
+        this.gotoTopPage();
   }
 
-  private obtenerUsuario(){
-    this.email = this.tokenStorageService.getEmail();
-    this.accountService.getUserInfo(this.email).subscribe( data =>{
+  private getUserInformation(){
+    this.emailTokenStorage = this.tokenStorageService.getEmail();
+    this.accountService.getUserInfo(this.emailTokenStorage).subscribe( data =>{
       if(data){
         let date2 = data.nacimiento;
 
@@ -97,17 +93,16 @@ msgs: Message[] = [];
         this.userform.controls['email'].setValue(data.email);
         this.userform.controls['phone'].setValue(data.telefono);
         if(data.genero){
-          this.generoSelected = this.generos.find(x => x.id == data.genero.id);
-          //this.generoSelected = {label:data.genero.nombre, value:data.genero};console.log("GENERO: ",this.generoSelected)
-          this.userform.controls['gender'].patchValue(this.generoSelected);
+          this.selectedGender = this.genders.find(x => x.id == data.genero.id);
+          this.userform.controls['gender'].patchValue(this.selectedGender);
         }
-        this.obtenerDireccionUsuario(data);
-        this.getProfileImage();
+        this.getUserAddress(data);
+        this.getUserProfileImage();
       }
     })
   }
 
-  private obtenerDireccionUsuario(data: any){
+  private getUserAddress(data: any){
     let direccion: UsuarioDireccion;
     direccion = data.direccion;
     this.adressform.controls['destinatari'].setValue(direccion.destinatario);
@@ -115,24 +110,34 @@ msgs: Message[] = [];
     this.adressform.controls['streetNum'].setValue(direccion.piso);
     this.adressform.controls['aditionalData'].setValue(direccion.datosAdicionales);
     this.adressform.controls['postCode'].setValue(direccion.codigoPostal);
-    this.adressform.controls['locality'].setValue(direccion.localidad);
+    if(direccion.localidad){
+      this.spainCitySelected = this.spainCitiesList.find(x => x.city == direccion.localidad);
+      this.adressform.controls['locality'].patchValue(this.spainCitySelected.city);
+    }
     this.adressform.controls['phone'].setValue(direccion.telefono); 
   }
 
   form(){
     console.log(this.userform);
   }
-  guardarUsuario(){
-    this.llenarInfoUsuario();
-    this.accountService.actualizarUsuario(this.usuario).subscribe();
+  saveUserInDatabase(){
+    this.fillUserObjectFrom();
+    this.accountService.actualizarUsuario(this.usuario).subscribe(data=>{
+      if(data){
+        this.messageService.add({severity:'info', summary: this.successUserSavedLabel, life: TOAST_MILISECONDS_REMAINING});
+      }
+    });
+  }
+  saveAddressInDatabase(){
+    this.fillUserAddressObject();
+    this.accountService.crearDireccionUsuario(this.userAdress, this.usuario.email).subscribe(data => {
+      if(data){
+        this.messageService.add({severity:'info', summary: this.successAddressSavedLabel, life: TOAST_MILISECONDS_REMAINING});
+      }
+    });
   }
 
-  guardarDireccion(){
-    this.llenarDireccionUsuario();
-    this.accountService.crearDireccionUsuario(this.direccionUpdated, this.usuario.email).subscribe();
-  }
-
-  private llenarInfoUsuario(){
+  private fillUserObjectFrom(){
     this.usuario.nombre = this.userform.value.name;
     this.usuario.apellido = this.userform.value.lastname;
     this.usuario.nacimiento = this.userform.value.date;
@@ -141,51 +146,51 @@ msgs: Message[] = [];
     this.usuario.genero = this.userform.value.gender;
   }
 
-  private llenarDireccionUsuario(){
-    this.direccionUpdated = {
+  private fillUserAddressObject(){
+    this.userAdress = {
       destinatario : this.adressform.value.destinatari,
       calle : this.adressform.value.street,
       piso : this.adressform.value.streetNum,
       codigoPostal : this.adressform.value.postCode,
-      localidad : this.adressform.value.locality.admin,
+      localidad : this.adressform.value.locality,
       telefono : this.adressform.value.phone,
       datosAdicionales : this.adressform.value.aditionalData
     }
   }
 
-  private obtenerGeneros(){
+  private getGenders(){
     this.accountService.getGeneros().subscribe( data =>{
-      this.generos = data;
-      this.genders = [];
-      for(let genero of this.generos){
-        this.genders.push({label:genero.nombre, value:genero});
+      this.genders = data;
+      this.gendersComboBox = [];
+      for(let genero of this.genders){
+        this.gendersComboBox.push({label:genero.nombre, value:genero});
       }
-      this.obtenerUsuario();
+      this.getUserInformation();
     })
   }
 
-  getCities(){
-      this.countryList = this.accountService.getCities();
-      this.adressform.controls['locality'].patchValue(
-        this.countryList
-      );
+  private getCities(){
+      this.spainCitiesList = this.accountService.getCities();
+      for(let city of this.spainCitiesList){
+        this.spainCitiesComboBox.push({label:city.city, value:city.city})
+      }
   }
 
-  onUpload(event){
+  onUploadUserPhoto(event){
     this.fileData = event.files[0];
-    this.preview();
+    this.previewUploadedPhoto();
   } 
   removeFileData(){
     this.fileData = null;
-    this.getProfileImage();
+    this.getUserProfileImage();
   }
 
   fileProgress(fileInput: any) {
     //this.fileData = <File>fileInput.target.files[0];
-    this.preview();
+    this.previewUploadedPhoto();
 }
 
-  preview() {
+  previewUploadedPhoto() {
     // Show preview 
     var mimeType = this.fileData.type;
     if (mimeType.match(/image\/*/) == null) {
@@ -209,12 +214,12 @@ onProfileImageSubmit() {
         } else if(resp.type === HttpEventType.Response) {
           this.fileUploadProgress = 0;
           this.removeFileData();      
-          this.showSuccesUpload();
+          this.showSuccesUploadMessage();
         }
       });
 }
 
-getProfileImage(){
+getUserProfileImage(){
   const fileName = this.usuario.usuario+'_foto';
   this.accountService.getProfileImage(fileName).subscribe( data =>{
     this.retrieveResponse = data;
@@ -224,19 +229,20 @@ getProfileImage(){
     //this.uploadedFiles.push(this.retrievedImage);
   })
 }
-showSuccesUpload(){
-  this.msgs = [];
-  this.msgs.push({severity:'info', summary: this.successUploadLabel});
+showSuccesUploadMessage(){
+ /*  this.msgs = [];
+  this.msgs.push({severity:'info', summary: this.successPhotoUploadLabel});
   setTimeout(() => {
     this.msgs = [];
-  }, 1500);
+  }, 1500); */
+  this.messageService.add({severity:'info', summary: this.successPhotoUploadLabel});
 }
 
   saveAdressInfo(adress:string){
 
   }
 
-  manageBuscadorSuperior(){
+  manageBuscadorTextoSuperior(){
   /*para el buscador*/
   this.textoBuscadorOvservable$ = this.store.pipe(select(selectSettingsBuscador));
   this.subscription.push(this.textoBuscadorOvservable$.subscribe( (texto) => {
@@ -281,12 +287,31 @@ initDeleteAccountForm(){
   })
 }
 
-  ngOnDestroy(){
-    this.subscription.forEach(s => s.unsubscribe());
+  private successUserSavedLabel: string = "";
+  private successAddressSavedLabel: string = "";
+  private successPhotoUploadLabel: string = "";
+  loadTranslatedLabels(){
+    this.subscription.push(this.translate.getTranslation(this.language).subscribe(data=>{
+      this.successUserSavedLabel = data['usuario.guardado.correctamente'];
+      this.successAddressSavedLabel = data['direccion.guardada.correctamente'];
+      this.successPhotoUploadLabel = data['foto.subida.correctamente'];
+    })
+    );
   }
 
-  private successUploadLabel: string = "";
-  cargarLabels(){
-    this.translate.stream('foto.subida.correctamente').subscribe(data => {this.successUploadLabel = data});
+  getLanguageBrowser(){
+    this.language = this.productsService.getLanguageBrowser();
+  }
+
+  gotoTopPage() {
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth' 
+    });
+  }
+
+  ngOnDestroy(){
+    this.subscription.forEach(s => s.unsubscribe());
   }
 }

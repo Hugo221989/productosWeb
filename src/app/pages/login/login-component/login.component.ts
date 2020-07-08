@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { User } from 'src/app/models/user';
-import {SelectItem} from 'primeng/api';
 import {MessageService} from 'primeng/api';
 import { LoginService } from '../logn-service/login.service';
 import { TokenStorageService } from '../logn-service/token-storage.service';
@@ -10,6 +9,8 @@ import { actionSettingsIsAuthenticated } from 'src/app/settings/settings.actions
 import { SettingsState } from 'src/app/settings/settings.model';
 import { Store } from '@ngrx/store';
 import { ProductsService } from '../../products-page/service/products.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -22,55 +23,22 @@ import { ProductsService } from '../../products-page/service/products.service';
 export class LoginComponent {
 
   public profileForm: FormGroup;
-  usuario: User;
-  email: string;
-  password: string;
-
- /* constructor(private router:Router,
-              private fb: FormBuilder) {
- 
-                this.profileForm = this.fb.group({
-                  login: ['', [Validators.required, Validators.minLength(2)]],
-                  email: ['', [Validators.required, Validators.email]],
-                  nombre: ['', [Validators.required, Validators.minLength(2)]],
-                  apellido: ['', [Validators.required, Validators.minLength(2)]],
-                  creacion: ['', [Validators.required]],
-                  ciudad: ['', [Validators.required, Validators.minLength(2)]],
-                  direccion: ['', [Validators.required, Validators.minLength(2)]],
-                  nacimiento: ['', Validators.required],
-                  constrasena: ['', Validators.required],
-                })
-
-              }
-
-  onSubmit() {
-    console.log(this.email);
-    console.log(this.password);
-    this.llenarLogin();
-  }
-
-  llenarLogin(){
-    this.usuario.email = this.profileForm.value.email;
-    this.usuario.constrasena = this.profileForm.value.constrasena;
-  } */
-  form: any = {};
-  isLoggedIn = false;
-  isLoginFailed = false;
-  errorMessage = '';
-  roles: string[] = [];
-
-
-
-  userform: FormGroup;
-
-    submitted: boolean;
-
- /*    genders: SelectItem[]; */
-
-    description: string;
+  public usuario: User;
+  public email: string;
+  public password: string;
+  public form: any = {};
+  public isLoggedIn = false;
+  public isLoginFailed = false;
+  public errorMessage = '';
+  public roles: string[] = [];
+  public userform: FormGroup;
+  public submitted: boolean;
+  public description: string;
+  public isIncorrectLoginCredentials: boolean = false;
 
     constructor(private fb: FormBuilder, private messageService: MessageService, private router:Router, private productosService: ProductsService,
-      private authService: LoginService, private tokenStorage: TokenStorageService, private store: Store<{settings: SettingsState}>) {}
+      private loginService: LoginService, private tokenStorage: TokenStorageService, private store: Store<{settings: SettingsState}>,
+      public translate: TranslateService) {}
 
     ngOnInit() {
 
@@ -79,15 +47,9 @@ export class LoginComponent {
         this.roles = this.tokenStorage.getUser().roles;
       }
       this.createUserForm();
-
         if(this.tokenStorage.isRememberLogin()){
 
         }
-
-      /*   this.genders = [];
-        this.genders.push({label:'Select Gender', value:''});
-        this.genders.push({label:'Male', value:'Male'});
-        this.genders.push({label:'Female', value:'Female'}); */
     }
 
     createUserForm(){
@@ -103,29 +65,51 @@ export class LoginComponent {
 
     onSubmit() {
         this.submitted = true;
-        this.messageService.add({severity:'info', summary:'Success', detail:'Form Submitted'});
-
-
-        this.authService.login(this.form).subscribe(
+        //this.messageService.add({severity:'info', summary:'Success', detail:'Form Submitted'});
+        this.loginService.login(this.form).subscribe(
           data => {
-            this.store.dispatch(actionSettingsIsAuthenticated({
-              isAuthenticated: true
-            }))
-            this.tokenStorage.saveToken(data.accessToken);
-            this.tokenStorage.saveUser(data);
-    
-            this.isLoginFailed = false;
-            this.isLoggedIn = true;
-            this.roles = this.tokenStorage.getUser().roles;
-            this.tokenStorage.rememberLogin(data.rememberLogin);
-            this.obtenerCestaUsuario();
+            this.dispatchUserAuthentication();
+            this.saveUserAndTokenInStorage(data);
+            this.setLoginVariables();
+            this.setUserRoles();
+            this.getUserCart(this.form.username);
             this.reloadPage();
           },
           err => {
-            this.errorMessage = err.error.message;
-            this.isLoginFailed = true;
+            this.setErrorLogin(err);
           }
         );
+    }
+
+    dispatchUserAuthentication(){
+      this.store.dispatch(actionSettingsIsAuthenticated({
+        isAuthenticated: true
+      }))
+    }
+
+    saveUserAndTokenInStorage(data: any){
+      this.tokenStorage.saveToken(data.accessToken);
+      this.tokenStorage.saveUser(data);
+      this.tokenStorage.rememberLogin(data.rememberLogin);
+    }
+
+    setLoginVariables(){
+      this.isLoginFailed = false;
+      this.isLoggedIn = true;
+    }
+
+    setUserRoles(){
+      this.roles = this.tokenStorage.getUser().roles;  
+    }
+
+    setErrorLogin(err: any){
+      this.errorMessage = err.error.message;
+      this.isLoginFailed = true;
+      this.isIncorrectLoginCredentials = true;
+    }
+
+    switchLoginToRegisterModal(){
+      this.loginService.switchLoginToRegisterModal();
     }
 
     reloadPage() {
@@ -134,13 +118,14 @@ export class LoginComponent {
 
     get diagnostic() { return JSON.stringify(this.userform.value); }
 
-  irHome(){
-    this.router.navigateByUrl('home');
-  }
-  obtenerCestaUsuario(){
-    this.productosService.getUserCartBbdd().subscribe(data => {
-      window.sessionStorage.setItem('cesta', JSON.stringify(data));
-    })
-  }
+    irHome(){
+      this.router.navigateByUrl('home');
+    }
+
+    getUserCart(username: string){
+      this.productosService.getUserCartBbdd(username).subscribe(data => {
+        window.sessionStorage.setItem('cesta', JSON.stringify(data));
+      })
+    }
 
 }

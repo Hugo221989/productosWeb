@@ -17,7 +17,10 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'data',
-        pathMatch: 'full'
+        pathMatch: 'full',
+        data: {
+          animation: 'account'
+        }
       },{
         path: 'data',
         data: {

@@ -12,25 +12,25 @@
                 <div class="ui-grid-row">
                     <span class="ui-float-label inputInicioSesion">
                         <input id="user-input" type="text" size="30" pInputText name="usernameReg" [(ngModel)]="form.usernameReg" required #usernameReg="ngModel"> 
-                        <label for="user-input" class="fontSize16">Usuario*</label>
+                        <label for="user-input" class="fontSize16">{{'login.usuario' | translate}}*</label>
                     </span>
                 </div>
                 <div class="ui-grid-row">
                   <span class="ui-float-label inputInicioSesion">
                       <input id="email-input" type="email" size="30" pInputText name="emailReg" [(ngModel)]="form.emailReg" required #emailReg="ngModel"> 
-                      <label for="email-input" class="fontSize16">Email*</label>
+                      <label for="email-input" class="fontSize16">{{'email' | translate}}*</label>
                   </span>
               </div>
               <div class="ui-grid-row">
                 <span class="ui-float-label inputInicioSesion marginB10">
                     <input id="password-input" type="password" size="30" pInputText name="passwordReg" [(ngModel)]="form.passwordReg" required #passwordReg="ngModel"> 
-                    <label for="password-input" class="fontSize16">Contraseña*</label>
+                    <label for="password-input" class="fontSize16">{{'login.contrasena' | translate}}*</label>
                 </span>
               </div>
               <div class="ui-grid-row botonLogin">
                 <div class="ui-grid-col-2"></div>
                 <div class="ui-grid-col-8">
-                    <button pButton type="submit" label="Registrarse"  class="buttonBig"></button>
+                    <button pButton type="submit" label="{{'login.registrarse' | translate}}"  class="buttonBig"></button>
                 </div>
                 <div class="ui-grid-col-2"></div>
                 

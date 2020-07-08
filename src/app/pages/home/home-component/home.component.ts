@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService } from '../../products-page/service/products.service';
-import { Producto } from 'src/app/models/producto';
+import { Producto, ProductoDto } from 'src/app/models/producto';
 import { TranslateService } from '@ngx-translate/core';
 import { Carousel } from 'primeng/carousel';
 import { CategoriaPadre } from 'src/app/models/categoria';
@@ -11,6 +11,8 @@ import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
 import { select, Store } from '@ngrx/store';
 import { SettingsState } from 'src/app/settings/settings.model';
 import { myAnimation } from 'src/app/animations/animation';
+import { LoginService } from '../../login/logn-service/login.service';
+import { error } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-home',
@@ -20,103 +22,97 @@ import { myAnimation } from 'src/app/animations/animation';
 })
 export class HomeComponent implements OnInit {
 
-  productsNutricion: Producto[] = [];
-  productsAlimentacion: Producto[] = [];
-  productsPromociones: Producto[] = [];
-  responsiveOptions;
-  language: string = "es";
-  subCatUrl: string;
-  catUrl: string;
-  images: any[] = [];
-  imagesLoaded: boolean = false;
-
-  blockedDocument: boolean = true;
-  productLoaded: Promise<boolean>;
-  contenedorBusquedaProducto: boolean = false;
-  textoBuscadorOvservable$: Observable<string>;
+  public productsNutricion: ProductoDto[] = [];
+  public productsAlimentacion: ProductoDto[] = [];
+  public productsPromociones: ProductoDto[] = [];
+  public responsiveOptions;
+  public language: string = "es";
+  public subCatUrl: string;
+  public catUrl: string;
+  public images: any[] = [];
+  public imagesLoaded: boolean = false;
+  public blockedDocument: boolean = true;
+  public productLoaded: Promise<boolean>;
+  public contenedorBusquedaProducto: boolean = false;
+  public textoBuscadorOvservable$: Observable<string>;
   private subscription: Subscription[] = [];
-  textoBuscador: string = null;
+  public textoBuscador: string = null;
+  private tokenUrlParam: string;
+  public displayModalUserActivationOk: boolean = false;
+  public userActivationTokenOk: boolean = false;
 
   constructor(private router:Router, 
               private productsService: ProductsService,
               public translate: TranslateService,
+              private loginService: LoginService,
               private store: Store<{settings: SettingsState}>) { }
 
   ngOnInit(): void {
+    this.getUrlParams();
     this.getImages();
     this.getLanguageBrowser();
     this.manageBuscadorSuperior();
-    this.responsiveCarousel();
+    this.setResponsiveCarouselOptions();
     this.cargarProductosNutricion();
     this.cargarProductosAlimentacion();
     this.cargarProductosPromociones();
     this.unblockScreen();
   }
 
+  getUrlParams(){
+    let searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has('token')) {
+      this.tokenUrlParam = searchParams.get('token');
+      this.checkActivationUserToken();
+    }
+  }
+
+  checkActivationUserToken(){
+    this.loginService.checkActivationUserToken(this.tokenUrlParam).subscribe(data => {
+      if(data){
+        this.displayModalUserActivationOk = true;
+        this.userActivationTokenOk = true;
+      }else{
+        this.displayModalUserActivationOk = true;
+        this.userActivationTokenOk = false;
+      }
+    },error => {
+      this.displayModalUserActivationOk = true;
+      this.userActivationTokenOk = false;
+    })
+  }
 
   cargarProductosNutricion(){
     this.productsService.getProductsNutritionListRelacionados().subscribe( data =>{
-      let categoriaPadre: CategoriaPadre = data;
-      for(let cats of categoriaPadre.categoria){
-        for(let prod of cats.productos){
-          this.productsNutricion.push(prod);
-        }
-      }
+      this.productsNutricion = data;
     })
   }
 
   cargarProductosAlimentacion(){
     this.productsService.getProductsFeedingListRelacionados().subscribe( data =>{
-      let categoriaPadre: CategoriaPadre = data;
-      for(let cats of categoriaPadre.categoria){
-        for(let prod of cats.productos){
-          this.productsAlimentacion.push(prod);
-        }
-      }
+      this.productsAlimentacion = data;
     })
   }
   cargarProductosPromociones(){
     this.productsService.getProductsNutritionListRelacionados().subscribe( data =>{
-      let categoriaPadre: CategoriaPadre = data;
-      for(let cats of categoriaPadre.categoria){
-        for(let prod of cats.productos){
-          this.productsPromociones.push(prod);
-        }
-      }
+      this.productsPromociones = data;
     })
   }
 
-  verProducto(id:number, nombre:string, nombreEng: string, categoriaPadre: string, apartadoMenu: string){
-    this.productsService.getCatSubCatProduct(id).subscribe( data =>{
-      if(data){
-        this.catUrl = data.categoriaKey;
-        this.subCatUrl = data.subCategoriaKey;
-
-        this.cambiarBreadcrumb(nombre, nombreEng);
-        this.router.navigate([ apartadoMenu, categoriaPadre, this.catUrl, this.subCatUrl, 'detail', id]);
-      }
-    })
+  seeCarouselProduct(modulo: string, product: ProductoDto){
+    this.router.navigate([modulo, product.categoriaPadre, product.categoria , product.subCategoria, 'detail', product.id]);
+    this.changeBreadcrumb(product.nombre, product.nombreEng);
   }
 
   irCategoriaGeneral(cat: string, subCat: string){
-    let catPadre: string = "1";
-    this.router.navigate(['products', catPadre, cat, subCat]);
-    setTimeout(() => {
-      /* this.reloadPage(); */  
-    }, 500);
-    
+    this.router.navigate(['products', cat, 'all', 'all']);
   }
 
   irCategoriaGeneralFeeding(cat: string, subCat: string){
-    let catPadre: string = "2";
-    this.router.navigate(['feeding', catPadre, cat, subCat]);
-    setTimeout(() => {
-      /* this.reloadPage(); */  
-    }, 500);
-    
+    this.router.navigate(['feeding', cat, 'all', 'all']);
   }
 
-  cambiarBreadcrumb(nombre: string, nombreEng: string){
+  changeBreadcrumb(nombre: string, nombreEng: string){
     this.productsService.cambiarBreadcrumb(nombre, nombreEng);
   }
 
@@ -139,7 +135,7 @@ export class HomeComponent implements OnInit {
     }))
   }
 
-  responsiveCarousel(){
+  setResponsiveCarouselOptions(){
     Carousel.prototype.changePageOnTouch = (e,diff) => {}
     this.responsiveOptions = [
       {

@@ -16,7 +16,7 @@ const routes: Routes = [
       breadcrumb: 'Nutrición',
       breadcrumbEng: 'Nutrition',
       modulo: 'products',
-      animation: 'HomePage'
+      animation: 'products'
     },
     loadChildren: () =>
       import('./pages/products-page/products.module').then(m => m.ProductsModule)
@@ -27,7 +27,7 @@ const routes: Routes = [
       breadcrumb: 'Alimentacion',
       breadcrumbEng: 'Feeding',
       modulo: 'feeding',
-      animation: 'HomePage'
+      animation: 'feeding'
     },
     loadChildren: () =>
       import('./pages/products-page/products.module').then(m => m.ProductsModule)
@@ -43,7 +43,7 @@ const routes: Routes = [
   {
     path: 'account',
     data: {
-      animation: 'HomePage'
+      animation: 'account'
     },
     loadChildren: () =>
       import('./pages/account/account.module').then(m => m.AccountModule),

@@ -28,9 +28,14 @@ novalidate>
                 <div class="ui-grid-col-2"></div>
                 <div class="ui-grid-col-8">
                     <div class="ui-grid-row">
+                        <div class="ui-grid-col-12" *ngIf="isIncorrectLoginCredentials">
+                            <p-message severity="error" text="Usuario o contraseña incorrecto"></p-message>
+                        </div>
+                    </div>
+                    <div class="ui-grid-row">
                         <span class="ui-float-label inputInicioSesion">
                             <input id="float-input" type="text" size="30" pInputText name="username" [(ngModel)]="form.username" required #username="ngModel"> 
-                            <label for="float-input" class="fontSize16">Usuario*</label>
+                            <label for="float-input" class="fontSize16">{{'login.usuario' | translate}}*</label>
                         </span>
                         <!-- <div class="ui-grid-col-4">
                             <p-message severity="error" text="Introduce e-mail" *ngIf="!userform.controls['email'].valid&&userform.controls['email'].dirty"></p-message>
@@ -39,22 +44,25 @@ novalidate>
                     <div class="ui-grid-row">
                         <span class="ui-float-label inputInicioSesion marginB10">
                             <input id="password-input" type="password" size="30" pInputText name="password" [(ngModel)]="form.password" required #password="ngModel"> 
-                            <label for="password-input" class="fontSize16">Contraseña*</label>
+                            <label for="password-input" class="fontSize16">{{'login.contrasena' | translate}}*</label>
                         </span>
                         <!-- <div class="ui-grid-col-4">
                             <p-message severity="error" text="Introduce contraseña" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty"></p-message>
                         </div> -->
                     </div>
                     <div class="ui-grid-col-12 checkRecordarme">
-                        <p-checkbox [(ngModel)]="form.rememberLogin" binary="true" label="Recordarme" name="rememberLogin" #rememberLogin="ngModel">Recordarme</p-checkbox>
+                        <p-checkbox [(ngModel)]="form.rememberLogin" binary="true" label="Recordarme" name="rememberLogin" #rememberLogin="ngModel">{{'login.recordarme' | translate}}</p-checkbox>
                     </div>
                     <div class="ui-grid-row botonLogin">
                         <div class="ui-grid-col-2"></div>
                         <div class="ui-grid-col-8">
-                            <button pButton type="submit" label="Iniciar Sesión" class="buttonBig"></button>
+                            <button pButton type="submit" label="{{'navbar.iniciar.sesion' | translate}}" class="buttonBig"></button>
                         </div>
                         <div class="ui-grid-col-2"></div>
                         
+                    </div>
+                    <div class="ui-grid-col-12 linkRegistro">
+                        <a class="pointer" (click)="switchLoginToRegisterModal()">{{'login.link.registro' | translate}}</a> 
                     </div>
                 </div>
             <div class="ui-grid-col-2"></div>

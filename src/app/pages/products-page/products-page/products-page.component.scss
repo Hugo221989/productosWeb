@@ -27,7 +27,7 @@
     }
 }
 
-@media screen and (min-width: 480px) and (max-width: 768px){
+@media screen and (min-width: 480px) and (max-width: 667px){
     .imagenProducto{
         max-height: 100% ;
         max-width: 100%;
@@ -41,9 +41,51 @@
     .contenedorFiltrosLateral{
         min-height: 10em;
         padding-bottom: 8%;
+        width: 100%;
+    }
+    .contenedorProductos{
+        width: 100%;
     }
     .divRangoPrecios{
         margin-top: 0%;
+    }
+}
+
+@media screen and (min-width: 667px) and (max-width: 768px){
+    .imagenProducto{
+        max-height: 100% ;
+        max-width: 100%;
+    }
+    .panelGeneralProducto{
+        width: 45% !important; 
+    }
+    .divImagenProducto{
+        min-width: 100%;
+    }
+    .contenedorFiltrosLateral {
+        width: 35%;
+    }
+    .contenedorProductos{
+        width: 65%;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .imagenProducto{
+        max-height: 100% ;
+        max-width: 100%;
+    }
+    .panelGeneralProducto{
+        width: 45% !important; 
+    }
+    .divImagenProducto{
+        min-width: 100%;
+    }
+    .contenedorFiltrosLateral {
+        width: 35%;
+    }
+    .contenedorProductos{
+        width: 65%;
     }
 }
 
@@ -60,9 +102,17 @@
     }
     .contenedorFiltrosLateral{
         min-height: 760px;
+        width: 20%;
+    }
+    .contenedorProductos{
+        width: 80%;
     }
     .divRangoPrecios{
         margin-top: 25%;
+    }
+    :host ::ng-deep .menuLateral.ui-tree.ui-widget.ui-widget-content.ui-corner-all.ui-tree-selectable.ng-star-inserted{
+        border: 0 !important;
+        width: 100%;
     }
 }
 

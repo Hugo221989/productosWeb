@@ -24,3 +24,26 @@ export class SubCategoria {
     nombreEng: string;
     key: string;
 }
+
+export class CategoriaPadreDto {
+    id: number;
+    nombre: string;
+    nombreEng: string;
+    key: string;
+    modulo: string;
+    categorias: CategoriaDto[];
+}
+
+export class CategoriaDto {
+    id: number;
+    nombre: string;
+    nombreEng: string;
+    key: string;
+    subcategorias: SubCategoriaDto[];
+}
+export class SubCategoriaDto {
+    id: number;
+    nombre: string;
+    nombreEng: string;
+    key: string;
+}

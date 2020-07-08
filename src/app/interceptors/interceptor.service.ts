@@ -12,7 +12,10 @@
  export class InterceptorService implements HttpInterceptor{
   constructor() { }
   handleError(error: HttpErrorResponse){
-   console.log(error.message);
+   console.log(error);
+   if(error.error.status != null && error.error.status == 401){console.log("401");
+    return throwError(error);
+   }
    return EMPTY;
   }
  intercept(req: HttpRequest<any>, next: HttpHandler):

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, Subject } from 'rxjs';
-import { Producto, CatProductoDto } from 'src/app/models/producto';
+import { Observable} from 'rxjs';
+import { Producto, ProductoDto } from 'src/app/models/producto';
 import { Sabor } from 'src/app/models/productoOtrosDatos';
 import { Cesta, ProductoCesta } from 'src/app/models/cesta';
 import { SettingsState } from 'src/app/settings/settings.model';
@@ -9,14 +9,11 @@ import { Store, select } from '@ngrx/store';
 import { actionSettingsCarritoVacio, actionSettingsNombreBreadcrumb, actionSettingsNombreBreadcrumbEng, actionSettingsCesta } from 'src/app/settings/settings.actions';
 import { TranslateService } from '@ngx-translate/core';
 import { TranslateCacheService } from 'ngx-translate-cache';
-import { CategoriaPadre } from 'src/app/models/categoria';
 import { TokenStorageService } from '../../login/logn-service/token-storage.service';
-import { User } from 'src/app/models/user';
+import { User, AuthUser } from 'src/app/models/user';
 import { selectSettingsCesta } from 'src/app/settings/settings.selectors';
 
-const USER_API = 'http://localhost:8182/restfull/usuario/';
 const PRODUCT_API = 'http://localhost:8182/restfull/producto/';
-const CATEGORIA_API = 'http://localhost:8182/restfull/categoria/';
 const PEDIDO_API = 'http://localhost:8182/restfull/pedido/';
 
 @Injectable({
@@ -48,51 +45,47 @@ export class ProductsService {
   }
 
   getProductsList(buscador: string): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductos?buscador=${buscador}&language=${this.browserLang}`);
+    return this.httpClient.get<ProductoDto[]>(`${PRODUCT_API}obtenerProductos?buscador=${buscador}&language=${this.browserLang}`);
   }
 
   getProductsListBySubCat(subCategoria: string): Observable<any> {
     if(subCategoria == 'all'){
       subCategoria = null;
     }
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosBySubCategoria?subCategoria=${subCategoria}&language=${this.browserLang}`);
+    return this.httpClient.get<ProductoDto[]>(`${PRODUCT_API}obtenerProductosBySubCategoria?subCategoria=${subCategoria}&language=${this.browserLang}`);
   }
 
   getProductsListByCat(categoria: string): Observable<any> {
     if(categoria == 'all'){
       categoria = null;
     }
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoria?categoria=${categoria}&language=${this.browserLang}`);
+    return this.httpClient.get<ProductoDto[]>(`${PRODUCT_API}obtenerProductosByCategoria?categoria=${categoria}&language=${this.browserLang}`);
   }
-  getProductsListByCatPadre(categoriaPadre: number): Observable<any> {
-    return this.httpClient.get<Producto[]>(`${USER_API}obtenerProductosByCategoriaPadre?categoriaPadre=${categoriaPadre}&language=${this.browserLang}`);
+  getProductsListByCatPadre(categoriaPadre: string): Observable<any> {
+    return this.httpClient.get<ProductoDto[]>(`${PRODUCT_API}obtenerProductosByCategoriaPadre?categoriaPadre=${categoriaPadre}&language=${this.browserLang}`);
   }
 
 
   getProductsNutritionListRelacionados(): Observable<any> {
-    return this.httpClient.get<CategoriaPadre>(`${CATEGORIA_API}obtenerCategoriaPadreByKey?idCategoriaPadre=nutricion`);
+    return this.httpClient.get<ProductoDto[]>(`${PRODUCT_API}obtenerProductosRelacionados?categoriaPadreKey=nutricion`);
   }
 
   getProductsFeedingListRelacionados(): Observable<any> {
-    return this.httpClient.get<CategoriaPadre>(`${CATEGORIA_API}obtenerCategoriaPadreByKey?idCategoriaPadre=alimentacion`);
+    return this.httpClient.get<ProductoDto[]>(`${PRODUCT_API}obtenerProductosRelacionados?categoriaPadreKey=alimentacion`);
   }
 
   getProductById(idProducto: number): Observable<any> {
-    return this.httpClient.get<Producto>(`${USER_API}obtenerProductoById?idProducto=${idProducto}&language=${this.browserLang}`);
-  }
-
-  getCatSubCatProduct(idProducto: number){
-    return this.httpClient.get<CatProductoDto>(`${PRODUCT_API}obtenerCatAndSubCatByProductoId?idProducto=${idProducto}&language=${this.browserLang}`);
+    return this.httpClient.get<ProductoDto>(`${PRODUCT_API}obtenerProductoById?idProducto=${idProducto}&language=${this.browserLang}`);
   }
 
   getSabores(): Observable<any> {
-    return this.httpClient.get<Sabor[]>(`${USER_API}obtenerProductoById?language=${this.browserLang}`);
+    return this.httpClient.get<Sabor[]>(`${PRODUCT_API}obtenerProductoById?language=${this.browserLang}`);
   }
   
   /* SHOPPING CART */
   addProductToCart(productoCesta: ProductoCesta){
     if(sessionStorage.getItem('cesta')){
-      this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
+      this.cesta = this.getCestaFromSession();
     }else{
       this.productosCesta = [];
       this.cesta = {
@@ -188,26 +181,10 @@ export class ProductsService {
       cesta: this.cesta
     }))
   }
-  
-/*   getProductosCesta(): Observable<Cesta>{
-    if(sessionStorage.getItem('cesta')){
-      this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
-    }else{
-      this.productosCesta = [];
-      this.cesta = {
-        productosCesta: this.productosCesta
-      }
-    } 
-    this.calcularImporteTotal();
-    //this.saveUserCartBbdd();
-    //let cestaObservable: Subject<Cesta>; 
-    
-    return this.cestaObservable.asObservable();
-  } */
 
   removeProductoCesta(index: number): Cesta{
     if(sessionStorage.getItem('cesta')){
-      this.cesta =  JSON.parse(sessionStorage.getItem('cesta'));
+      this.cesta =  this.getCestaFromSession();
       let productCesta = this.cesta.productosCesta[index];
       this.cesta.productosCesta.splice(index, 1);
       this.cesta.cantidadProductos--;
@@ -219,19 +196,24 @@ export class ProductsService {
 
   saveUserCartBbdd(){
     if(window.sessionStorage.getItem('authenticated') == 'true'){
-      let usuario: User = JSON.parse(window.sessionStorage.getItem('auth-user'));
-      this.cesta.usuario = usuario;
+      let authUser: AuthUser = JSON.parse(window.sessionStorage.getItem('auth-user'));
+      //this.cesta.usuario = usuario;
+      this.cesta = this.getCestaFromSession();console.log("CESTA ",this.cesta);
       return this.httpClient.post<Cesta>(
-        `${PEDIDO_API}saveCesta`,
+        `${PEDIDO_API}saveCesta?email=${authUser.email}`,
         this.cesta
       ).subscribe();
     }
   }
 
-  getUserCartBbdd(){
+  getCestaFromSession():Cesta{
+    return JSON.parse(sessionStorage.getItem('cesta'));
+  }
+
+  getUserCartBbdd(username: string){
     if(window.sessionStorage.getItem('authenticated') == 'true'){
       let usuario: User = JSON.parse(window.sessionStorage.getItem('auth-user'));
-        return this.httpClient.get<Cesta>(`${PEDIDO_API}obtenerCesta?idUsuario=${usuario.id}`);
+        return this.httpClient.get<Cesta>(`${PEDIDO_API}obtenerCesta?username=${username}`);
     }
   }
 

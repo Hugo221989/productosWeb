@@ -112,9 +112,19 @@
     "elementos":"elementos",
     "subir.foto":"Subir Foto",
     "foto.subida.correctamente":"Foto subida correctamente",
+    "usuario.guardado.correctamente":"Usuario guardado correctamente",
+    "direccion.guardada.correctamente":"Dirección guardada correctamente",
     "elegir":"Elegir",
     "cancelar":"Cancelar",
     "continuar":"Continuar",
+    "aceptar":"Aceptar",
     "finalizar,pago":"Finalizar Pago",
-    "buscar.productos":"Buscar productos"
+    "buscar.productos":"Buscar productos",
+    "email.registro.enviado": "Email de activación enviado",
+    "email.registro.enviado.descripcion": "Se ha enviado un email de activación a la cuenta de correo indicada en el registro. Por favor haz click en el enlace que aparece en el cuerpo del email para activar tu usuario.",
+    "login.usuario":"Usuario",
+    "login.contrasena":"Contraseña",
+    "login.recordarme":"Recordarme",
+    "login.link.registro":"O Crear Cuenta",
+    "login.registrarse":"Registrarse"
 }

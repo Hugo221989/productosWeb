@@ -3,12 +3,12 @@ import { SelectItem } from 'primeng/api/selectitem';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { SettingsState } from 'src/app/settings/settings.model';
-import { actionSettingsBreadcrumbExist, actionSettingsCambiarProductoId } from 'src/app/settings/settings.actions';
+import { actionSettingsBreadcrumbExist, actionSettingsCambiarProductoId, actionSettingsBuscador } from 'src/app/settings/settings.actions';
 import { ProductsService } from '../service/products.service';
-import { Producto } from 'src/app/models/producto';
+import { ProductoDto } from 'src/app/models/producto';
 import { Observable, Subscription } from 'rxjs';
 import { selectSettingsBuscador } from 'src/app/settings/settings.selectors';
-import { Categoria, SubCategoria, CategoriaPadre } from 'src/app/models/categoria';
+import { Categoria, SubCategoria, CategoriaPadreDto } from 'src/app/models/categoria';
 import { TreeNode, MessageService } from 'primeng/api';
 import { CategoriaService } from '../service/categoria.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,9 +32,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   subCatUrl: string;
   catUrl: string;
 
-  products: Producto[] = [];
-  productsClone: Producto[] = [];
-  selectedProduct: Producto = new Producto;
+  products: ProductoDto[] = [];
+  productsClone: ProductoDto[] = [];
 
   sortOptions: SelectItem[];
   sortKey: string;
@@ -44,7 +43,6 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   textoBuscadorOvservable$: Observable<string>;
   private subscription: Subscription[] = [];
   textoBuscador: string = null;
-  subCategoriaText: string = null;
 
   primerNivelTree: TreeNode[] = [];
   segundoNivelTree: TreeNode[] = [];
@@ -52,7 +50,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   selectedMenuNode: TreeNode;
   treeMenuDisplay: boolean = true;
 
-  categoriaPadre: CategoriaPadre;
+  categoriaPadre: CategoriaPadreDto;
   modulo: string;
   categoria: Categoria[] = [];
   subCategoria: SubCategoria[] = [];
@@ -83,6 +81,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       this.filtrarPorPrecio();
       this.unblockScreen();
       this.sortOptionsMethod();
+      this.gotoTop();
   }
 
   getLanguageBrowser(){
@@ -93,9 +92,12 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     this.subscription.push(this.router.events.pipe(
       filter(
           event => event instanceof NavigationEnd))
-          .subscribe( ()=> {console.log("navigation End");
-            this.getUrlParams();
-            if(this.subCatUrl != null && this.subCatUrl != 'all'){
+          .subscribe( ()=> {
+            this.getUrlParams();console.log("subcat: ",this.subCatUrl, "cat: ",this.catUrl);
+            if(this.subCatUrl == 'all' && this.catUrl == 'all' ){
+              this.getProductListByCategoriaPadre();
+              this.getSubCatsTreeNodeByCat(this.catUrl);
+            }else if(this.subCatUrl != null && this.subCatUrl != 'all'){
               this.getProductListBySubCat(this.subCatUrl);
               this.getSubCatsTreeNodeByCat(this.catUrl);
             }else{
@@ -109,7 +111,6 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   getUrlParams(){
     this.catPadreUrl = this.route.snapshot.paramMap.get("catPadre");
     this.subCatUrl = this.route.snapshot.paramMap.get("subcat");
-    this.subCategoriaText = this.subCatUrl;
 
     this.catUrl = this.route.snapshot.paramMap.get("cat");
     const children: ActivatedRoute[] = this.route.root.children;
@@ -124,10 +125,10 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         this.textoBuscador = texto;
         if(this.textoBuscador != null && this.textoBuscador != ''){
           this.getProductListConBuscador();
-        }else if('nutricion' == this.catUrl || 'alimentacion' == this.catUrl || 'promociones' == this.catUrl){
+        }else  if(this.subCatUrl == 'all' && this.catUrl == 'all' ){
           this.getProductListByCategoriaPadre();
-        }else if(this.subCategoriaText != null && this.subCategoriaText != '' && this.subCategoriaText != 'all'){
-          this.getProductListBySubCat(this.subCategoriaText);
+        }else if(this.subCatUrl != null && this.subCatUrl != '' && this.subCatUrl != 'all'){
+          this.getProductListBySubCat(this.subCatUrl);
         }else{
           this.getProductsByCat(this.catUrl);
         }
@@ -142,30 +143,15 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     })
   }
 
-  goProductListBySubCatUrl(cat: string){
-    if(cat != null){
-      if(this.categoriaPadre == null){
-        this.router.navigate([this.modulo, this.catPadreUrl, this.catUrl, this.subCategoriaText]);
-      }else{
-        this.router.navigate([this.categoriaPadre.modulo, this.catPadreUrl, this.catUrl, this.subCategoriaText]);
-      }
-    }
-  }
   getProductListBySubCat(subCat: string){
     this.productsService.getProductsListBySubCat(subCat).subscribe( data =>{
       this.products = data;
       this.productsClone = this.products;
       this.filtrarPorPrecio();
     });
-    this.selectLateralCurrentNode(this.catUrl, this.subCategoriaText);
+    this.selectLateralCurrentNode(this.catUrl, this.subCatUrl);
   }
 
-  goProductListByCatUrl(cat: string){
-    if(cat != null){
-      let subCat = "all";
-      this.router.navigate([this.categoriaPadre.modulo, this.catPadreUrl, cat, subCat]);
-    }
-  }
   getProductsByCat(cat: string){
     this.productsService.getProductsListByCat(cat).subscribe( data =>{
       this.products = data;
@@ -174,43 +160,47 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     })
     this.selectLateralCurrentNode(this.catUrl, null);
     this.catUrl = cat;
-    this.subCategoriaText = null;
+    this.subCatUrl = null;
   }
   getProductListByCategoriaPadre(){
-    this.productsService.getProductsListByCatPadre(this.productsService.ConvertStringToNumber(this.catPadreUrl)).subscribe( data => {
+    this.productsService.getProductsListByCatPadre(this.catPadreUrl).subscribe( data => {
       this.products = data;
       this.productsClone = this.products;
       this.filtrarPorPrecio();
     })
-    this.subCategoriaText = "all";
+    this.subCatUrl = "all";
     this.selectLateralCurrentNode(this.catUrl, 'all');
   }
 
-  selectProductDetail(event: Event, product: Producto) {
-      let categoriaPadre;
-      let categoriaPadreId;
-      this.store.dispatch(actionSettingsBreadcrumbExist({
-        hayBreadcrumbFinal: true
-      }))
-      this.productsService.cambiarBreadcrumb(product.nombre, product.nombreEng);
-      if(this.subCategoriaText == null){
-        this.subCategoriaText = 'all';
-        window.sessionStorage.setItem('categoria', this.catUrl);
-      }
-      this.productsService.getCatSubCatProduct(product.id).subscribe(data => {
-        categoriaPadre = data.categoriaPadreModulo;
-        categoriaPadreId = data.categoriaPadreId;
-        this.catUrl = data.categoriaKey;
-        this.subCatUrl = data.subCategoriaKey 
-        /*BUSCAMOS CAT Y SUBCAT PARA COLOCAR BIEN LA URL*/
-        this.router.navigate([categoriaPadre, categoriaPadreId, this.catUrl , this.subCatUrl, 'detail', product.id]);
-      })
-      
-      this.store.dispatch(actionSettingsCambiarProductoId({
-        productoId: product.id
-      }))
-      let inputSearchNavBar: HTMLElement = document.getElementById('inputSearchNavBar') as HTMLElement;
-      inputSearchNavBar.innerText = "";
+  selectProductDetail(event: Event, product: ProductoDto) {
+      this.changeBreadcrumbStore(product);
+      this.setSessionCatUrl();
+
+      this.router.navigate([this.categoriaPadre.modulo, product.categoriaPadre, product.categoria , product.subCategoria, 'detail', product.id]);
+
+      this.changeProductIdStore(product);
+      this.cleanInputSearch();
+  }
+
+  changeBreadcrumbStore(product: ProductoDto){
+    this.store.dispatch(actionSettingsBreadcrumbExist({
+      hayBreadcrumbFinal: true
+    }))
+    this.productsService.cambiarBreadcrumb(product.nombre, product.nombreEng);
+  }
+
+  changeProductIdStore(product: ProductoDto){
+    this.store.dispatch(actionSettingsCambiarProductoId({
+      productoId: product.id
+    }))
+  }
+
+  cleanInputSearch(){
+    this.store.dispatch(actionSettingsBuscador({
+      buscador: null
+    }))
+    let inputSearchNavBar: HTMLElement = document.getElementById('inputSearchNavBar') as HTMLElement;
+    inputSearchNavBar.innerText = "";
   }
 
   reloadPage() {
@@ -231,7 +221,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   }
 
   getCategoriaPadre(){
-    this.categoriaService.getCategoriaPadre(this.productsService.ConvertStringToNumber(this.catPadreUrl)).subscribe( data => {
+    this.categoriaService.getCategoriaPadre(this.catPadreUrl).subscribe( data => {
       this.categoriaPadre = data;
       this.getSubCatsTreeNodeByCat(this.catUrl);
     })
@@ -251,7 +241,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
             labelCatPadre = this.categoriaPadre.nombre;
         }
 
-      for(let cat of this.categoriaPadre.categoria){ 
+      for(let cat of this.categoriaPadre.categorias){ 
         let catNode: TreeNode;
         let labelCat: string;
         if(this.language == "en"){
@@ -264,7 +254,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         if(cat.key == selectedCat){
           let subCatNode: TreeNode;
           let labelSubcat: string;
-          for(let subCat of cat.subCategoria){
+          for(let subCat of cat.subcategorias){
             if(this.language == "en"){
               labelSubcat = subCat.nombreEng;
             }else{
@@ -272,14 +262,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
             }
             subCatNode = {
               label: labelSubcat,
-              key: cat.key+'/'+subCat.key
+              key: this.categoriaPadre.key+'/'+cat.key+'/'+subCat.key
             }
             this.tercerNivelTree.push(subCatNode);
           }
 
           catNode = {
             label: labelCat,
-            key: cat.key,
+            key: this.categoriaPadre.key+'/'+cat.key+'/all',
             children: this.tercerNivelTree,
             expanded: true
           }
@@ -290,7 +280,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         /*SI ES LA CATEGORIA SELECIONADA AÑADIMOS LAS SUBCATEGORIAS SOLO DE ESA*/
           catNode = {
             label: labelCat,
-            key: cat.key+'/all'
+            key: this.categoriaPadre.key+'/'+cat.key+'/all'
           }
           this.segundoNivelTree.push(catNode);
         }
@@ -300,7 +290,7 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
         this.primerNivelTree = [
           {
             label: labelCatPadre,
-            key: this.categoriaPadre.key+'/all',
+            key: this.categoriaPadre.key+'/all/all',
             children: this.segundoNivelTree,
             expanded: true
           }
@@ -310,27 +300,28 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       }
   }
 
-  nodeSelect(event) {
+  sideMenuSelect(event) {
     let nodeKey = event.node.key;
+    let categoriaKey;
+    let subCategoriaKey;
     if(nodeKey.indexOf('/') != -1){
-      let subCatExtract = nodeKey.substring(nodeKey.indexOf('/')+1, nodeKey.length);
-      let catExtract = nodeKey.substring(0, nodeKey.indexOf('/'));
-      this.subCategoriaText = subCatExtract;
-      if(catExtract == (this.categoriaPadre.key)){
-        this.getProductListByCategoriaPadre();
-        this.getSubCatsTreeNodeByCat(catExtract);
-        this.catUrl = catExtract;
-        this.router.navigate([this.categoriaPadre.modulo,this.catPadreUrl, catExtract, subCatExtract]);
-      }else if(subCatExtract != null && subCatExtract != 'all'){
-        this.goProductListBySubCatUrl(subCatExtract);
-      }else{
-        this.goProductListByCatUrl(catExtract);
-        this.getSubCatsTreeNodeByCat(catExtract);
+      let restoNode = nodeKey.substring(nodeKey.indexOf('/')+1, nodeKey.length);
+      if(restoNode.indexOf('/') != -1){
+        categoriaKey = restoNode.substring(0, restoNode.indexOf('/'));
+        subCategoriaKey = restoNode.substring(restoNode.indexOf('/')+1, restoNode.length); 
       }
-    }else{
-      this.goProductListByCatUrl(nodeKey);
-      this.getSubCatsTreeNodeByCat(nodeKey);
     }
+
+    if(categoriaKey == 'all' && subCategoriaKey == 'all'){
+      this.getProductListByCategoriaPadre();
+      this.getSubCatsTreeNodeByCat(categoriaKey);
+    }else if(categoriaKey != 'all' && subCategoriaKey == 'all'){
+      this.getProductsByCat(categoriaKey);
+      this.getSubCatsTreeNodeByCat(categoriaKey);
+    }else{
+      this.getProductListBySubCat(subCategoriaKey);
+    }
+
     this.selectedMenuNode = {
       key: nodeKey
     }
@@ -340,8 +331,8 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
   filtrarPorPrecio(){
     if(this.productsClone != null && this.productsClone.length > 0){
       this.products = this.productsClone.filter(p => {
-        if((this.productsService.ConvertStringToNumber(p.precio) >= this.rangePriceValues[0]) && 
-        (this.productsService.ConvertStringToNumber(p.precio) <= this.rangePriceValues[1])){
+        if((p.precio >= this.rangePriceValues[0]) && 
+        (p.precio <= this.rangePriceValues[1])){
           return p;
         }
       })
@@ -366,10 +357,17 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  setSessionCatUrl(){
+    if(this.subCatUrl == null){
+      this.subCatUrl = 'all';
+      window.sessionStorage.setItem('categoria', this.catUrl);
+    }
+  }
+
   selectLateralCurrentNode(cat: string, subCat: string){
     if(subCat != null && subCat != ''){
       this.selectedMenuNode = {
-        key: cat+'/'+this.subCategoriaText
+        key: cat+'/'+this.subCatUrl
       }
     }else{
       this.selectedMenuNode = {
@@ -392,6 +390,14 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
       this.blockedDocument = false;
       this.productLoaded = Promise.resolve(true); 
     }, 1000);
+  }
+
+  gotoTop() {
+    window.scroll({ 
+      top: 0, 
+      left: 0, 
+      behavior: 'smooth' 
+    });
   }
 
   ngOnDestroy(){

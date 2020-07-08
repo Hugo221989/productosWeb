@@ -26,3 +26,11 @@ export class UsuarioDireccion{
     telefono: string;
     datosAdicionales: string;
 }
+
+export class AuthUser {
+    accessToken: string;
+    email: string;
+    id: number;
+    rememberLogin: boolean;
+    username: string;
+}

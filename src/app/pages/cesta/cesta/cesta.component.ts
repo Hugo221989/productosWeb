@@ -46,6 +46,7 @@ export class CestaComponent implements OnInit, OnDestroy {
     this.unblockScreen();
     this.isAuthenticated();
     this.triggerBotonCesta();
+    this.gotoTop();
   }
 
   getLanguageBrowser(){
@@ -172,6 +173,14 @@ export class CestaComponent implements OnInit, OnDestroy {
       this.productLoaded = Promise.resolve(true); 
     }, 1000);
   }
+
+  gotoTop() {
+      window.scroll({ 
+        top: 0, 
+        left: 0, 
+        behavior: 'smooth' 
+      });
+    }
 
   ngOnDestroy(){
     this.subscription.forEach(s => s.unsubscribe());

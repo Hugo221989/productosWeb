@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../login/logn-service/login.service';
+import { ProductsService } from '../../products-page/service/products.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
@@ -16,30 +18,43 @@ export class RegisterComponent implements OnInit {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
+  language: string = 'es';
 
-  constructor(private authService: LoginService) {}
-
-  register() {
-    console.log(this.email);
-    console.log(this.password);
-  }
+  constructor(private loginService: LoginService, private productsService: ProductsService, public translate: TranslateService) {}
   
   ngOnInit(): void {
   }
 
   onSubmit() {
-    this.authService.register(this.form).subscribe(
+    this.getLanguageBrowser();
+    this.loginService.register(this.form).subscribe(
       data => {
-        console.log(data);
-        this.isSuccessful = true;
-        this.isSignUpFailed = false;
-        this.reloadPage();
+        if(data){
+          console.log(data);
+          this.isSuccessful = true;
+          this.isSignUpFailed = false;
+          this.showEmailSendedPopUp();
+        }else{
+          this.isSignUpFailed = true;
+        }
       },
       err => {
         this.errorMessage = err.error.message;
         this.isSignUpFailed = true;
       }
     );
+  }
+
+  showEmailSendedPopUp(){
+    this.loginService.setRegistrationEmailSended();
+  }
+
+  getLanguageBrowser(){
+    this.language = this.productsService.getLanguageBrowser();
+    this.form.language = this.language;
+    }
+  setLanguageSelected(){
+
   }
 
   reloadPage() {

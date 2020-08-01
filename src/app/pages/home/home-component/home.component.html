@@ -88,12 +88,20 @@
         </p-carousel>
     </div>
 
-    <p-dialog header="{{'email.registro.enviado' | translate}}" [(visible)]="displayModalUserActivationOk" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    <p-dialog header="{{'registro.token.titulo' | translate}}" [(visible)]="displayModalUserActivationOk" [modal]="true" [style]="{width: '50vw'}" [baseZIndex]="10000"
         [draggable]="false" [resizable]="false">
-        <p>{{'email.registro.enviado.descripcion' | translate}}</p>
+        <div *ngIf="userActivationTokenOk">
+            <p>{{'registro.token.ok' | translate}}</p>
             <p-footer>
                 <button type="button" pButton icon="pi pi-check" (click)="displayModalUserActivationOk=false" label="{{'aceptar' | translate}}"></button>
             </p-footer>
+        </div>
+        <div *ngIf="!userActivationTokenOk">
+            <p>{{'registro.token.nok' | translate}}</p>
+            <p-footer>
+                <button type="button" pButton icon="pi pi-check" (click)="displayModalUserActivationOk=false" label="{{'aceptar' | translate}}"></button>
+            </p-footer>
+        </div>
     </p-dialog>
 </div>
 

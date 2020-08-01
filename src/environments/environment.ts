@@ -3,6 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  //urlAPI: 'http://localhost:8182/restfull/',
+  urlAPI: 'http://192.168.99.100:32792/restfull/',
   production: false
 };
 

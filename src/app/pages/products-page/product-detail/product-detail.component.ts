@@ -200,9 +200,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
     changeProductIdFromStore(){
       this.productoIdOvservable$ = this.store.pipe(select(selectSettingsProductoId));
-      this.productoIdOvservable$.subscribe( (id) => {
+      this.subscription.push(this.productoIdOvservable$.subscribe( (id) => {
         this.loadProductById(id);
-      })
+      }))
     }
 
     setProductoIdInStore(){

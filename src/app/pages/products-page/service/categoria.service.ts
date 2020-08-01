@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CategoriaPadre, CategoriaPadreDto } from 'src/app/models/categoria';
+import { CategoriaPadreDto } from 'src/app/models/categoria';
 import { TranslateCacheService } from 'ngx-translate-cache';
 import { TranslateService } from '@ngx-translate/core';
+import { environment } from 'src/environments/environment';
 
-const CATEGORIA_API = 'http://localhost:8182/restfull/categoria/';
+const CATEGORIA_API = `${environment.urlAPI}categoria/`;
 
 @Injectable({
   providedIn: 'root'

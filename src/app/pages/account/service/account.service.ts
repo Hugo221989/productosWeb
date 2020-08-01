@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import spainCities from '../../../../assets/spainCities/spainCities.json';
 import { SpainCities } from 'src/app/models/spainCities';
 import { Observable } from 'rxjs';
 import { User, Genero, UsuarioDireccion } from '../../../models/user';
 import { Pedido } from '../../../models/pedido';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { imageProfile } from 'src/app/models/imageProfile';
+import { environment } from 'src/environments/environment';
 
-
-const USER_API = 'http://localhost:8182/restfull/usuario/';
-const USER_DIR_API = 'http://localhost:8182/restfull/usuarioDireccion/';
-const ORDER_API = 'http://localhost:8182/restfull/pedido/';
-const IMG_API = 'http://localhost:8182/restfull/image/';
+const USER_API = `${environment.urlAPI}usuario/`;
+const USER_DIR_API = `${environment.urlAPI}usuarioDireccion/`;
+const ORDER_API = `${environment.urlAPI}pedido/`;
+const IMG_API = `${environment.urlAPI}image/`;
 
 @Injectable({
   providedIn: 'root'

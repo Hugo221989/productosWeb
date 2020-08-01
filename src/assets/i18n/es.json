@@ -126,5 +126,8 @@
     "login.contrasena":"Contraseña",
     "login.recordarme":"Recordarme",
     "login.link.registro":"O Crear Cuenta",
-    "login.registrarse":"Registrarse"
+    "login.registrarse":"Registrarse",
+    "registro.token.ok":"Tu usuario ha sido activado correctamente!",
+    "registro.token.nok":"Ha habido un error con la activación de tu usuario. Por favor, vuelve a realizar el proceso de registro.",
+    "registro.token.titulo":"Activación de usuario"
 }

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
-const AUTH_API = 'http://localhost:8182/restfull/api/auth/';
+const AUTH_API = `${environment.urlAPI}api/auth/`;
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })

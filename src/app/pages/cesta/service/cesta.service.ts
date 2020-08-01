@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MetodoEnvio, MetodoPago } from 'src/app/models/cesta';
+import { environment } from 'src/environments/environment';
 
-const ORDER_API = 'http://localhost:8182/restfull/pedido/';
+const ORDER_API = `${environment.urlAPI}pedido/`;
 
 @Injectable({
   providedIn: 'root'

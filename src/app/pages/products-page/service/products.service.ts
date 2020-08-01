@@ -12,9 +12,10 @@ import { TranslateCacheService } from 'ngx-translate-cache';
 import { TokenStorageService } from '../../login/logn-service/token-storage.service';
 import { User, AuthUser } from 'src/app/models/user';
 import { selectSettingsCesta } from 'src/app/settings/settings.selectors';
+import { environment } from 'src/environments/environment';
 
-const PRODUCT_API = 'http://localhost:8182/restfull/producto/';
-const PEDIDO_API = 'http://localhost:8182/restfull/pedido/';
+const PRODUCT_API = `${environment.urlAPI}producto/`;
+const PEDIDO_API = `${environment.urlAPI}pedido/`;
 
 @Injectable({
   providedIn: 'root'
